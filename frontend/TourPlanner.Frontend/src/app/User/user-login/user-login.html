@@ -1,1 +1,13 @@
-<p>user-login works!</p>
+<div class="login-container">
+    <div class="login-panel">
+        <h2>Login</h2>
+
+        <input type="text" placeholder="Username or Email" (input)="setIdentifier($event.target.value)" />
+
+        <input type="password" placeholder="Password" (input)="setPassword($event.target.value)" />
+
+        <button (click)="login()">
+            Login
+        </button>
+    </div>
+</div>

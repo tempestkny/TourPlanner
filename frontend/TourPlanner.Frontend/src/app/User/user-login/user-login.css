@@ -1,0 +1,44 @@
+/* Fullscreen center */
+.login-wrapper{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg);
+}
+
+/* Panel / Card */
+.login-panel {
+  width: 320px;
+  padding: 2rem;
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Inputs */
+.login-panel input {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--panel2);
+  font-size: 1rem;
+}
+
+/* Button */
+.login-panel button {
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  background: #0078d4;
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.login-panel button:hover {
+  background: var(--muted);
+}
