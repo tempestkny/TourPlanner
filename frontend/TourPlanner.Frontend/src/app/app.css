@@ -1,0 +1,15 @@
+.top {
+  padding: 28px 28px 8px;
+}
+.title {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+.subtitle {
+  margin-top: 6px;
+  color: var(--muted);
+}
+.shell {
+  padding: 18px 28px 34px;
+}
