@@ -1,1 +1,24 @@
-<p>user-register works!</p>
+<div class="register-container">
+    <div class="register-panel">
+        <h2>Register</h2>
+
+        <input type="text" placeholder="email@example.com" (input)="setEmail($event.target.value)" />
+        <input type="text" placeholder="username" (input)="setUsername($event.target.value)" />
+        <input type="password" placeholder="password" (input)="setPassword($event.target.value)" />
+        <input type="password" placeholder="check password" (input)="checkPassword($event.target.value)" />
+        <div class="error">
+            @if (password && checkpassword && password !== checkpassword) {
+                Passwords do not match
+            }
+        </div>
+
+        <button (click)="register()" [disabled]="!canRegister" routerLink="/login">
+            Register
+        </button>
+
+        <div class="login-link">
+            <a routerLink="/">Login</a>
+        </div>
+
+    </div>
+</div>
