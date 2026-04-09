@@ -1,0 +1,43 @@
+.tour-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0rem;
+    padding: 0rem;
+    cursor: pointer;
+}
+
+.tour-list-left {
+    padding: 0.7rem;
+    background: var(--color-panel-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+
+}
+
+.tour-map {
+    display: flex;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: var(--bg);
+    /* fallback if image missing */
+}
+
+
+.tour-list-item p {
+    font-size: 0.9rem;
+}
+
+
+.tour-title {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.tour-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
