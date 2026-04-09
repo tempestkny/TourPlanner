@@ -9,4 +9,5 @@ export const routes: Routes = [
     {path:'login',component : UserLogin},
     {path:'register',component: UserRegister},
     {path:'tour-list',component:TourList},
+    {path:'tour-list/create',component:TourCreation},
 ];

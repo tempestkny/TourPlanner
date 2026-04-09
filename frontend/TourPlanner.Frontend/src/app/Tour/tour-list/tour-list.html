@@ -10,7 +10,11 @@
     </div>
 
     <div class="tour-list-list">
-        <button routerLink="/tour-list/create-tour">+ Add Tour</button>
+
+        <button type="button" routerLink="/tour-list/create">
+            + Add Tour
+        </button>
+
         @for (tour of tours; track $index) {
         <div class="tour-list-item">
             <app-tour-entry [tour]="tour"></app-tour-entry>

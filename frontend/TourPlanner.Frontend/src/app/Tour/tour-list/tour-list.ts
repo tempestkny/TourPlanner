@@ -1,14 +1,19 @@
 import { Component } from '@angular/core';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourEntry } from "./tour-entry/tour-entry";
+import { RouterModule } from "@angular/router";
 
 @Component({
   selector: 'app-tour-list',
-  imports: [TourEntry],
+  imports: [TourEntry,RouterModule],
   templateUrl: './tour-list.html',
   styleUrl: './tour-list.css',
 })
 export class TourList {
+
+  debug() {
+    console.log("Button pressed")
+  }
 
   tours: TourItemInterface[] = [
     {
