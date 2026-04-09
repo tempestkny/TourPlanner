@@ -11,13 +11,14 @@
 
     <div class="tour-list-list">
 
-        <button type="button" routerLink="/tour-list/create">
+        <button type="button" (click)="createTour.emit()">
             + Add Tour
         </button>
 
         @for (tour of tours; track $index) {
-        <div class="tour-list-item">
+        <div class="tour-list-item" (click) = "selectTour.emit(tour)">
             <app-tour-entry [tour]="tour"></app-tour-entry>
+             <button (click)="editTour.emit(tour);$event.stopPropagation()">edit tour</button>
         </div>
         }
 

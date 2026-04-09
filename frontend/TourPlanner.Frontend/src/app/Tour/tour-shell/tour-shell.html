@@ -1,1 +1,28 @@
-<p>tour-shell works!</p>
+<div class="split-view">
+    <div class="left">
+        <router-outlet name = "list"></router-outlet>
+        <app-tour-list
+        (selectTour) = "onSelectTour($event)"
+        (createTour) = "onCreateTour()"
+        (editTour) = "onEditTour($event)">
+    </app-tour-list>
+    </div>
+
+    <div class="right">
+       @switch (mode) {
+        @case('detail'){
+            <app-tour-detail [tour] = "selectedTour"></app-tour-detail>
+        }
+        @case('edit'){
+            <app-tour-edit [tour] = "selectedTour"></app-tour-edit>
+        }
+        @case('create'){
+            <app-tour-creation></app-tour-creation>
+        }
+        @default {
+            <div class="placeholder">Select or create a tour</div>
+        }
+       }
+    </div>
+
+</div>

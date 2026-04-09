@@ -32,7 +32,7 @@ export class UserLogin{
 
   onLoginClick(): void{
     if(this.login()){
-      this.router.navigate(['/tour-list']);
+      this.router.navigate(['/tours']);
     }else{
       this.errorMessage = 'Invalid username or password';
     }

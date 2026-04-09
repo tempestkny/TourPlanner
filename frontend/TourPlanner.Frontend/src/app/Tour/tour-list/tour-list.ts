@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourEntry } from "./tour-entry/tour-entry";
 import { RouterModule } from "@angular/router";
 
 @Component({
   selector: 'app-tour-list',
-  imports: [TourEntry,RouterModule],
+  imports: [TourEntry, RouterModule],
   templateUrl: './tour-list.html',
   styleUrl: './tour-list.css',
 })
 export class TourList {
 
-  debug() {
-    console.log("Button pressed")
-  }
+  @Output() selectTour = new EventEmitter<TourItemInterface>();
+  @Output() editTour = new EventEmitter<TourItemInterface>();
+  @Output() createTour = new EventEmitter<void>();
+
 
   tours: TourItemInterface[] = [
     {
