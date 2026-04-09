@@ -1,0 +1,35 @@
+.tour-list-container {
+    background-color: var(--panel2);
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.tour-list-task-bar {
+    padding: 0.2rem;
+    display: flex;
+}
+
+.tour-list-task-bar button{
+    gap: 0.5rem;
+    background-color: var(--button);
+}
+
+.tour-list-list {
+    background-color: var(--panel2);
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tour-list-item {
+    padding: 0.5rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}

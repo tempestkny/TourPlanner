@@ -8,4 +8,19 @@ import { Component } from '@angular/core';
 })
 export class TourList {
 
+  tours = [
+    { name: 'Tour 1' },
+    { name: 'Tour 2' },
+    { name: 'Tour 3' }
+  ];
+
+  onQueryInput(arg0: string) {
+    
+  }
+
+
+  clearQuery() {
+    
+  }
+
 }

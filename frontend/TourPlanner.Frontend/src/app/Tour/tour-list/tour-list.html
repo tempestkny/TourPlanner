@@ -1,1 +1,25 @@
-<p>tour-list works!</p>
+<h3>Your Tours</h3>
+<div class="tour-list-container">
+    <div class="tour-list-task-bar">
+        <div class="controls">
+
+            <input #q class="input" type="text" placeholder="Search for Tour" [value]="" (input)="onQueryInput(q.value)"/>
+
+            <button class="btn" type="button" (click)="clearQuery()">Clear</button>
+
+        </div>
+    </div>
+
+    <div class="tour-list-list">
+        <button>+ Add Tour</button>
+        @for (tour of tours; track $index) {
+        <div class="tour-list-item">
+
+            <p>{{tour.name}}</p>
+
+        </div>
+        }
+
+    </div>
+
+</div>
