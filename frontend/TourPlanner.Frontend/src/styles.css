@@ -20,3 +20,7 @@ body {
   color: var(--text);
 }
 a { color: var(--accent); }
+
+.error {
+  color: var(--error);
+}
