@@ -6,8 +6,19 @@
 
         <input type="password" placeholder="Password" (input)="setPassword($event.target.value)" />
 
-        <button (click)="login()">
+        <button (click)="onLoginClick()">
             Login
         </button>
+
+        <div class="error">
+            @if (errorMessage){
+            {{errorMessage}}
+            }
+        </div>
+
+        <div class="register-link">
+            <a routerLink="/register">Register?</a>
+        </div>
+
     </div>
 </div>
