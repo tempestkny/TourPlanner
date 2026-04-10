@@ -1,5 +1,5 @@
 /* Fullscreen center */
-.register-wrapper {
+.register-container{
   height: 100vh;
   display: flex;
   justify-content: center;
