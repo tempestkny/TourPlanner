@@ -9,6 +9,7 @@
   --border: rgba(255,255,255,0.08);
   --accent: #7aa2ff;
   --error: #ff6b6b;
+  --okay: #83ff64;
 }
 
 * { box-sizing: border-box; }
@@ -23,4 +24,9 @@ a { color: var(--accent); }
 
 .error {
   color: var(--error);
+}
+
+.okay{
+  color: var(--okay);
+  font-size: 0.8rem;
 }
