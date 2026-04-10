@@ -4,11 +4,15 @@
 <div class="tour-creation-panel">
     <div class="input-details">
         <p>Tour Details</p>
-        <input type="text" placeholder="Title">
-        <input type="text" placeholder="Description">
-        <input type="text" placeholder="From">
-        <input type="text" placeholder="To">
-        <input type="text" placeholder="Transport Type">
+        <input type="text" placeholder="Title" (input)="setTitle($event.target.value)" />
+        <input type="text" placeholder="Description" (input)="setDescription($event.target.value)" />
+
+        <input type="text" placeholder="From" (input)="setFrom($event.target.value)" />
+        @if (!isFromValid && newTour.from != ''){<div class="error">Invalid Location!</div>}
+        <input type="text" placeholder="To" (input)="setTo($event.target.value)" />
+        @if (!isToValid && newTour.to != ''){<div class="error">Invalid Location!</div>}
+
+        <input type="text" placeholder="Transport Type" (input)="setTransportType($event.target.value)" />
     </div>
 
     <div class="route-calculations">
@@ -19,8 +23,7 @@
     <img class="tour-map" src="assets/a.png" alt="Map placeholder">
 
     <div class="tour-creation-buttons">
-        <button>Create Tour</button>
-        <button>Cancel</button>
+        <button (click)="CreateTour()">Create Tour</button>
     </div>
 
 </div>

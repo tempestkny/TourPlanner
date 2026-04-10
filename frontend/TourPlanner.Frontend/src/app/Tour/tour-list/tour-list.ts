@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourEntry } from "./tour-entry/tour-entry";
 import { RouterModule } from "@angular/router";
+import { TourListService } from './tour-list-service';
 
 @Component({
   selector: 'app-tour-list',
@@ -16,23 +17,16 @@ export class TourList {
   @Output() createTour = new EventEmitter<void>();
 
 
-  tours: TourItemInterface[] = [
-    {
-      name: 'Vienna City Walk',
-      tourDescription: 'A relaxing walk through the historic center.',
-      from: 'Stephansplatz',
-      to: 'Schönbrunn',
-      transportType: 'Walking'
-    },
-    {
-      name: 'Danube Bike Tour',
-      tourDescription: 'A scenic bike ride along the river.',
-      from: 'Donauinsel',
-      to: 'Klosterneuburg',
-      transportType: 'Bike'
-    }
-  ];
+  tours: TourItemInterface[] = [];
 
+  constructor(private tourListService: TourListService) {}
+
+    ngOnInit() {
+      this.tourListService.tours$.subscribe(tours => {
+        this.tours = tours;
+      });
+    }
+  
   onQueryInput(arg0: string) {
 
   }

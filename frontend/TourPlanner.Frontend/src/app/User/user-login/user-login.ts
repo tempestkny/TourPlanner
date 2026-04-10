@@ -7,35 +7,36 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './user-login.html',
   styleUrl: './user-login.css',
 })
-export class UserLogin{
+export class UserLogin {
+  
   identifier = '';
   password = '';
   errorMessage = '';
 
-  constructor(private router:Router){}
+  constructor(private router: Router) { }
 
-  setIdentifier(value:string){
+  setIdentifier(value: string) {
     this.identifier = value;
   }
 
-  setPassword(value:string){
+  setPassword(value: string) {
     this.password = value;
   }
 
-  login() : boolean{
-    console.log('Logging in with:',{
-      username:this.identifier,
-      password:this.password
+  login(): boolean {
+    console.log('Logging in with:', {
+      username: this.identifier,
+      password: this.password
     })
     return true;
   }
 
-  onLoginClick(): void{
-    if(this.login()){
+  onLoginClick(): void {
+    if (this.login()) {
       this.router.navigate(['/tours']);
-    }else{
+    } else {
       this.errorMessage = 'Invalid username or password';
     }
   }
-  
+
 }

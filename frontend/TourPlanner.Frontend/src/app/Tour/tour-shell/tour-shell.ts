@@ -18,17 +18,26 @@ export class TourShell {
   mode: 'detail' | 'edit' | 'create' | 'none' = 'none';
   selectedTour: TourItemInterface | null = null;
 
+
+  // When the button to edit/create/view Tour is clicked
+  // the TourItemInterface of this object is selected 
+  // for CRUD-Operations
+
   onEditTour(tour: TourItemInterface) {
     this.selectedTour = tour;
     this.mode = 'edit';
+    console.log("Selected for Edit: ", tour.title);
   }
+
   onCreateTour() {
     this.selectedTour = null;
     this.mode = 'create';
+    console.log("Create new Tour");
   }
   onSelectTour(tour: TourItemInterface) {
     this.selectedTour = tour;
     this.mode = 'detail';
+    console.log("Selected for View: ", tour.title);
   }
 
 }
