@@ -7,6 +7,10 @@
     cursor: pointer;
 }
 
+.tour-log-buttons{
+    padding: 0.7rem;
+}
+
 .tour-list-left {
     padding: 0.7rem;
     background: var(--color-panel-bg);

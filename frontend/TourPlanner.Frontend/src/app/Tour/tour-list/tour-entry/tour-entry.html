@@ -6,6 +6,18 @@
         <p>to: {{ tour.to }}</p>
         <p>transport: {{ tour.transportType }}</p>
     </div>
+
+    <div class="tour-log-buttons">
+        <button (click)="createLog.emit(tour); $event.stopPropagation()">
+            Add Log
+        </button>
+
+        <button (click)="viewLogs.emit(tour); $event.stopPropagation()">
+            View Logs
+        </button>
+    </div>
+
+
     <img class="tour-map" src="assets/a.png" alt="Map placeholder">
 
 </div>
