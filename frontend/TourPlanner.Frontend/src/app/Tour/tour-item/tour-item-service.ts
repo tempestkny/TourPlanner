@@ -12,6 +12,8 @@ export class TourItemService {
     this._tour.set(t);
   }
 
+  // accepts an incompletly defined TourItem and updates the signal state container
+  // if the old value exists, the old value should be merged with the new value
   updateTour(partial: Partial<TourItemInterface>) {
     this._tour.update(old => old ? { ...old, ...partial } : old);
   }
