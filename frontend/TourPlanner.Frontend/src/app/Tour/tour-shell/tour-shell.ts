@@ -5,17 +5,20 @@ import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourDetail } from "../tour-detail/tour-detail";
 import { TourEdit } from "../tour-edit/tour-edit";
 import { TourCreation } from "../tour-creation/tour-creation";
+import { TourLogList } from '../tour-log/tour-log-list/tour-log-list';
+import { CreateTourLog } from "../tour-log/create-tour-log/create-tour-log";
 
 
 @Component({
   selector: 'app-tour-shell',
-  imports: [RouterModule, TourList, TourDetail, TourEdit, TourCreation],
+  imports: [RouterModule, TourList, TourDetail, TourEdit, TourCreation, TourLogList, CreateTourLog],
   templateUrl: './tour-shell.html',
   styleUrl: './tour-shell.css',
 })
 
 export class TourShell {
-  mode: 'detail' | 'edit' | 'create' | 'none' = 'none';
+
+  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' = 'detail';
   selectedTour: TourItemInterface | null = null;
 
 
@@ -38,6 +41,19 @@ export class TourShell {
     this.selectedTour = tour;
     this.mode = 'detail';
     console.log("Selected for View: ", tour.title);
+  }
+
+  // Log User-Interface
+
+  onViewLogs(tour: TourItemInterface) {
+    this.selectedTour = tour;
+    this.mode = 'logList';
+  }
+
+  onCreateLog(tour: TourItemInterface) {
+    this.selectedTour = tour;
+    this.mode = 'logCreate';
+    console.log("Create new Tour Log");
   }
 
 }

@@ -1,28 +1,39 @@
 <div class="split-view">
     <div class="left">
-        <router-outlet name = "list"></router-outlet>
-        <app-tour-list
-        (selectTour) = "onSelectTour($event)"
-        (createTour) = "onCreateTour()"
-        (editTour) = "onEditTour($event)">
-    </app-tour-list>
+        <router-outlet name="list"></router-outlet>
+        <app-tour-list 
+            (selectTour)="onSelectTour($event)" 
+            (createTour)="onCreateTour()" 
+            (editTour)="onEditTour($event)"
+            (viewLogs)="onViewLogs($event)"
+            (createLog)="onCreateLog()">
+        </app-tour-list>
     </div>
 
     <div class="right">
-       @switch (mode) {
+        <!--Event Handling of which page the shell should display on the right side-->
+        @switch (mode) {
         @case('detail'){
-            <app-tour-detail [tour] = "selectedTour"></app-tour-detail>
+        <app-tour-detail [tour]="selectedTour"></app-tour-detail>
         }
         @case('edit'){
-            <app-tour-edit [tour] = "selectedTour"></app-tour-edit>
+        <app-tour-edit [tour]="selectedTour"></app-tour-edit>
         }
         @case('create'){
-            <app-tour-creation></app-tour-creation>
+        <app-tour-creation/>
         }
+
+        @case('logList'){
+        <app-tour-log-list [tour]="selectedTour" />
+        }
+        @case('logCreate'){
+        <app-create-tour-log/>
+        }
+
         @default {
-            <div class="placeholder">Select or create a tour</div>
+        <div class="placeholder">Select or create a tour</div>
         }
-       }
+        }
     </div>
 
 </div>
