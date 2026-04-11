@@ -7,6 +7,8 @@
         <p>transport: {{ tour.transportType }}</p>
     </div>
 
+    <!--Adding a tour log should be accessible from the Tour entry itself-->
+    <!--Editing, Viewing, Deleting a Log should be accessible form the log list-->
     <div class="tour-log-buttons">
         <button (click)="createLog.emit(tour); $event.stopPropagation()">
             Add Log
