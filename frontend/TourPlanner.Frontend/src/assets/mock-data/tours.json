@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "Mountain Trail",
+    "description": "Scenic mountain hike with great views.",
+    "from": "Graz",
+    "to": "Schöckl",
+    "transportType": "Hike",
+    "distance": 12,
+    "estimatedTime": "3h 30min",
+    "rating": 4.0
+  },
+  {
+    "id": 2,
+    "name": "City Bike Tour",
+    "description": "Relaxed bike ride through the city.",
+    "from": "Vienna Center",
+    "to": "Prater",
+    "transportType": "Bike",
+    "distance": 8,
+    "estimatedTime": "1h 20min",
+    "rating": 3.5
+  },
+  {
+    "id": 3,
+    "name": "Lakeside Run",
+    "description": "Running route along the lake.",
+    "from": "Wörthersee",
+    "to": "Velden",
+    "transportType": "Run",
+    "distance": 6,
+    "estimatedTime": "45min",
+    "rating": 4.5
+  }
+]
