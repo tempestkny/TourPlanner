@@ -1,5 +1,6 @@
 export interface TourItemInterface {
-    id : number;
+    id : string;
+    userId:string;
     title: string;
     tourDescription?: string;
     from: string;

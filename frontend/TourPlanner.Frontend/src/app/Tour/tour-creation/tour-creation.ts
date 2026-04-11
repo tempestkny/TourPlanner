@@ -11,7 +11,8 @@ import { TourListService } from '../tour-list/tour-list-service';
 export class TourCreation {
 
   newTour: TourItemInterface = {
-    id: 0,
+    id: '',
+    userId: '',
     title: '',
     from: '',
     to: '',
@@ -33,6 +34,7 @@ export class TourCreation {
       this.isToValid = false;
     this.newTour.to = arg0;
   }
+
   setFrom(arg0: string) {
     if (this.CheckIfRealPlace(arg0))
       this.isFromValid = true;
@@ -53,11 +55,13 @@ export class TourCreation {
   CreateTour() {
     if(this.isFromValid && this.isToValid){
       this.tourService.addTour(this.newTour);
-      console.log("Succsessfully created tour", this.newTour)
+      console.log("Successfully created tour", this.newTour)
     }
-      
   }
 
+  SetTourID() : void{
+    this.newTour.id = crypto.randomUUID();
+  }
 
   // Should later check if leaflet can find the location.
   CheckIfRealPlace(place: string): boolean {

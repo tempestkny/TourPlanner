@@ -7,7 +7,7 @@
         <input type="password" placeholder="password" (input)="setPassword($event.target.value)" />
         <input type="password" placeholder="check password" (input)="checkPassword($event.target.value)" />
         <div class="error">
-            @if (password && checkpassword && password !== checkpassword) {
+            @if (newUser.password && checkpassword && newUser.password !== checkpassword) {
                 Passwords do not match
             }
         </div>

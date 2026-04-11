@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { RouterModule } from "@angular/router";
+import { User } from "../user/user";
 
 
 @Component({
@@ -10,47 +11,56 @@ import { RouterModule } from "@angular/router";
 })
 export class UserRegister {
 
-  email: string = '';
-  username: string = '';
-  password: string = '';
+  newUser: User = {
+    id: "",
+    username: "",
+    email: "",
+    password: ""
+  };
   checkpassword: string = '';
 
-
   setEmail(arg0: string) {
-    this.email = arg0;
+    this.newUser.email = arg0;
   }
 
   setUsername(arg0: string) {
-    this.username = arg0;
+    this.newUser.username = arg0;
   }
 
   checkPassword(arg0: string) {
     this.checkpassword = arg0;
   }
   setPassword(arg0: string) {
-    this.password = arg0;
+    this.newUser.password = arg0;
   }
 
   get canRegister(): boolean {
     return (
-      this.email.trim().length > 0 &&
-      this.username.trim().length > 0 &&
-      this.password.trim().length > 0 &&
-      this.password === this.checkpassword
+      this.newUser.email.trim().length > 0 &&
+      this.newUser.username.trim().length > 0 &&
+      this.newUser.password.trim().length > 0 &&
+      this.newUser.password === this.checkpassword
     );
+  }
+
+  setUserID() {
+    this.newUser.id = crypto.randomUUID();
   }
 
 
   register(): void {
-    if (this.password === this.checkpassword)
+    if (this.canRegister) {
+      this.setUserID();
       console.log('Registering:', {
-        email: this.email,
-        username: this.username,
-        password: this.password
+        id: this.newUser.id,
+        email: this.newUser.email,
+        username: this.newUser.username,
+        password: this.newUser.password
       })
+    }
     else
       console.log('Password Check failed:', {
-        password: this.password,
+        password: this.newUser.password,
         checkpassword: this.checkpassword
       })
   }
