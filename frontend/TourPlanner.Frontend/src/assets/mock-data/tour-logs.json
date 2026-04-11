@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "tourId": 1,
+    "user": "mmuster",
+    "date": "2025-04-11T12:00:00",
+    "comment": "Amazing hike, great views!",
+    "difficulty": 3,
+    "totalDistance": 12,
+    "totalTime": "2h 30min",
+    "rating": 5
+  },
+  {
+    "id": 2,
+    "tourId": 1,
+    "user": "mmuster",
+    "date": "2025-04-04T18:45:00",
+    "comment": "Nice but a bit exhausting.",
+    "difficulty": 4,
+    "totalDistance": 12,
+    "totalTime": "3h 30min",
+    "rating": 3
+  },
+  {
+    "id": 3,
+    "tourId": 2,
+    "user": "jdoe",
+    "date": "2025-04-02T10:15:00",
+    "comment": "Easy and fun ride.",
+    "difficulty": 2,
+    "totalDistance": 8,
+    "totalTime": "1h 10min",
+    "rating": 4
+  }
+]
