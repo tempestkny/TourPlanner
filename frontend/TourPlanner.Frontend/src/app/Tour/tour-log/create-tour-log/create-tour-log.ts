@@ -50,12 +50,22 @@ export class CreateTourLog {
     this.newLog.rating = Number(value);
   }
 
+  CheckNumber(number?:number):boolean{
+    if(number == null || Number.isNaN(number)) return false;
+    return true;
+  }
+
   setID() {
     this.newLog.id = crypto.randomUUID();
   }
 
   createLog() {
-    console.log("Creating: ", this.newLog);
+    if(this.CheckNumber(this.newLog.totalDistance) && this.CheckNumber(this.newLog.totalTime)){
+      console.log("Creating: ", this.newLog);
+    }
+    else{
+      console.log("Could not create Tourlog: invalid input");
+    }
   }
 
   cancel() {

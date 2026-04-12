@@ -27,8 +27,8 @@
         <label class="distance">
             Total distance:
             <p>
-            <input type="number" min="0" (input)="setDistance($event.target.valueAsNumber)" />
-            km
+                <input type="number" min="0" (input)="setDistance($event.target.valueAsNumber)" />
+                km
             </p>
         </label>
 
@@ -36,10 +36,12 @@
         <label class="time">
             Total time:
             <p>
-            <input type="number" min="0" (input)="setTime($event.target.valueAsNumber)" />
-            min
+                <input type="number" min="0" (input)="setTime($event.target.valueAsNumber)" />
+                min
             </p>
         </label>
+        @if (!(CheckNumber(newLog.totalTime)||CheckNumber(newLog.totalDistance)) )
+        {<div class="error">Invalid Input!</div>}
 
         <!--Rating-->
         <label class="rating">
