@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TourLogInterface } from '../tour-log-interface';
 
 @Component({
@@ -8,5 +8,11 @@ import { TourLogInterface } from '../tour-log-interface';
   styleUrl: './view-tour-log.css',
 })
 export class ViewTourLog {
+
   @Input() log!: TourLogInterface | null
+  @Output() back = new EventEmitter<void>();
+
+  onBack() {
+    this.back.emit();
+  }
 }

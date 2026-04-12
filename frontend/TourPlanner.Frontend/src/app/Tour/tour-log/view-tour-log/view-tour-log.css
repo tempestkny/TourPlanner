@@ -1,0 +1,44 @@
+.view-log-wrapper{
+    background: var(--panel);
+    padding: 1rem;
+    border-style:solid;
+    border-color: var(--border);
+    border-radius: 2rem;
+    border-width: 0.1rem;
+    display: flex;
+    flex-direction: column;
+    gap:0.5rem
+}
+
+.view-log-wrapper label{
+}
+
+.timeStamp{
+
+}
+
+.Rating{
+}
+
+.comment{
+    font-style: italic;
+    background: var(--panel2);
+    padding:1rem;
+}
+
+.difficulty{
+
+}
+
+.DistTime{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    font-weight: 1;
+}
+
+.back-button{
+    display: flex;
+    width: 5rem;
+}
