@@ -5,9 +5,9 @@ export interface TourLogInterface {
     timeStamp : Date; // Date and Time
     comment? : string;
     difficulty? : Difficulty;
-    totalDistance : number; // in Meters
-    totalTime : number; //  in Minutes
-    rating? : 1 | 2 | 3 | 4 | 5;
+    totalDistance? : number; // in Meters
+    totalTime? : number; //  in Minutes
+    rating? : number
 }
 
 export enum Difficulty {
