@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TourItemInterface } from '../../tour-item/tour-item-interface';
 import { TourLogEntry } from "./tour-log-entry/tour-log-entry";
 import { LogListService } from './log-list-service';
@@ -14,11 +14,18 @@ import { Observable } from 'rxjs';
 })
 export class TourLogList {
   @Input() tour!: TourItemInterface | null;
+  @Output() viewLog = new EventEmitter<TourLogInterface>();
 
-  logs$ : Observable<TourLogInterface[]>;
+  logs$: Observable<TourLogInterface[]>;
+
+  onViewLog(log: TourLogInterface) {
+    this.viewLog.emit(log);
+    console.log("TourLogList: ", log);
+  }
 
 
   constructor(private logListService: LogListService) {
-      this.logs$ = this.logListService.logs$;
-  } 
+    this.logs$ = this.logListService.logs$;
+  }
+
 }

@@ -11,6 +11,6 @@ export class TourEntry {
   @Input() tour!: TourItemInterface;
 
   // Tour Logs
-  @Output() viewLogs = new EventEmitter<TourItemInterface>();
+  @Output() viewLogList = new EventEmitter<TourItemInterface>();
   @Output() createLog = new EventEmitter<TourItemInterface>();
 }

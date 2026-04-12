@@ -42,9 +42,11 @@ export class TourCreation {
       this.isFromValid = false;
     this.newTour.from = arg0;
   }
+
   setDescription(arg0: string) {
     this.newTour.tourDescription = arg0;
   }
+  
   setTitle(arg0: string) {
     this.newTour.title = arg0;
   }

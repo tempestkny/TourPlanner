@@ -5,8 +5,9 @@
             (selectTour)="onSelectTour($event)" 
             (createTour)="onCreateTour()" 
             (editTour)="onEditTour($event)"
-            (viewLogs)="onViewLogs($event)"
-            (createLog)="onCreateLog($event)">
+            (viewLogList)="onViewLogList($event)"
+            (createLog)="onCreateLog($event)"
+            >
         </app-tour-list>
     </div>
 
@@ -14,20 +15,33 @@
         <!--Event Handling of which page the shell should display on the right side-->
         @switch (mode) {
         @case('detail'){
-        <app-tour-detail [tour]="selectedTour"></app-tour-detail>
+        <app-tour-detail [tour]="selectedTour"/>
         }
+
         @case('edit'){
-        <app-tour-edit [tour]="selectedTour"></app-tour-edit>
+        <app-tour-edit [tour]="selectedTour"/>
         }
+
         @case('create'){
         <app-tour-creation/>
         }
 
         @case('logList'){
-        <app-tour-log-list [tour]="selectedTour" />
+        <app-tour-log-list 
+        [tour]="selectedTour" 
+        (viewLog)="onViewLog($event)"
+        />
         }
+
         @case('logCreate'){
         <app-create-tour-log/>
+        }
+
+        @case('logView'){
+            <app-view-tour-log
+            [log]="selectedLog"
+            />
+
         }
 
         @default {

@@ -16,7 +16,7 @@ export class TourList {
   @Output() createTour = new EventEmitter<void>();
 
   // Tour Log events
-  @Output() viewLogs = new EventEmitter<TourItemInterface>();
+  @Output() viewLogList = new EventEmitter<TourItemInterface>();
   @Output() createLog = new EventEmitter<TourItemInterface>()
 
   tours: TourItemInterface[] = [];

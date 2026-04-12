@@ -7,20 +7,25 @@ import { TourEdit } from "../tour-edit/tour-edit";
 import { TourCreation } from "../tour-creation/tour-creation";
 import { TourLogList } from '../tour-log/tour-log-list/tour-log-list';
 import { CreateTourLog } from "../tour-log/create-tour-log/create-tour-log";
+import { TourLogInterface } from '../tour-log/tour-log-interface';
+import { ViewTourLog } from "../tour-log/view-tour-log/view-tour-log";
 
 
 @Component({
   selector: 'app-tour-shell',
-  imports: [RouterModule, TourList, TourDetail, TourEdit, TourCreation, TourLogList, CreateTourLog],
+  imports: [RouterModule, TourList, TourDetail, TourEdit, TourCreation, TourLogList, CreateTourLog, ViewTourLog],
   templateUrl: './tour-shell.html',
   styleUrl: './tour-shell.css',
 })
 
 export class TourShell {
 
-  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' = 'detail';
-  selectedTour: TourItemInterface | null = null;
 
+
+  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' = 'detail';
+
+  selectedTour: TourItemInterface | null = null;
+  selectedLog: TourLogInterface | null = null;
 
   // When the button to edit/create/view Tour is clicked
   // the TourItemInterface of this object is selected 
@@ -37,6 +42,7 @@ export class TourShell {
     this.mode = 'create';
     console.log("Create new Tour");
   }
+
   onSelectTour(tour: TourItemInterface) {
     this.selectedTour = tour;
     this.mode = 'detail';
@@ -45,7 +51,7 @@ export class TourShell {
 
   // Log User-Interface
 
-  onViewLogs(tour: TourItemInterface) {
+  onViewLogList(tour: TourItemInterface) {
     this.selectedTour = tour;
     this.mode = 'logList';
   }
@@ -55,5 +61,14 @@ export class TourShell {
     this.mode = 'logCreate';
     console.log("Create new Tour Log");
   }
+
+    onViewLog(log: TourLogInterface) {
+    this.selectedLog = log;
+    this.mode = 'logView';
+    console.log("View Tour Log", log);
+  }
+  
+
+  
 
 }

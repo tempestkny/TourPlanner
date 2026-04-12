@@ -16,10 +16,10 @@
         </button>
 
         @for (tour of tours; track $index) {
-        <div class="tour-list-item" (click) = "selectTour.emit(tour)">
+        <div class="tour-list-item" (click)="selectTour.emit(tour)">
             <app-tour-entry 
                 [tour]="tour"
-                (viewLogs)="viewLogs.emit(tour)"
+                (viewLogList)="viewLogList.emit(tour)"
                 (createLog)="createLog.emit(tour)"
             ></app-tour-entry>
 

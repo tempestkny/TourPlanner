@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TourLogInterface } from '../../tour-log-interface';
 
 @Component({
@@ -9,4 +9,10 @@ import { TourLogInterface } from '../../tour-log-interface';
 })
 export class TourLogEntry {
   @Input() log!: TourLogInterface;
+  @Output() viewLog = new EventEmitter<TourLogInterface>();
+
+  onClick(){
+    this.viewLog.emit(this.log);
+    console.log("TourLogEntry: ",this.log);
+  }
 }

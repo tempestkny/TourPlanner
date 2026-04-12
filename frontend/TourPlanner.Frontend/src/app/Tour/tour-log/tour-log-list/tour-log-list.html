@@ -3,11 +3,11 @@
 
     <div class="log-list-list">
         @for(log of logs$ | async; track log.id){
-        <div class="log-list-item">
-            <app-tour-log-entry 
-            [log]="log"
-            />
-        </div>
+        <app-tour-log-entry 
+        class="log-list-item" 
+        [log]="log" 
+        (viewLog)="onViewLog($event)">
+        </app-tour-log-entry>
         }
     </div>
 

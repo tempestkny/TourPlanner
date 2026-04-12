@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TourLogInterface } from '../tour-log-interface';
 
 @Component({
   selector: 'app-view-tour-log',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './view-tour-log.css',
 })
 export class ViewTourLog {
-
+  @Input() log!: TourLogInterface | null
 }
