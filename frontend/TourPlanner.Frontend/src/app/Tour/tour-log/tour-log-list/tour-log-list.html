@@ -1,1 +1,12 @@
-<p>tour-log-list works!</p>
+<h4>Your Tour Logs</h4>
+<div class="log-list-container">
+
+    <div class="log-list-list">
+        @for(log of logs;track $index){
+        <div class="log-list-item">
+            <app-tour-log-entry [log]="log"/>
+        </div>
+        }
+    </div>
+
+</div>
