@@ -1,1 +1,129 @@
-<p>tour-detail works!</p>
+@if (tour) {
+  <section class="tour-summary card">
+
+    <!-- HEADER -->
+    <div class="tour-summary-top">
+      <div>
+        <h2 class="tour-title">{{ tour.title }}</h2>
+        <div class="tour-rating">★★★★☆ 4,0</div>
+      </div>
+
+      <div class="tour-actions">
+        <button type="button">Edit</button>
+        <button type="button">Delete</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="tour-summary-content">
+
+      <!-- LEFT SIDE (IMAGE + DESCRIPTION) -->
+      <div class="tour-media">
+
+        <!-- IMAGE -->
+        <div class="main-image placeholder"></div>
+
+        <!-- DESCRIPTION -->
+        <div class="tour-description">
+            <p>{{ tour.tourDescription }}</p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDE (INFO BOX) -->
+      <aside class="tour-info-box">
+        <p>{{ tour.from }} → {{ tour.to }}</p>
+        <p>{{ tour.transportType }}</p>
+        <p>Tour Distance: 12km</p>
+        <p>Estimated Time: 3h 30min</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="tour-logs card">
+
+  <div class="section-header">
+    <h3>Tour Logs</h3>
+  </div>
+
+  <div class="logs-row">
+
+    <!-- LOG CARD 1 -->
+    <div class="log-card">
+      <div class="log-rating">★★★★★ 5</div>
+
+      <div class="log-date">11. April 2025 12:00</div>
+
+      <div class="log-comment">
+        <p>We had a great time on this tour! The weather was perfect and the scenery was beautiful.</p>
+      </div>
+    </div>
+
+    <!-- LOG CARD 2 -->
+    <div class="log-card">
+      <div class="log-rating">★★★☆☆ 3</div>
+
+      <div class="log-date">4. April 2025 18:45</div>
+
+      <div class="log-comment">
+        <p>It was a nice tour, but the weather was bad and the path was muddy.</p>
+      </div>
+    </div>
+
+    <!-- ARROW -->
+    <button class="logs-next" type="button">></button>
+
+  </div>
+
+  <!-- SHOW MORE -->
+  <div class="show-more">
+    <button type="button">Show more</button>
+  </div>
+</section>
+
+<section class="route-section card">
+  <div class="route-layout">
+
+    <!-- LEFT SIDE -->
+    <div class="route-steps">
+      <h3>Route</h3>
+
+      <div class="route-step">
+        <div class="step-dot"></div>
+        <div class="step-content">
+          <p class="step-label">Starting at:<br>{{ tour.from }}</p>
+        </div>
+      </div>
+
+      <div class="route-step">
+        <div class="step-dot"></div>
+        <div class="step-content">
+            <p class="step-label">Place:<br>Place</p>
+        </div>
+      </div>
+
+      <div class="route-step">
+        <div class="step-dot"></div>
+        <div class="step-content">
+            <p class="step-label">Place:<br>Place</p>
+        </div>
+      </div>
+
+      <div class="route-step end-step">
+        <div class="step-dot"></div>
+        <div class="step-content">
+          <p class="step-label">Ending at:<br>{{ tour.from }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="route-map">
+        <img src="assets/img/a.png" alt="Map placeholder">
+    </div>
+
+  </div>
+</section>
+} @else {
+  <p>Loading tour...</p>
+}
