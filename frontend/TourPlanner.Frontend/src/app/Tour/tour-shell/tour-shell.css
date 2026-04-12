@@ -4,7 +4,7 @@
 }
 
 .left {
-  width: 60%;
+  width: 30%;
   border-right: 1px solid #ccc;
   overflow-y: auto;
 }
