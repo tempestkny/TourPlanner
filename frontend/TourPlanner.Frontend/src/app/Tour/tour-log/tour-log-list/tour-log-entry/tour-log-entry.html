@@ -1,0 +1,28 @@
+<div class="log-list-item">
+
+    <div class="item-left">
+        
+        <h5 class="timestamp">{{log.timeStamp.toISOString().slice(0, 16).replace('T',' ')}}</h5>
+
+        <p class="comment">
+            @if (log.comment)
+            {...commented...}
+        </p>
+
+        <p class="difficulty">
+            Difficulty: {{log.difficulty}}
+        </p>
+
+        <div class="DistTime">
+            <p>Dist.: {{log.totalDistance}} km</p>
+            <p>Time: {{log.totalTime}} min</p>
+        </div>
+
+    </div>
+    <div class="item-right">
+        <h5 class="rating">
+            Rating: {{log.rating}}
+        </h5>
+    </div>
+
+</div>
