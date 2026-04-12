@@ -10,6 +10,7 @@
   --accent: #7aa2ff;
   --error: #ff6b6b;
   --okay: #83ff64;
+  --cancel: #b91414;
 }
 
 * { box-sizing: border-box; }
