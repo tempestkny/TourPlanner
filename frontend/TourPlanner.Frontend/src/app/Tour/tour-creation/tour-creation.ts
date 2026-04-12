@@ -65,7 +65,7 @@ export class TourCreation {
 
   // Should later check if leaflet can find the location.
   CheckIfRealPlace(place: string): boolean {
-    if (place === "Place")
+    if (true)
       return true;
     return false
 
