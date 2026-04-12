@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Difficulty, TourLogInterface } from '../tour-log-interface';
 
 @Component({
   selector: 'app-create-tour-log',
@@ -6,6 +7,59 @@ import { Component } from '@angular/core';
   templateUrl: './create-tour-log.html',
   styleUrl: './create-tour-log.css',
 })
+
+//a tour-log consists of date/time, comment, difficulty, total distance, total time, and rating taken
+// on the tour
 export class CreateTourLog {
+
+  newLog: TourLogInterface = {
+    id: '',
+    timeStamp: new Date(),
+    totalDistance: 0,
+    totalTime: 0
+  }
+
+  difficulties = Object.values(Difficulty);
+
+  currentDateTime = new Date().toISOString().slice(0, 16)
+  // format: "1900-01-01T00:00"
+
+  setDateTime(arg0: string) {
+    this.newLog.timeStamp = new Date(arg0);
+  }
+
+  setComment(arg0: string) {
+    this.newLog.comment = arg0;
+  }
+
+  setDifficulty(arg0: Event) {
+    const value = (arg0.target as HTMLSelectElement).value;
+    this.newLog.difficulty = value as Difficulty;
+  }
+
+  setDistance(arg0: number) {
+    this.newLog.totalDistance = arg0;
+  }
+
+  setTime(arg0: number) {
+    this.newLog.totalTime = arg0;
+  }
+
+  setRating(arg0: Event) {
+    const value = (arg0.target as HTMLSelectElement).value;
+    this.newLog.rating = Number(value);
+  }
+
+  setID() {
+    this.newLog.id = crypto.randomUUID();
+  }
+
+  createLog() {
+    console.log("Creating: ", this.newLog);
+  }
+
+  cancel() {
+
+  }
 
 }

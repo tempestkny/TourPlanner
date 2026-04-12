@@ -1,0 +1,28 @@
+.buttons{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+.cancel-button{
+    background: var(--cancel);
+}
+
+.input-fields{
+    display:flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.input-fields label{
+    display:flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.distance input,
+.time input {
+    width: 5rem;
+}

@@ -1,1 +1,59 @@
-<p>create-tour-log works!</p>
+<h3>Create new Tour Log</h3>
+<div class="tour-log-creation-panel">
+    <div class="input-fields">
+        <!-- Date + Time -->
+        <label class="date">
+            Date & Time:
+            <input type="datetime-local" [value]="currentDateTime" (input)="setDateTime($event.target.value)" />
+        </label>
+
+        <!-- Comment -->
+        <label class="comment">
+            Comment:
+            <input type="text" placeholder="The tour was..." (input)="setComment($event.target.value)" />
+        </label>
+
+        <!-- Difficulty -->
+        <label class="difficulty">
+            Difficulty:
+            <select (change)="setDifficulty($event)">
+                @for (d of difficulties; track $index) {
+                <option [value]="d">{{d}}</option>
+                }
+            </select>
+        </label>
+
+        <!-- Distance -->
+        <label class="distance">
+            Total distance:
+            <p>
+            <input type="number" min="0" (input)="setDistance($event.target.valueAsNumber)" />
+            km
+            </p>
+        </label>
+
+        <!-- Time -->
+        <label class="time">
+            Total time:
+            <p>
+            <input type="number" min="0" (input)="setTime($event.target.valueAsNumber)" />
+            min
+            </p>
+        </label>
+
+        <!--Rating-->
+        <label class="rating">
+            Rating:
+            <select (change)="setRating($event)">
+                @for (r of [1,2,3,4,5];track $index) {
+                <option [value]="r">{{r}}</option>
+                }
+            </select>
+        </label>
+    </div>
+
+    <div class="buttons">
+        <button class="create-button" (click)="createLog()">create log</button>
+        <button class="cancel-button" (click)="cancel()">cancel</button>
+    </div>
+</div>
