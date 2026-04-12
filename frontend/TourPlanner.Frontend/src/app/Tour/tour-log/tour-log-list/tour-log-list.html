@@ -2,9 +2,11 @@
 <div class="log-list-container">
 
     <div class="log-list-list">
-        @for(log of logs;track $index){
+        @for(log of logs$ | async; track log.id){
         <div class="log-list-item">
-            <app-tour-log-entry [log]="log"/>
+            <app-tour-log-entry 
+            [log]="log"
+            />
         </div>
         }
     </div>

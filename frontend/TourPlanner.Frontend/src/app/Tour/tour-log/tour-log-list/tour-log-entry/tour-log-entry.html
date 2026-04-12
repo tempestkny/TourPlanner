@@ -2,7 +2,7 @@
 
     <div class="item-left">
         
-        <h5 class="timestamp">{{log.timeStamp.toISOString().slice(0, 16).replace('T',' ')}}</h5>
+        <h5 class="timestamp">Tour Date: {{log.timeStamp.toISOString().slice(0, 16).replace('T',' ')}}</h5>
 
         <p class="comment">
             @if (log.comment)
@@ -10,7 +10,7 @@
         </p>
 
         <p class="difficulty">
-            Difficulty: {{log.difficulty}}
+            @if(log.difficulty){Difficulty: {{log.difficulty}}}
         </p>
 
         <div class="DistTime">

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Difficulty, TourLogInterface } from '../tour-log-interface';
+import { LogListService } from '../tour-log-list/log-list-service';
 
 @Component({
   selector: 'app-create-tour-log',
@@ -16,7 +17,9 @@ export class CreateTourLog {
     id: '',
     timeStamp: new Date(),
     totalDistance: 0,
-    totalTime: 0
+    totalTime: 0,
+    difficulty: Difficulty.Easy,
+    rating:1
   }
 
   difficulties = Object.values(Difficulty);
@@ -50,23 +53,31 @@ export class CreateTourLog {
     this.newLog.rating = Number(value);
   }
 
-  CheckNumber(number?:number):boolean{
-    if(number == null || Number.isNaN(number)) return false;
+  CheckNumber(number?: number): boolean {
+    if (number == null || Number.isNaN(number)) return false;
     return true;
   }
 
-  setID() {
-    this.newLog.id = crypto.randomUUID();
-  }
+  constructor(private logListService: LogListService){}
 
   createLog() {
-    if(this.CheckNumber(this.newLog.totalDistance) && this.CheckNumber(this.newLog.totalTime)){
-      console.log("Creating: ", this.newLog);
+    if (this.CheckNumber(this.newLog.totalDistance) &&
+      this.CheckNumber(this.newLog.totalTime)) {
+      
+        const log: TourLogInterface = {
+          ...this.newLog,
+          id: crypto.randomUUID(),
+        }
+
+        this.logListService.addLog(log);
+
+        console.log("Creating: ", log);
     }
-    else{
+    else {
       console.log("Could not create Tourlog: invalid input");
     }
   }
+
 
   cancel() {
 
