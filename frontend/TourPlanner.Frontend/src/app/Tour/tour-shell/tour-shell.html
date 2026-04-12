@@ -34,7 +34,9 @@
         }
 
         @case('logCreate'){
-        <app-create-tour-log/>
+        <app-create-tour-log
+        (cancel)="onCancelLog()"
+        />
         }
 
         @case('logView'){
@@ -45,7 +47,7 @@
         }
 
         @default {
-        <div class="placeholder">Select or create a tour</div>
+        <div class="placeholder"></div>
         }
         }
     </div>

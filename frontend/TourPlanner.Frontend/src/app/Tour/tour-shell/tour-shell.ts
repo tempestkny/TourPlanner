@@ -20,9 +20,7 @@ import { ViewTourLog } from "../tour-log/view-tour-log/view-tour-log";
 
 export class TourShell {
 
-
-
-  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' = 'detail';
+  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' | 'none' = 'detail';
 
   selectedTour: TourItemInterface | null = null;
   selectedLog: TourLogInterface | null = null;
@@ -62,13 +60,15 @@ export class TourShell {
     console.log("Create new Tour Log");
   }
 
-    onViewLog(log: TourLogInterface) {
+  onViewLog(log: TourLogInterface) {
     this.selectedLog = log;
     this.mode = 'logView';
     console.log("View Tour Log", log);
   }
-  
 
-  
+
+  onCancelLog() {
+    this.mode = 'logList';
+  }
 
 }

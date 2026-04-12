@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Difficulty, TourLogInterface } from '../tour-log-interface';
 import { LogListService } from '../tour-log-list/log-list-service';
 
@@ -12,6 +12,7 @@ import { LogListService } from '../tour-log-list/log-list-service';
 //a tour-log consists of date/time, comment, difficulty, total distance, total time, and rating taken
 // on the tour
 export class CreateTourLog {
+  @Output() cancel = new EventEmitter<void>();
 
   newLog: TourLogInterface = {
     id: '',
@@ -79,8 +80,8 @@ export class CreateTourLog {
   }
 
 
-  cancel() {
-
+  onCancel() {
+    this.cancel.emit();
   }
 
 }
