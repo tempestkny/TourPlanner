@@ -1,38 +1,33 @@
-.view-log-wrapper{
+.view-log-wrapper {
     background: var(--panel);
     padding: 1rem;
-    border-style:solid;
+    border-style: solid;
     border-color: var(--border);
     border-radius: 2rem;
     border-width: 0.1rem;
+}
+
+.view-log-info {
     display: flex;
     flex-direction: column;
-    gap:0.5rem;
-
-    overflow-y: auto;
+    gap: 0.5rem;
 }
 
-.view-log-wrapper label{
-}
+.view-log-wrapper label {}
 
-.timeStamp{
+.timeStamp {}
 
-}
+.Rating {}
 
-.Rating{
-}
-
-.comment{
+.comment {
     font-style: italic;
     background: var(--panel2);
-    padding:1rem;
+    padding: 1rem;
 }
 
-.difficulty{
+.difficulty {}
 
-}
-
-.DistTime{
+.DistTime {
     display: flex;
     flex-direction: row;
     gap: 1rem;
@@ -40,7 +35,7 @@
     font-weight: 1;
 }
 
-.back-button{
+.back-button {
     display: flex;
     width: 5rem;
 }
