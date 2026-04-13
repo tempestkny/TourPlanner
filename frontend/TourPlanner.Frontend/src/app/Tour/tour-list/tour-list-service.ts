@@ -23,4 +23,12 @@ export class TourListService {
     const updated = [...this.toursSubject.value, tour];
     this.toursSubject.next(updated);
   }
+
+  updateTour(updatedTour: TourItemInterface): void {
+  const updated = this.toursSubject.value.map(tour =>
+    tour.id === updatedTour.id ? updatedTour : tour
+  );
+
+  this.toursSubject.next(updated);
+}
 }

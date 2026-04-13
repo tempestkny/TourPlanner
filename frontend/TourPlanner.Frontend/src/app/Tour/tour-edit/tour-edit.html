@@ -1,1 +1,61 @@
-<p>tour-edit works!</p>
+<h3>Edit tour</h3>
+
+@if (tour) {
+  <div class="tour-edit-container">
+    <div class="tour-edit-panel">
+      <div class="input-details">
+        <p>Tour Details</p>
+
+        <input
+          type="text"
+          placeholder="Title"
+          [value]="editableTour.title"
+          (input)="setTitle($any($event.target).value)" />
+
+        <input
+          type="text"
+          placeholder="Description"
+          [value]="editableTour.tourDescription"
+          (input)="setDescription($any($event.target).value)" />
+
+        <input
+          type="text"
+          placeholder="From"
+          [value]="editableTour.from"
+          (input)="setFrom($any($event.target).value)" />
+        @if (!isFromValid && editableTour.from != '') {
+          <div class="error">Invalid Location!</div>
+        }
+
+        <input
+          type="text"
+          placeholder="To"
+          [value]="editableTour.to"
+          (input)="setTo($any($event.target).value)" />
+        @if (!isToValid && editableTour.to != '') {
+          <div class="error">Invalid Location!</div>
+        }
+
+        <input
+          type="text"
+          placeholder="Transport Type"
+          [value]="editableTour.transportType"
+          (input)="setTransportType($any($event.target).value)" />
+      </div>
+
+      <div class="route-calculations">
+        <p>Length</p>
+        <p>Time</p>
+      </div>
+
+      <img class="tour-map" src="assets/img/a.png" alt="Map placeholder" />
+
+      <div class="tour-edit-buttons">
+        <button type="button" (click)="saveTour()">Save Changes</button>
+        <button type="button" (click)="cancel.emit()">Cancel</button>
+      </div>
+    </div>
+  </div>
+} @else {
+  <p>Loading tour...</p>
+}

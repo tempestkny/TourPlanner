@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
 
 @Component({
@@ -9,4 +9,11 @@ import { TourItemInterface } from '../tour-item/tour-item-interface';
 })
 export class TourDetail {
   @Input() tour!:TourItemInterface | null
+  @Output() editTour = new EventEmitter<TourItemInterface>();
+
+  onEditClick() {
+    if (this.tour) {
+      this.editTour.emit(this.tour);
+    }
+  } 
 }
