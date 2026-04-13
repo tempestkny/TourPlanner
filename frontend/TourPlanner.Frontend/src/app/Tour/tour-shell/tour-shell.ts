@@ -9,18 +9,22 @@ import { TourLogList } from '../tour-log/tour-log-list/tour-log-list';
 import { CreateTourLog } from "../tour-log/create-tour-log/create-tour-log";
 import { TourLogInterface } from '../tour-log/tour-log-interface';
 import { ViewTourLog } from "../tour-log/view-tour-log/view-tour-log";
+import { EditTourLog } from "../tour-log/edit-tour-log/edit-tour-log";
+import { LogListService } from '../tour-log/tour-log-list/log-list-service';
+
 
 
 @Component({
   selector: 'app-tour-shell',
-  imports: [RouterModule, TourList, TourDetail, TourEdit, TourCreation, TourLogList, CreateTourLog, ViewTourLog],
+  imports: [RouterModule, TourList, TourDetail, TourEdit, TourCreation, TourLogList, CreateTourLog, ViewTourLog, EditTourLog],
   templateUrl: './tour-shell.html',
   styleUrl: './tour-shell.css',
 })
 
 export class TourShell {
 
-  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' | 'none' = 'detail';
+
+  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' | 'logEdit' | 'none' = 'detail';
 
   selectedTour: TourItemInterface | null = null;
   selectedLog: TourLogInterface | null = null;
@@ -53,7 +57,7 @@ export class TourShell {
   onSelectTour(tour: TourItemInterface) {
     this.selectedTour = tour;
     this.mode = 'detail';
-    console.log("Selected for View: ", tour.title);
+    console.log("Selected for View: ", tour);
   }
 
   // Log User-Interface
@@ -66,15 +70,26 @@ export class TourShell {
   onCreateLog(tour: TourItemInterface) {
     this.selectedTour = tour;
     this.mode = 'logCreate';
-    console.log("Create new Tour Log");
   }
 
   onViewLog(log: TourLogInterface) {
     this.selectedLog = log;
     this.mode = 'logView';
-    console.log("View Tour Log", log);
   }
 
+  onEditLog(log: TourLogInterface) {
+    this.selectedLog = log;
+    this.mode = 'logEdit';
+  }
+
+  constructor(private logListService : LogListService){}
+
+  onSaveLog(updated: TourLogInterface) {
+    //UpdateLog
+    this.logListService.updateLog(updated);
+    this.selectedLog = updated;
+    this.mode = 'logView';
+  }
 
   onCancelLog() {
     this.mode = 'logList';
