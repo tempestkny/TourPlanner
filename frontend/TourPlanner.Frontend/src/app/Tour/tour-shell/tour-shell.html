@@ -22,7 +22,7 @@
         }
 
         @case('edit'){
-        <app-tour-edit
+        <app-tour-edit 
             [tour]="selectedTour"
             (saved)="onEditSaved($event)"
             (cancel)="onEditCancelled()">
@@ -30,34 +30,40 @@
         }
 
         @case('create'){
-        <app-tour-creation/>
+        <app-tour-creation />
         }
 
         @case('logList'){
         <app-tour-log-list 
-        [tour]="selectedTour" 
-        (viewLog)="onViewLog($event)"
-        />
+            [tour]="selectedTour" 
+            (viewLog)="onViewLog($event)" 
+            />
         }
 
         @case('logCreate'){
-        <app-create-tour-log
-        (cancel)="onCancelLog()"
-        />
+        <app-create-tour-log 
+            (cancel)="onCancelLog()" 
+            />
         }
 
         @case('logView'){
-            <app-view-tour-log
-            [log]="selectedLog"
-            (back)="onCancelLog()"
-            />
+        <app-view-tour-log 
+            [log]="selectedLog" 
+            (back)="onCancelLog()" 
+            (editLog)="onEditLog($event)" />
+        }
 
+        @case('logEdit'){
+         <app-edit-tour-log 
+            [log]="selectedLog" 
+            (back)="onCancelLog()" 
+            (save)="onSaveLog($event)"/>   
         }
 
         @default {
         <div class="placeholder"></div>
         }
-        }
+    }
     </div>
 
 </div>

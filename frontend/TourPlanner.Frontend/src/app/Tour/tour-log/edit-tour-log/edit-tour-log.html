@@ -1,1 +1,62 @@
-<p>edit-tour-log works!</p>
+<h3>Create new Tour Log</h3>
+<div class="tour-log-creation-panel">
+    <div class="input-fields">
+        <!-- Date + Time -->
+        <label class="date">
+            Date & Time of Tour:
+            <input type="datetime-local" [value]="log?.timeStamp" (input)="setDateTime($event.target.value)" />
+        </label>
+
+        <!-- Comment -->
+        <label class="comment">
+            Comment:
+            <input type="text" placeholder="The tour was..." [value]="log?.comment" (input)="setComment($event.target.value)" />
+        </label>
+
+        <!-- Difficulty -->
+        <label class="difficulty">
+            Difficulty:
+            <select (change)="setDifficulty($event)" [value]="log?.difficulty">
+                @for (d of difficulties; track $index) {
+                <option [value]="d">{{d}}</option>
+                }
+            </select>
+        </label>
+
+        <!-- Distance -->
+        <label class="distance">
+            Total distance:
+            <p>
+                <input type="number" min="0" (input)="setDistance($event.target.valueAsNumber)" [value]="log?.totalDistance" />
+                km
+            </p>
+        </label>
+
+        <!-- Time -->
+        <label class="time">
+            Total time:
+            <p>
+                <input type="number" min="0" (input)="setTime($event.target.valueAsNumber)" [value]="log?.totalTime" />
+                min
+            </p>
+        </label>
+        @if (!(CheckNumber(newLog.totalTime)||CheckNumber(newLog.totalDistance)) )
+        {<div class="error">Invalid Input!</div>}
+
+        <!--Rating-->
+        <label class="rating">
+            Rating:
+            <select (change)="setRating($event)">
+                @for (r of [1,2,3,4,5];track $index) {
+                <option [value]="r">{{r}}</option>
+                }
+            </select>
+        </label>
+    </div>
+
+
+    <div class="buttons">
+        <button class="save-button" (click)="onSave()">save</button>
+        <button class="cancel-button" (click)="onCancel()">cancel</button>
+    </div>
+</div>

@@ -9,10 +9,17 @@ import { TourLogInterface } from '../tour-log-interface';
 })
 export class ViewTourLog {
 
+
   @Input() log!: TourLogInterface | null
   @Output() back = new EventEmitter<void>();
+  @Output() editLog = new EventEmitter<TourLogInterface>();
 
   onBack() {
     this.back.emit();
+  }
+
+  onEdit() {
+    this.editLog.emit(this.log!);
+    console.log("edit clicked!");
   }
 }
