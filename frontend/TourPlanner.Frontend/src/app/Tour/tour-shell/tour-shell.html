@@ -49,7 +49,9 @@
         <app-view-tour-log 
             [log]="selectedLog" 
             (back)="onCancelLog()" 
-            (editLog)="onEditLog($event)" />
+            (editLog)="onEditLog($event)" 
+            (deleteLog)="onDeleteLog($event)"
+            />
         }
 
         @case('logEdit'){

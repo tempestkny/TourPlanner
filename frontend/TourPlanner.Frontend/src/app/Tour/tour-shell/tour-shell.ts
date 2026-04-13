@@ -91,6 +91,12 @@ export class TourShell {
     this.mode = 'logView';
   }
 
+  onDeleteLog(id : string){
+    this.logListService.deleteLog(id);
+    this.selectedLog = null;
+    this.mode = 'logList';
+  }
+
   onCancelLog() {
     this.mode = 'logList';
   }
