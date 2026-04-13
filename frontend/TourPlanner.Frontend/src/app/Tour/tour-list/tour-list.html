@@ -1,30 +1,28 @@
 <h3>Your Tours</h3>
-<div class="tour-list-container">
 
-    <div class="tour-list-task-bar">
-        <input #q class="input" type="text" placeholder="Search for Tour" [value]="" (input)="onQueryInput(q.value)" />
-        <button class="btn" type="button" (click)="clearQuery()">Clear</button>
-    </div>
 
-    <div class="tour-list-list">
+<div class="tour-list-task-bar">
+    <input #q class="input" type="text" placeholder="Search for Tour" [value]="" (input)="onQueryInput(q.value)" />
+    <button class="btn" type="button" (click)="clearQuery()">Clear</button>
+</div>
 
-        <button type="button" (click)="createTour.emit()">
-            + Add Tour
-        </button>
+<div class="tour-list-list">
 
-        <div class="tour-list-entry-container">
-            @for (tour of tours; track $index) {
-            <div class="tour-list-item" (click)="selectTour.emit(tour)">
-                <app-tour-entry [tour]="tour" (viewLogList)="viewLogList.emit(tour)"
-                    (createLog)="createLog.emit(tour)"></app-tour-entry>
+    <button type="button" (click)="createTour.emit()">
+        + Add Tour
+    </button>
 
-                <button (click)="editTour.emit(tour);$event.stopPropagation()">
-                    edit tour
-                </button>
-            </div>
-            }
+    <div class="tour-list-entry-container">
+        @for (tour of tours; track $index) {
+        <div class="tour-list-item" (click)="selectTour.emit(tour)">
+            <app-tour-entry [tour]="tour" (viewLogList)="viewLogList.emit(tour)"
+                (createLog)="createLog.emit(tour)"></app-tour-entry>
+
+            <button (click)="editTour.emit(tour);$event.stopPropagation()">
+                edit tour
+            </button>
         </div>
-
+        }
     </div>
 
 </div>
