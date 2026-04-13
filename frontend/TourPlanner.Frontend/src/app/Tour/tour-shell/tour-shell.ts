@@ -54,6 +54,15 @@ export class TourShell {
     console.log("Create new Tour");
   }
 
+  onCreateSuccess(tour: TourItemInterface){
+    this.selectedTour = tour;
+    this.mode = 'detail';
+  }
+
+  onCreateCancelled(){
+    this.mode = 'none';
+  }
+
   onSelectTour(tour: TourItemInterface) {
     this.selectedTour = tour;
     this.mode = 'detail';
