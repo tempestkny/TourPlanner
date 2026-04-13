@@ -1,24 +1,25 @@
 <div class="view-log-wrapper">
-    <h4 class="timeStamp">Tour Date: {{log?.timeStamp?.toISOString()?.slice(0, 16)?.replace('T',' ')}}</h4>
+    <div class="view-log-info">
+        <h4 class="timeStamp">Tour Date: {{log?.timeStamp?.toISOString()?.slice(0, 16)?.replace('T',' ')}}</h4>
 
-    <label class="Rating">Rating: {{log?.rating}} / 5</label>
+        <label class="Rating">Rating: {{log?.rating}} / 5</label>
 
-    <label>
-        @if(log?.comment){
-        Comment:
-        <p class="comment">{{log?.comment}}</p>
-        }
-    </label>
+        <label>
+            @if(log?.comment){
+            Comment:
+            <p class="comment">{{log?.comment}}</p>
+            }
+        </label>
 
-    <label class="difficulty">
-        Difficulty: {{log?.difficulty}}
-    </label>
+        <label class="difficulty">
+            Difficulty: {{log?.difficulty}}
+        </label>
 
-    <label class="DistTime">
-        <p>Dist.: {{log?.totalDistance}} km</p>
-        <p>Time: {{log?.totalTime}} min</p>
-    </label>
+        <label class="DistTime">
+            <p>Dist.: {{log?.totalDistance}} km</p>
+            <p>Time: {{log?.totalTime}} min</p>
+        </label>
 
-    <button class="back-button" (click)="onBack()"> Back </button>
-
+        <button class="back-button" (click)="onBack()"> Back </button>
+    </div>
 </div>
