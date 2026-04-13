@@ -31,4 +31,9 @@ export class LogListService {
     this.logsSubject.next(newList);
   }
 
+  deleteLog(id:string){
+    const updated = this.logsSubject.value.filter(log => log.id !== id);
+    this.logsSubject.next(updated);
+  }
+
 }

@@ -30,7 +30,10 @@
         }
 
         @case('create'){
-        <app-tour-creation />
+        <app-tour-creation 
+            (cancel)="onCreateCancelled()"
+            (success)="onCreateSuccess($event)"
+            />
         }
 
         @case('logList'){
@@ -50,7 +53,9 @@
         <app-view-tour-log 
             [log]="selectedLog" 
             (back)="onCancelLog()" 
-            (editLog)="onEditLog($event)" />
+            (editLog)="onEditLog($event)" 
+            (deleteLog)="onDeleteLog($event)"
+            />
         }
 
         @case('logEdit'){
@@ -61,7 +66,9 @@
         }
 
         @default {
-        <div class="placeholder"></div>
+        <div class="placeholder">
+            add or select a tour
+        </div>
         }
     }
     </div>

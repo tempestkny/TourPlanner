@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourListService } from '../tour-list/tour-list-service';
-import { TourItemService } from '../tour-item/tour-item-service';
 
 @Component({
   selector: 'app-tour-edit',
@@ -36,7 +35,6 @@ export class TourEdit implements OnChanges {
 
   constructor(
     private tourListService: TourListService,
-    private tourItemService: TourItemService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -73,6 +71,8 @@ export class TourEdit implements OnChanges {
     if (!this.isFromValid || !this.isToValid) {
       return;
     }
+
+    this.tourListService.updateTour(this.editableTour);
     this.saved.emit(this.editableTour);
   }
 

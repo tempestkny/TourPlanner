@@ -72,6 +72,15 @@ export class TourShell {
     console.log("Create new Tour");
   }
 
+  onCreateSuccess(tour: TourItemInterface){
+    this.selectedTour = tour;
+    this.mode = 'detail';
+  }
+
+  onCreateCancelled(){
+    this.mode = 'none';
+  }
+
   onSelectTour(tour: TourItemInterface) {
     this.selectedTour = tour;
     this.mode = 'detail';
@@ -107,6 +116,12 @@ export class TourShell {
     this.logListService.updateLog(updated);
     this.selectedLog = updated;
     this.mode = 'logView';
+  }
+
+  onDeleteLog(id : string){
+    this.logListService.deleteLog(id);
+    this.selectedLog = null;
+    this.mode = 'logList';
   }
 
   onCancelLog() {

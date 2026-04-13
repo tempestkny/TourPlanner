@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourListService } from '../tour-list/tour-list-service';
 
@@ -9,6 +9,8 @@ import { TourListService } from '../tour-list/tour-list-service';
   styleUrl: './tour-creation.css',
 })
 export class TourCreation {
+  @Output() cancel = new EventEmitter<void>();
+  @Output() success = new EventEmitter<TourItemInterface>()
 
   newTour: TourItemInterface = {
     id: '',
@@ -46,22 +48,27 @@ export class TourCreation {
   setDescription(arg0: string) {
     this.newTour.tourDescription = arg0;
   }
-  
+
   setTitle(arg0: string) {
     this.newTour.title = arg0;
   }
 
-  constructor(private tourService: TourListService){}
-  
+  constructor(private tourService: TourListService) { }
+
   // The tour can only be created when all neccesary fields were filled out.
   CreateTour() {
-    if(this.isFromValid && this.isToValid){
+    if (this.isFromValid && this.isToValid) {
+      this.SetTourID();
       this.tourService.addTour(this.newTour);
-      console.log("Successfully created tour", this.newTour)
+      this.success.emit(this.newTour);
     }
   }
 
-  SetTourID() : void{
+  Cancel(){
+    this.cancel.emit();
+  }
+
+  SetTourID(): void {
     this.newTour.id = crypto.randomUUID();
   }
 

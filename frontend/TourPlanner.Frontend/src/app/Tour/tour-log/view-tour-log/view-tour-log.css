@@ -16,9 +16,15 @@
     gap: 0.5rem;
 }
 
-.edit-button{
-    height: 25px;
-    margin-left: auto;
+.UD-button{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-left: 50%;
+}
+
+.delete-button{
+    background: var(--cancel);
 }
 
 .comment {
