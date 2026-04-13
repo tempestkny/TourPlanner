@@ -10,10 +10,17 @@ import { TourItemInterface } from '../tour-item/tour-item-interface';
 export class TourDetail {
   @Input() tour!:TourItemInterface | null
   @Output() editTour = new EventEmitter<TourItemInterface>();
+  @Output() deleteTour = new EventEmitter<TourItemInterface>();
 
-  onEditClick() {
+  onEditClick(): void {
     if (this.tour) {
       this.editTour.emit(this.tour);
     }
-  } 
+  }
+
+  onDeleteClick(): void {
+    if (this.tour) {
+      this.deleteTour.emit(this.tour);
+    }
+  }
 }

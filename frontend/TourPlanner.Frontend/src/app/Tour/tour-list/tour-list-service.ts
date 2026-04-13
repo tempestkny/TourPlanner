@@ -24,11 +24,16 @@ export class TourListService {
     this.toursSubject.next(updated);
   }
 
-  updateTour(updatedTour: TourItemInterface): void {
-  const updated = this.toursSubject.value.map(tour =>
-    tour.id === updatedTour.id ? updatedTour : tour
-  );
+  updateTour(originalTour: TourItemInterface, updatedTour: TourItemInterface): void {
+    const updated = this.toursSubject.value.map(tour =>
+      tour === originalTour ? updatedTour : tour
+    );
 
-  this.toursSubject.next(updated);
-}
+    this.toursSubject.next(updated);
+  }
+
+  deleteTour(tourToDelete: TourItemInterface): void {
+    const updated = this.toursSubject.value.filter(tour => tour !== tourToDelete);
+    this.toursSubject.next(updated);
+  }
 }

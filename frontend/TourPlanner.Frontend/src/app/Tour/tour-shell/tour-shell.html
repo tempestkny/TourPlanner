@@ -14,18 +14,20 @@
         <!--Event Handling of which page the shell should display on the right side-->
         @switch (mode) {
         @case('detail'){
-        <app-tour-detail 
+        <app-tour-detail
             [tour]="selectedTour"
-            (editTour)="onEditTour($event)"/>
+            (editTour)="onEditTour($event)"
+            (deleteTour)="onDeleteTour($event)">
+        </app-tour-detail>
         }
 
         @case('edit'){
         <app-tour-edit
             [tour]="selectedTour"
             (saved)="onEditSaved($event)"
-            (cancel)="onEditCancelled()"
-        />
-}
+            (cancel)="onEditCancelled()">
+        </app-tour-edit>
+        }
 
         @case('create'){
         <app-tour-creation/>

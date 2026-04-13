@@ -73,9 +73,6 @@ export class TourEdit implements OnChanges {
     if (!this.isFromValid || !this.isToValid) {
       return;
     }
-
-    this.tourListService.updateTour(this.editableTour);
-    this.tourItemService.setTour(this.editableTour);
     this.saved.emit(this.editableTour);
   }
 
