@@ -56,6 +56,7 @@ export class TourCreation {
   // The tour can only be created when all neccesary fields were filled out.
   CreateTour() {
     if(this.isFromValid && this.isToValid){
+      this.SetTourID();
       this.tourService.addTour(this.newTour);
       console.log("Successfully created tour", this.newTour)
     }
