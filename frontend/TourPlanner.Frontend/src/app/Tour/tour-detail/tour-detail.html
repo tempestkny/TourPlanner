@@ -9,7 +9,7 @@
       </div>
 
       <div class="tour-actions">
-        <button type="button">Edit</button>
+        <button type="button" (click)="onEditClick()">Edit</button>
         <button type="button">Delete</button>
       </div>
     </div>
@@ -112,7 +112,7 @@
       <div class="route-step end-step">
         <div class="step-dot"></div>
         <div class="step-content">
-          <p class="step-label">Ending at:<br>{{ tour.from }}</p>
+          <p class="step-label">Ending at:<br>{{ tour.to }}</p>
         </div>
       </div>
     </div>

@@ -17,10 +17,6 @@
         <div class="tour-list-item" (click)="selectTour.emit(tour)">
             <app-tour-entry [tour]="tour" (viewLogList)="viewLogList.emit(tour)"
                 (createLog)="createLog.emit(tour)"></app-tour-entry>
-
-            <button (click)="editTour.emit(tour);$event.stopPropagation()">
-                edit tour
-            </button>
         </div>
         }
     </div>

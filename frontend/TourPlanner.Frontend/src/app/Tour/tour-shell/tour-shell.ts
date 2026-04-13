@@ -35,6 +35,15 @@ export class TourShell {
     console.log("Selected for Edit: ", tour.title);
   }
 
+  onEditSaved(updatedTour: TourItemInterface) {
+    this.selectedTour = updatedTour;
+    this.mode = 'detail';
+  }
+
+  onEditCancelled() {
+    this.mode = 'detail';
+  }
+
   onCreateTour() {
     this.selectedTour = null;
     this.mode = 'create';
