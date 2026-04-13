@@ -5,6 +5,9 @@
     border-color: var(--border);
     border-radius: 2rem;
     border-width: 0.1rem;
+
+    display: flex;
+    gap: 1rem;
 }
 
 .view-log-info {
@@ -13,11 +16,10 @@
     gap: 0.5rem;
 }
 
-.view-log-wrapper label {}
-
-.timeStamp {}
-
-.Rating {}
+.edit-button{
+    height: 25px;
+    margin-left: auto;
+}
 
 .comment {
     font-style: italic;
