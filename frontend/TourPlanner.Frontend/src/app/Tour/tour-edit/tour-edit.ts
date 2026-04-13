@@ -68,13 +68,12 @@ export class TourEdit implements OnChanges {
   }
 
   saveTour(): void {
-    if (!this.isFromValid || !this.isToValid) {
-      return;
-    }
-
-    this.tourListService.updateTour(this.editableTour);
-    this.saved.emit(this.editableTour);
+  if (!this.isFromValid || !this.isToValid) {
+    return;
   }
+
+  this.saved.emit(this.editableTour);
+}
 
   checkIfRealPlace(place: string): boolean {
     return true;

@@ -24,9 +24,12 @@ import { LogListService } from '../tour-log/tour-log-list/log-list-service';
 
 export class TourShell {
 
-  constructor(private tourListService: TourListService) {}
+  constructor(
+    private tourListService: TourListService,
+    private logListService : LogListService
+  ) {}
 
-  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' | 'none' = 'detail';
+  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' | 'logEdit' | 'none' = 'detail';
 
   selectedTour: TourItemInterface | null = null;
   selectedLog: TourLogInterface | null = null;
@@ -108,8 +111,6 @@ export class TourShell {
     this.selectedLog = log;
     this.mode = 'logEdit';
   }
-
-  constructor(private logListService : LogListService){}
 
   onSaveLog(updated: TourLogInterface) {
     //UpdateLog

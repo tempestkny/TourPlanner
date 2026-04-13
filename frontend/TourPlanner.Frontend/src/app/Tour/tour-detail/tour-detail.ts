@@ -19,6 +19,7 @@ export class TourDetail {
   }
 
   onDeleteClick(): void {
+    console.log('Delete clicked in detail');
     if (this.tour) {
       this.deleteTour.emit(this.tour);
     }

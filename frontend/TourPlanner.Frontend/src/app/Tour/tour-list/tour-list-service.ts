@@ -33,7 +33,10 @@ export class TourListService {
   }
 
   deleteTour(tourToDelete: TourItemInterface): void {
-    const updated = this.toursSubject.value.filter(tour => tour !== tourToDelete);
+    const updated = this.toursSubject.value.filter(
+      tour => tour !== tourToDelete
+    );
+
     this.toursSubject.next(updated);
   }
 }
