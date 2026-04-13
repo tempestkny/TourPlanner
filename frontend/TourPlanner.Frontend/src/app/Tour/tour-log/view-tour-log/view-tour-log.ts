@@ -13,6 +13,7 @@ export class ViewTourLog {
   @Input() log!: TourLogInterface | null
   @Output() back = new EventEmitter<void>();
   @Output() editLog = new EventEmitter<TourLogInterface>();
+  @Output() deleteLog = new EventEmitter<string>();
 
   onBack() {
     this.back.emit();
@@ -20,6 +21,9 @@ export class ViewTourLog {
 
   onEdit() {
     this.editLog.emit(this.log!);
-    console.log("edit clicked!");
+  }
+
+  onDelete(){
+    this.deleteLog.emit(this.log!.id);
   }
 }
