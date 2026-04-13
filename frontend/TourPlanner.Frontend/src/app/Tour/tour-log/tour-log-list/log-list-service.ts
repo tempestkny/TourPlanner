@@ -23,4 +23,12 @@ export class LogListService {
     this.logsSubject.next(updated);
   }
 
+  updateLog(updated: TourLogInterface){
+    const newList = this.logsSubject.value.map(
+      log =>
+        log.id === updated.id ? updated : log
+    );
+    this.logsSubject.next(newList);
+  }
+
 }
