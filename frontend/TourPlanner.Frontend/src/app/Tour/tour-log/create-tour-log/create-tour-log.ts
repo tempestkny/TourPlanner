@@ -73,6 +73,8 @@ export class CreateTourLog {
         this.logListService.addLog(log);
 
         console.log("Creating: ", log);
+        
+        this.cancel.emit();
     }
     else {
       console.log("Could not create Tourlog: invalid input");
