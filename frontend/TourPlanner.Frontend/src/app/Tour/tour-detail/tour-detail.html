@@ -45,15 +45,27 @@
       <h3>Tour Logs</h3>
     </div>
 
-    <div class="logs-row">
-      @for (log of tourLogs.slice(0, 2); track log.id) {
-        <app-tour-log-entry [log]="log"></app-tour-log-entry>
-      }
-    </div>
+    @if (tourLogs.length === 0) {
+      <div class="no-logs-message">
+        <p>No tour logs available yet.</p>
+        <button type="button" (click)="onAddLogClick()">Add Log</button>
+      </div>
+    } @else {
+      <div class="logs-row">
+        @for (log of tourLogs.slice(0, 2); track log.id) {
+          <app-tour-log-entry
+            [log]="log"
+            (viewLog)="onViewLogClick($event)">
+          </app-tour-log-entry>
+        }
+      </div>
+    }
 
-    <div class="show-more">
-      <button type="button" (click)="onShowMoreClick()">Show more</button>
-    </div>
+    @if (tourLogs.length >= 2) {
+      <div class="show-more">
+        <button type="button" (click)="onShowMoreClick()">Show more</button>
+      </div>
+    }
   </section>
 
 <section class="route-section card">
