@@ -11,6 +11,7 @@ export class TourDetail {
   @Input() tour!:TourItemInterface | null
   @Output() editTour = new EventEmitter<TourItemInterface>();
   @Output() deleteTour = new EventEmitter<TourItemInterface>();
+  @Output() viewLogs = new EventEmitter<TourItemInterface>();
 
   onEditClick(): void {
     if (this.tour) {
@@ -24,4 +25,10 @@ export class TourDetail {
       this.deleteTour.emit(this.tour);
     }
   }
+  
+  onShowMoreClick(): void {
+  if (this.tour) {
+    this.viewLogs.emit(this.tour);
+  }
+}
 }
