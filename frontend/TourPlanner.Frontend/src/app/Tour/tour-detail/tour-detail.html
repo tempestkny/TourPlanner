@@ -41,45 +41,20 @@
   </section>
 
   <section class="tour-logs card">
-
-  <div class="section-header">
-    <h3>Tour Logs</h3>
-  </div>
-
-  <div class="logs-row">
-
-    <!-- LOG CARD 1 -->
-    <div class="log-card">
-      <div class="log-rating">★★★★★ 5</div>
-
-      <div class="log-date">11. April 2025 12:00</div>
-
-      <div class="log-comment">
-        <p>We had a great time on this tour! The weather was perfect and the scenery was beautiful.</p>
-      </div>
+    <div class="section-header">
+      <h3>Tour Logs</h3>
     </div>
 
-    <!-- LOG CARD 2 -->
-    <div class="log-card">
-      <div class="log-rating">★★★☆☆ 3</div>
-
-      <div class="log-date">4. April 2025 18:45</div>
-
-      <div class="log-comment">
-        <p>It was a nice tour, but the weather was bad and the path was muddy.</p>
-      </div>
+    <div class="logs-row">
+      @for (log of tourLogs.slice(0, 2); track log.id) {
+        <app-tour-log-entry [log]="log"></app-tour-log-entry>
+      }
     </div>
 
-    <!-- ARROW -->
-    <button class="logs-next" type="button">></button>
-
-  </div>
-
-  <!-- SHOW MORE -->
-  <div class="show-more">
-    <button type="button" (click)="onShowMoreClick()">Show more</button>
-  </div>
-</section>
+    <div class="show-more">
+      <button type="button" (click)="onShowMoreClick()">Show more</button>
+    </div>
+  </section>
 
 <section class="route-section card">
   <div class="route-layout">
