@@ -1,9 +1,8 @@
-﻿namespace TourPlanner.Bll;
+﻿using TourPlanner.Models;
+
+namespace TourPlanner.Bll;
 
 public interface IDataCollector
 {
-    public async TourData CollectData()
-    {
-
-    }
+    
 }
