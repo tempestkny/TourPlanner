@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Models", "TourP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Dal", "TourPlanner.Dal\TourPlanner.Dal.csproj", "{F43F8DB3-6125-48FA-BF69-4617E9750406}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Tests", "TourPlanner.Tests\TourPlanner.Tests.csproj", "{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{F43F8DB3-6125-48FA-BF69-4617E9750406}.Release|x64.Build.0 = Release|Any CPU
 		{F43F8DB3-6125-48FA-BF69-4617E9750406}.Release|x86.ActiveCfg = Release|Any CPU
 		{F43F8DB3-6125-48FA-BF69-4617E9750406}.Release|x86.Build.0 = Release|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Debug|x64.Build.0 = Debug|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Debug|x86.Build.0 = Debug|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Release|x64.ActiveCfg = Release|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Release|x64.Build.0 = Release|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Release|x86.ActiveCfg = Release|Any CPU
+		{C4F4E803-EF3C-442B-BE93-7168C4DDA2E3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

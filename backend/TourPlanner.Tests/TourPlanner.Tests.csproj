@@ -20,4 +20,11 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TourPlanner.Api\TourPlanner.Api.csproj" />
+    <ProjectReference Include="..\TourPlanner.Bll\TourPlanner.Bll.csproj" />
+    <ProjectReference Include="..\TourPlanner.Dal\TourPlanner.Dal.csproj" />
+    <ProjectReference Include="..\TourPlanner.Models\TourPlanner.Models.csproj" />
+  </ItemGroup>
+
 </Project>

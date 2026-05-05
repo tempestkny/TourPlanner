@@ -8,10 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
-    <Compile Include="TourPlanner.Bll"/>
-    <Compile Include="TourPlanner.Dal"/>
-    <Compile Include="TourPlanner.Models"/>
-    <Compile Include="TourPlanner.Tests"/>
+    <Compile Include="TourPlanner.Bll" />
+    <Compile Include="TourPlanner.Dal" />
+    <Compile Include="TourPlanner.Models" />
+    <Compile Include="TourPlanner.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TourPlanner.Models\TourPlanner.Models.csproj" />
+    <ProjectReference Include="..\TourPlanner.Bll\TourPlanner.Bll.csproj" />
   </ItemGroup>
 
 </Project>
