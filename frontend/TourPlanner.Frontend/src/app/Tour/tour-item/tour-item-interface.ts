@@ -5,5 +5,5 @@ export interface TourItemInterface {
     tourDescription?: string;
     from: string;
     to: string;
-    transportType?: string;
+    transportType: string;
 }

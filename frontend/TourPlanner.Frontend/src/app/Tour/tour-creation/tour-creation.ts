@@ -18,6 +18,7 @@ export class TourCreation {
     title: '',
     from: '',
     to: '',
+    transportType: ''
   };
 
   isFromValid = false;

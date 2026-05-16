@@ -28,6 +28,7 @@ export class TourEdit implements OnChanges {
     title: '',
     from: '',
     to: '',
+    transportType: ''
   };
 
   isFromValid = true;
