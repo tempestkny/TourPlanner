@@ -22,6 +22,8 @@ export class TourEdit implements OnChanges {
   @Output() saved = new EventEmitter<TourItemInterface>();
   @Output() cancel = new EventEmitter<void>();
 
+  validationMessage = '';
+
   editableTour: TourItemInterface = {
     id: '',
     userId: '',
@@ -69,12 +71,35 @@ export class TourEdit implements OnChanges {
   }
 
   saveTour(): void {
-  if (!this.isFromValid || !this.isToValid) {
-    return;
-  }
+    this.validationMessage = '';
 
-  this.saved.emit(this.editableTour);
-}
+      if (!this.editableTour.title.trim()) {
+        this.validationMessage = 'Please enter a tour title.';
+        return;
+      }
+
+      if (!this.editableTour.from.trim()) {
+        this.validationMessage = 'Please enter a start location.';
+        return;
+      }
+
+      if (!this.editableTour.to.trim()) {
+        this.validationMessage = 'Please enter a destination.';
+        return;
+      }
+
+      if (!this.isFromValid || !this.isToValid) {
+        this.validationMessage = 'Please enter valid locations.';
+        return;
+      }
+
+      if (!this.editableTour.transportType.trim()) {
+        this.validationMessage = 'Please select a transport type.';
+        return;
+      }
+
+    this.saved.emit(this.editableTour);
+  }
 
   checkIfRealPlace(place: string): boolean {
     return true;
