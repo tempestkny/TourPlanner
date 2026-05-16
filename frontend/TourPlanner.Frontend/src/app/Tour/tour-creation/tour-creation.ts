@@ -12,6 +12,8 @@ export class TourCreation {
   @Output() cancel = new EventEmitter<void>();
   @Output() success = new EventEmitter<TourItemInterface>()
 
+  validationMessage = '';
+
   newTour: TourItemInterface = {
     id: '',
     userId: '',
@@ -24,45 +26,70 @@ export class TourCreation {
   isFromValid = false;
   isToValid = false;
 
-  setTransportType(arg0: string) {
-    this.newTour.transportType = arg0;
+  setTransportType(value: string) {
+    this.newTour.transportType = value;
   }
 
   // The boolean is set, so the error message can trigger,
   // but the string is still added to the Tour
-  setTo(arg0: string) {
-    if (this.CheckIfRealPlace(arg0))
+  setTo(value: string) {
+    if (this.CheckIfRealPlace(value))
       this.isToValid = true;
     else
       this.isToValid = false;
-    this.newTour.to = arg0;
+    this.newTour.to = value;
   }
 
-  setFrom(arg0: string) {
-    if (this.CheckIfRealPlace(arg0))
+  setFrom(value: string) {
+    if (this.CheckIfRealPlace(value))
       this.isFromValid = true;
     else
       this.isFromValid = false;
-    this.newTour.from = arg0;
+    this.newTour.from = value;
   }
 
-  setDescription(arg0: string) {
-    this.newTour.tourDescription = arg0;
+  setDescription(value: string) {
+    this.newTour.tourDescription = value;
   }
 
-  setTitle(arg0: string) {
-    this.newTour.title = arg0;
+  setTitle(value: string) {
+    this.newTour.title = value;
   }
 
   constructor(private tourService: TourListService) { }
 
   // The tour can only be created when all neccesary fields were filled out.
   CreateTour() {
-    if (this.isFromValid && this.isToValid) {
-      this.SetTourID();
-      this.tourService.addTour(this.newTour);
-      this.success.emit(this.newTour);
+    this.validationMessage = '';
+
+    if (!this.newTour.title.trim()) {
+      this.validationMessage = 'Please enter a tour title.';
+      return;
     }
+
+    if (!this.newTour.from.trim()) {
+      this.validationMessage = 'Please enter a start location.';
+      return;
+    }
+
+    if (!this.newTour.to.trim()) {
+      this.validationMessage = 'Please enter a destination.';
+      return;
+    }
+
+    if (!this.isFromValid || !this.isToValid) {
+      this.validationMessage = 'Please enter valid locations.';
+      return;
+    }
+
+    if (!this.newTour.transportType.trim()) {
+      this.validationMessage = 'Please select a transport type.';
+      return;
+    }
+
+    this.SetTourID();
+    this.tourService.addTour(this.newTour);
+    this.success.emit(this.newTour);
   }
 
   Cancel(){
