@@ -14,6 +14,8 @@ import { LogListService } from '../tour-log-list/log-list-service';
 export class CreateTourLog {
   @Output() cancel = new EventEmitter<void>();
 
+  validationMessage = '';
+
   newLog: TourLogInterface = {
     id: '',
     timeStamp: new Date(),
@@ -55,31 +57,48 @@ export class CreateTourLog {
   }
 
   CheckNumber(number?: number): boolean {
-    if (number == null || Number.isNaN(number)) return false;
-    return true;
+    return number != null && !Number.isNaN(number) && number > 0;
   }
 
   constructor(private logListService: LogListService){}
 
   createLog() {
-    if (this.CheckNumber(this.newLog.totalDistance) &&
-      this.CheckNumber(this.newLog.totalTime)) {
-      
-        const log: TourLogInterface = {
-          ...this.newLog,
-          id: crypto.randomUUID(),
-        }
+    this.validationMessage = '';
 
-        this.logListService.addLog(log);
+    if (!this.newLog.timeStamp || Number.isNaN(this.newLog.timeStamp.getTime())) {
+      this.validationMessage = 'Please select a valid date and time.';
+      return;
+    }
 
-        console.log("Creating: ", log);
-        
-        this.cancel.emit();
+    if (!this.newLog.difficulty) {
+      this.validationMessage = 'Please select a difficulty.';
+      return;
     }
-    else {
-      console.log("Could not create Tourlog: invalid input");
+
+    if (!this.CheckNumber(this.newLog.totalDistance)) {
+      this.validationMessage = 'Please enter a total distance greater than 0.';
+      return;
     }
-  }
+
+    if (!this.CheckNumber(this.newLog.totalTime)) {
+      this.validationMessage = 'Please enter a total time greater than 0.';
+      return;
+    }
+
+    if (!this.newLog.rating || this.newLog.rating < 1 || this.newLog.rating > 5) {
+      this.validationMessage = 'Please select a rating between 1 and 5.';
+      return;
+    }
+
+    const log: TourLogInterface = {
+      ...this.newLog,
+      id: crypto.randomUUID(),
+    };
+
+    this.logListService.addLog(log);
+    console.log('Creating: ', log);
+    this.cancel.emit();
+}
 
 
   onCancel() {
