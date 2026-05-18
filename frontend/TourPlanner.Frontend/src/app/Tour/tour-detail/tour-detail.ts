@@ -3,6 +3,7 @@ import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourLogInterface } from '../tour-log/tour-log-interface';
 import { LogListService } from '../tour-log/tour-log-list/log-list-service';
 import { TourLogEntry } from '../tour-log/tour-log-list/tour-log-entry/tour-log-entry';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-tour-detail',
@@ -20,11 +21,18 @@ export class TourDetail {
   @Output() viewLog = new EventEmitter<TourLogInterface>();
 
   tourLogs: TourLogInterface[] = [];
+  private map?: L.Map;
 
   constructor(private logListService: LogListService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.tourLogs = this.logListService.logs;
+
+    if (this.tour)  {
+      setTimeout(() => {
+        this.initializeMap();
+      }, 0);
+    }
   }
 
   onEditClick(): void {
@@ -51,8 +59,24 @@ export class TourDetail {
   }
   
   onShowMoreClick(): void {
-  if (this.tour) {
-    this.viewLogs.emit(this.tour);
+    if (this.tour) {
+      this.viewLogs.emit(this.tour);
+    }
   }
-}
+
+  private initializeMap(): void {
+    if (this.map) {
+      this.map.remove();
+    }
+
+    this.map = L.map('map').setView([48.2082, 16.3738], 13);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    L.marker([48.2082, 16.3738])
+      .addTo(this.map)
+      .bindPopup('Route preview');
+  } 
 }
