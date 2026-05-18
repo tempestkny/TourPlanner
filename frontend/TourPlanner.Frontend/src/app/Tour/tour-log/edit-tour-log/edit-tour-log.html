@@ -4,7 +4,7 @@
         <!-- Date + Time -->
         <label class="date">
             Date & Time of Tour:
-            <input type="datetime-local" [value]="log?.timeStamp" (input)="setDateTime($event.target.value)" />
+            <input type="text" [value]="formatDate(newLog.timeStamp)" disabled/>
         </label>
 
         <!-- Comment -->
@@ -40,8 +40,6 @@
                 min
             </p>
         </label>
-        @if (!(CheckNumber(newLog.totalTime)||CheckNumber(newLog.totalDistance)) )
-        {<div class="error">Invalid Input!</div>}
 
         <!--Rating-->
         <label class="rating">
@@ -52,6 +50,10 @@
                 }
             </select>
         </label>
+
+        @if (validationMessage) {
+            <div class="error">{{ validationMessage }} </div>
+        }
     </div>
 
 
