@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourListService } from '../tour-list/tour-list-service';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-tour-creation',
@@ -13,6 +14,7 @@ export class TourCreation {
   @Output() success = new EventEmitter<TourItemInterface>()
 
   validationMessage = '';
+  private map?: L.Map;
 
   newTour: TourItemInterface = {
     id: '',
@@ -57,6 +59,10 @@ export class TourCreation {
   }
 
   constructor(private tourService: TourListService) { }
+
+  ngOnInit(): void {
+    setTimeout(() => this.initMap(), 0);
+  }
 
   // The tour can only be created when all neccesary fields were filled out.
   CreateTour() {
@@ -106,5 +112,21 @@ export class TourCreation {
       return true;
     return false
 
+  }
+
+  private initMap(): void {
+    if (this.map) {
+      this.map.remove();
+    }
+
+    this.map = L.map('map').setView([48.2082, 16.3738], 13);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    L.marker([48.2082, 16.3738])
+      .addTo(this.map)
+      .bindPopup('Tour preview');
   }
 }
