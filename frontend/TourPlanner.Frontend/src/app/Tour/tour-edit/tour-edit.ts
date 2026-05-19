@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourListService } from '../tour-list/tour-list-service';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-tour-edit',
@@ -23,6 +24,7 @@ export class TourEdit implements OnChanges {
   @Output() cancel = new EventEmitter<void>();
 
   validationMessage = '';
+  private map?: L.Map;
 
   editableTour: TourItemInterface = {
     id: '',
@@ -39,6 +41,10 @@ export class TourEdit implements OnChanges {
   constructor(
     private tourListService: TourListService,
   ) {}
+
+  ngOnInit(): void {
+    setTimeout(() => this.initMap(), 0);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tour'] && this.tour) {
@@ -104,4 +110,20 @@ export class TourEdit implements OnChanges {
   checkIfRealPlace(place: string): boolean {
     return true;
   }
+
+  private initMap(): void {
+    if (this.map) {
+      this.map.remove();
+    }
+
+    this.map = L.map('map').setView([48.2082, 16.3738], 13);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    L.marker([48.2082, 16.3738])
+      .addTo(this.map)
+      .bindPopup('Tour route');
+}
 }
