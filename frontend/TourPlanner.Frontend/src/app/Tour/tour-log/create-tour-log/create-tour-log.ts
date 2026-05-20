@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Difficulty, TourLogInterface } from '../tour-log-interface';
 import { LogListService } from '../tour-log-list/log-list-service';
+import { TourItemInterface } from '../../tour-item/tour-item-interface';
 
 @Component({
   selector: 'app-create-tour-log',
@@ -12,12 +13,14 @@ import { LogListService } from '../tour-log-list/log-list-service';
 //a tour-log consists of date/time, comment, difficulty, total distance, total time, and rating taken
 // on the tour
 export class CreateTourLog {
+  @Input() tour!: TourItemInterface
   @Output() cancel = new EventEmitter<void>();
 
   validationMessage = '';
 
   newLog: TourLogInterface = {
     id: '',
+    tourId: '',
     timeStamp: new Date(),
     totalDistance: 0,
     totalTime: 0,
@@ -93,6 +96,7 @@ export class CreateTourLog {
     const log: TourLogInterface = {
       ...this.newLog,
       id: crypto.randomUUID(),
+      tourId: this.tour.id
     };
 
     this.logListService.addLog(log);

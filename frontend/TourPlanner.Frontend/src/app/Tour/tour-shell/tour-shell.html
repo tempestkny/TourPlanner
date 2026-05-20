@@ -47,9 +47,14 @@
         }
 
         @case('logCreate'){
-        <app-create-tour-log 
-            (cancel)="onCancelLog()" 
-            />
+            @if (selectedTour) {
+                <app-create-tour-log 
+                    [tour]="selectedTour"
+                    (cancel)="onCancelLog()" 
+                />
+            } @else {
+                <p>No tour selected.</p>
+            }
         }
 
         @case('logView'){

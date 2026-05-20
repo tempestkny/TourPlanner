@@ -2,6 +2,7 @@
 // on the tour
 export interface TourLogInterface {
     id : string;
+    tourId : string;
     timeStamp : Date; // Date and Time
     comment? : string;
     difficulty? : Difficulty;

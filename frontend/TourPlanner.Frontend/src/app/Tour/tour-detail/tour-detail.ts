@@ -26,7 +26,11 @@ export class TourDetail {
   constructor(private logListService: LogListService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.tourLogs = this.logListService.logs;
+    if (this.tour) {
+      this.tourLogs = this.logListService.logs.filter(
+        log => log.tourId === this.tour?.id
+      );
+    }
 
     if (this.tour)  {
       setTimeout(() => {
