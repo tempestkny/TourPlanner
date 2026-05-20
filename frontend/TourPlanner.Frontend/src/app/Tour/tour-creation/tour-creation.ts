@@ -3,6 +3,15 @@ import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourListService } from '../tour-list/tour-list-service';
 import * as L from 'leaflet';
 
+const defaultIcon = L.icon({
+  iconUrl: 'assets/img/marker-icon.png',
+  shadowUrl: 'assets/img/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 @Component({
   selector: 'app-tour-creation',
   imports: [],

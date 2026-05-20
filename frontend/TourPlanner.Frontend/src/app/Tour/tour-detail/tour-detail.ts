@@ -5,6 +5,17 @@ import { LogListService } from '../tour-log/tour-log-list/log-list-service';
 import { TourLogEntry } from '../tour-log/tour-log-list/tour-log-entry/tour-log-entry';
 import * as L from 'leaflet';
 
+const defaultIcon = L.icon({
+  iconUrl: 'assets/img/marker-icon.png',
+  shadowUrl: 'assets/img/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+L.Marker.prototype.options.icon = defaultIcon;
+
 @Component({
   selector: 'app-tour-detail',
   imports: [TourLogEntry],

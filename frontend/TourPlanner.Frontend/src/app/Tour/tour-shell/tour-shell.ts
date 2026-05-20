@@ -63,6 +63,11 @@ export class TourShell {
 
   onDeleteTour(tour: TourItemInterface) {
     this.tourListService.deleteTour(tour);
+
+    this.logListService.setLogs(
+      this.logListService.logs.filter(log => log.tourId !== tour.id)
+    );
+
     this.selectedTour = null;
     this.originalTour = null;
     this.mode = 'detail';
