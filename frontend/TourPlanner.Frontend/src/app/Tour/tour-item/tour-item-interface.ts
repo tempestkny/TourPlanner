@@ -6,4 +6,7 @@ export interface TourItemInterface {
     from: string;
     to: string;
     transportType: string;
+
+    tourDistance?: string;
+    tourTime?: string;
 }
