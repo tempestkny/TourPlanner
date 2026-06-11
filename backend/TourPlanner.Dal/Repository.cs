@@ -1,6 +1,6 @@
 ﻿namespace TourPlanner.Dal;
 
-public class Class1
+public class Repository<T>
 {
 
 }

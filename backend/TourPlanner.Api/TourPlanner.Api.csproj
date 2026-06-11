@@ -12,6 +12,7 @@
     <Compile Include="TourPlanner.Dal" />
     <Compile Include="TourPlanner.Models" />
     <Compile Include="TourPlanner.Tests" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
   </ItemGroup>
 
   <ItemGroup>
