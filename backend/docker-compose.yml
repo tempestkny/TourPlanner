@@ -1,0 +1,32 @@
+services:
+  tourplannerdb-container:
+    command:
+      - "postgres"
+    container_name: "tourplannerdb-container"
+    entrypoint:
+      - "docker-entrypoint.sh"
+    environment:
+      - "POSTGRES_USER=admin"
+      - "POSTGRES_PASSWORD=SWENSS26"
+      - "POSTGRES_DB=tourplannerdb"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/18/bin"
+      - "GOSU_VERSION=1.19"
+      - "LANG=en_US.utf8"
+      - "PG_MAJOR=18"
+      - "PG_VERSION=18.4-1.pgdg13+1"
+      - "PGDATA=/var/lib/postgresql/18/docker"
+    hostname: "4586363b8b5d"
+    image: "postgres"
+    ipc: "private"
+    logging:
+      driver: "json-file"
+      options: {}
+    network_mode: "bridge"
+    ports:
+      - "5432:5432/tcp"
+    volumes:
+      - "b9313e04e81074a128ff167800d57abc7797aa9535be019a35e1e767ec7f8c95:/var/lib/postgresql"
+version: "3.6"
+volumes:
+  b9313e04e81074a128ff167800d57abc7797aa9535be019a35e1e767ec7f8c95:
+    external: true
