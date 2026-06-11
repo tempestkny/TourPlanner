@@ -5,7 +5,15 @@
     <div class="tour-summary-top">
       <div>
         <h2 class="tour-title">{{ tour.title }}</h2>
-        <div class="tour-rating">★★★★☆ 4,0</div>
+        <div class="tour-rating">
+          {{getStars(getAverageRating())}}
+          @if(getAverageRating()<0){
+            [No Ratings]
+          }
+          @else{
+            {{getAverageRating()}}
+          }
+        </div>
       </div>
 
       <div class="tour-actions">
@@ -22,7 +30,6 @@
 
         <!-- IMAGE -->
         <div class="main-image placeholder"></div>
-
         <!-- DESCRIPTION -->
         <div class="tour-description">
             <p>{{ tour.tourDescription }}</p>

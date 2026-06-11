@@ -36,6 +36,22 @@ export class TourDetail {
 
   constructor(private logListService: LogListService) {}
 
+  getAverageRating() : number{
+    return this.calculateAverageRating(this.tourLogs.map(log => log.rating!));
+  }
+
+  calculateAverageRating(ratings: number[]) : number{
+    if(ratings.length == 0) return -1;
+    const sum = ratings.reduce((acc,cur) => acc + cur,0);
+    return sum / ratings.length
+  }
+
+  getStars(avg: number) : string{
+    const stars = Math.round(avg);
+    if(avg < 0) return '';
+    return '★'.repeat(stars) + '☆'.repeat(5-stars)
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (this.tour) {
       this.tourLogs = this.logListService.logs.filter(
