@@ -1,5 +1,4 @@
 ﻿namespace TourPlanner.Models;
-
 public class Tour
 {
     public required string Id { get; set; }
@@ -8,11 +7,18 @@ public class Tour
     public string? tourDescription { get; set; }
     public required string from { get; set; }
     public required string to { get; set; }
-    public string? transportType { get; set; }
+    public TransportType? transportType { get; set; }
 
     // TourData
 
     public double distance { get; set; }
     public double time { get; set; }
-    public string mapJSON { get; set; } // Whatever is required for the Map
+    public string? mapJSON { get; set; } // Whatever is required for the Map
+}
+
+public enum TransportType
+{
+    Car,
+    Bike,
+    Hike
 }
