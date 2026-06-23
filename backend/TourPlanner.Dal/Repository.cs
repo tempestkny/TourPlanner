@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.Dal;
+﻿using Npgsql;
 
 public class Repository
 {
