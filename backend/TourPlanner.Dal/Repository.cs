@@ -1,13 +1,10 @@
-﻿using Npgsql;
-
-namespace TourPlanner.Dal;
+﻿namespace TourPlanner.Dal;
 
 public class Repository
 {
-    protected NpgsqlConnection? connnectionString;
-    public Repository(string connectionString)
+    protected readonly TourPlannerDbContext _context;
+    public Repository(TourPlannerDbContext context)
     {
-        connnectionString = new NpgsqlConnection(connectionString);
-        connnectionString.Open();
+        _context = context;
     }
 }
