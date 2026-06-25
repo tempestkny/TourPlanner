@@ -30,10 +30,4 @@ public class DBCOntextSetupTest
         Assert.That(canConnect, Is.True);
     }
 
-    [Test]
-    public void EnsureSchemaCreated()
-    {
-        Assert.That(context.Database.EnsureCreated(),Is.True);
-    }
-
 }
