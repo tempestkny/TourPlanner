@@ -6,5 +6,5 @@ public interface IRepository<T>
     T? Read(string id);
     void Create(T obj);
     void Update(string id,T objData);
-    bool Delete(string id);
+    void Delete(T obj);
 }
