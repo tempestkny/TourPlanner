@@ -28,7 +28,6 @@ public class TourRepository : Repository, ITourRepository
         if(objData.TransportType is not null)
             tour.TransportType = objData.TransportType;
 
-        // 
         await _context.SaveChangesAsync();
     }
     public async Task Delete(Tour tour)
