@@ -4,5 +4,6 @@ namespace TourPlanner.Dal;
 
 public interface IUserRepository : IRepository<User>
 {
-    public Task<User?> getUserByName(string username);
+    public Task<User?> GetUserByName(string username);
+    public void UpdatePassword(string id, string newPassword);
 }
