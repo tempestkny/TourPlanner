@@ -25,7 +25,6 @@ public class TourRepository : Repository, ITourRepository
         tour.From = objData.From;
         tour.To = objData.To;
 
-        // 
         await _context.SaveChangesAsync();
     }
     public async Task Delete(Tour tour)
