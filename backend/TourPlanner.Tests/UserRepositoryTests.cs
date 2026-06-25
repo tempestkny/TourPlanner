@@ -24,7 +24,7 @@ public class UserRepositoryTests
     [TearDown]
     public async Task TearDown()
     {
-        //await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"users\" RESTART IDENTITY CASCADE");
+        await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"users\" RESTART IDENTITY CASCADE");
         context?.Dispose();
     }
 
