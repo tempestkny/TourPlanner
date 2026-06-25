@@ -110,5 +110,22 @@ public class UserRepositoryTests
 
         Assert.That(user.HashedPassword, Is.EqualTo("B0w71ng.B477"));
     }
+    [Test]
+    public async Task DeleteUser_ShouldReturnNull()
+    {
+        var user = new User
+        {
+            Email = "maxmustermann@outlook.com",
+            Username = "Max Mustermann",
+            HashedPassword = "MusterPasswort"
+        };
+
+        context.users.Add(user);
+        context.SaveChanges();
+
+        await UserRepository.Delete(user);
+
+        Assert.That(context.users.Find(user.Id),Is.Null);
+    }
 }
 
