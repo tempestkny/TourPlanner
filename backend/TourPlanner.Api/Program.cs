@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TourPlanner.Dal;
+
 // Controller-based Web API
 var builder = WebApplication.CreateBuilder(args);
 
