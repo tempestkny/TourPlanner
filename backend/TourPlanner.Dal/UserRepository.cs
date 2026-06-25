@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TourPlanner.Models;
 
 namespace TourPlanner.Dal;
@@ -14,14 +15,33 @@ public class UserRepository : Repository, IUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task Delete(User obj)
+    public async void Delete(User obj)
     {
         _context.users.Remove(obj);
         await _context.SaveChangesAsync();
     }
 
-    public void Update(string id, User objData)
+    public async Task<User?> GetUserByName(string username) => await _context.users.Where(u => u.Username == username).FirstAsync();
+    public async Task<User?> Read(string id) => await _context.users.FindAsync(id);
+
+    public async void Update(string id, User objData)
     {
-        throw new NotImplementedException();
+        var user = await _context.users.FindAsync(id);
+        if(user is null) return;
+
+        user.Email = objData.Email;
+        user.Username = objData.Username;
+        
+        await _context.SaveChangesAsync();
+    }
+
+    public async void UpdatePassword(string id, string newPassword)
+    {
+        var user = await _context.users.FindAsync(id);
+        if(user is null) return;
+
+        user.HashedPassword = newPassword;
+        
+        await _context.SaveChangesAsync();
     }
 }
