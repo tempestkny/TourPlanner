@@ -21,7 +21,10 @@ public class TourRepository : Repository, IRepository<Tour>
     {
         var tour = await _context.tours.FindAsync(id);
         if(tour is null) return;
+        // ADD UPDATE FUNCTIONALITY HERE
 
+
+        // 
         await _context.SaveChangesAsync();
     }
     public async void Delete(Tour tour)
