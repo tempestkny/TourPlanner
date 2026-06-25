@@ -11,7 +11,7 @@ public class TourRepository : Repository, IRepository<Tour>
     public TourRepository(TourPlannerDbContext tourPlannerDbContext) 
         : base(tourPlannerDbContext){}
 
-    public async void Create(Tour tour)
+    public async Task Create(Tour tour)
     {
     _context.tours.Add(tour);
     await _context.SaveChangesAsync();
@@ -20,7 +20,7 @@ public class TourRepository : Repository, IRepository<Tour>
     public async Task<IEnumerable<Tour>> ReadAll(string? userId) =>
         (IEnumerable<Tour>)_context.tours.Where(t => t.UserId == userId).ToListAsync();
 
-    public async void Update(string id, Tour objData)
+    public async Task Update(string id, Tour objData)
     {
         var tour = await _context.tours.FindAsync(id);
         if(tour is null) return;
@@ -33,7 +33,7 @@ public class TourRepository : Repository, IRepository<Tour>
 
         await _context.SaveChangesAsync();
     }
-    public async void Delete(Tour tour)
+    public async Task Delete(Tour tour)
     {
     _context.tours.Remove(tour);
     await _context.SaveChangesAsync();
