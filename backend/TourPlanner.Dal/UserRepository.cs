@@ -2,29 +2,22 @@ using TourPlanner.Models;
 
 namespace TourPlanner.Dal;
 
-public class UserRepository : Repository, IRepository<User>
+public class UserRepository : Repository, IUserRepository
 {
     public UserRepository(TourPlannerDbContext context) : base(context)
     {
     }
-    public void Create(User obj)
+
+    public async void Create(User user)
     {
-        throw new NotImplementedException();
+        _context.users.Add(user);
+        await _context.SaveChangesAsync();
     }
 
-    public void Delete(User obj)
+    public async Task Delete(User obj)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<User?> Read(string id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<User>> ReadAll(string? query = null)
-    {
-        throw new NotImplementedException();
+        _context.users.Remove(obj);
+        await _context.SaveChangesAsync();
     }
 
     public void Update(string id, User objData)
