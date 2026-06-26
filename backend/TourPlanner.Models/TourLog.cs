@@ -2,9 +2,13 @@
 
 public class TourLog
 {
-    public required string id { get; set; }
-    public DateTime timeStamp { get; set; }
-    public string? comment { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public DateTime TimeStamp { get; set; }
+    public string? Comment { get; set; }
+
+    // Navigation
+    public string? TourId { get; set; }
+    public required Tour Tour {get; set;}
 }
 
 public enum Difficulty

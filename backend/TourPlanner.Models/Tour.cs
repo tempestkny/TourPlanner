@@ -1,13 +1,18 @@
 ﻿namespace TourPlanner.Models;
 public class Tour
 {
-    public required string Id { get; set; }
-    public required string userId { get; set; }
-    public string? title { get; set; }
-    public string? tourDescription { get; set; }
-    public required string from { get; set; }
-    public required string to { get; set; }
-    public TransportType? transportType { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string? Title { get; set; }
+    public string? TourDescription { get; set; }
+    public required string From { get; set; }
+    public required string To { get; set; }
+    public TransportType? TransportType { get; set; }
+
+    // Navigation
+    public string? UserId { get; set; }
+    public User? User {get; set; }
+
+    public ICollection<TourLog> TourLogs {get; set;} = new List<TourLog>();
 
     // TourData
 
