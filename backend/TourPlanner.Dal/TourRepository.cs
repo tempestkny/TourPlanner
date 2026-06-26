@@ -36,8 +36,16 @@ public class TourRepository : Repository, ITourRepository
     await _context.SaveChangesAsync();
     }
 
-    public Task<Tour> ReadFromQuery(string userId, string? query)
+    /// <summary>
+    /// Returns a List of Tours dependend on a Search query
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="query"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task<IEnumerable<Tour>> ReadFromQuery(string userId, string? query)
     {
-        throw new NotImplementedException();
+        return await _context.tours.Where(t => t.UserId == userId).ToListAsync();
+
     }
 }

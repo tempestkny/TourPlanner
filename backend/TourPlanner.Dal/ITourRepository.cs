@@ -4,6 +4,6 @@ namespace TourPlanner.Dal;
 
 public interface ITourRepository : IRepository<Tour>
 {
-    Task<Tour> ReadFromQuery(string userId,string? query);
-    
+    Task<IEnumerable<Tour>> ReadFromQuery(string userId,string? query);
+
 }
