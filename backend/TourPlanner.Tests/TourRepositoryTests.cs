@@ -22,6 +22,7 @@ public class TourRepositoryTest
         context = new TourPlannerDbContext(options);
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
+        await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"tours\" RESTART IDENTITY CASCADE");
 
         TourRepository = new TourRepository(context);
 
@@ -31,10 +32,15 @@ public class TourRepositoryTest
     }
 
     [OneTimeTearDown]
-    public async Task TearDown()
+    public async Task OneTimeTearDown()
     {
-        //await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"tours\" RESTART IDENTITY CASCADE");
         context?.Dispose();
+    }
+
+    [SetUp]
+    public async Task SetUp()
+    {
+        await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"tours\" RESTART IDENTITY CASCADE");
     }
 
     [Test]
@@ -67,10 +73,10 @@ public class TourRepositoryTest
     {
         var tour = new Tour
         {
-            From = "Vienna",
-            To = "Salzburg",
-            Title = "LongTour",
-            TourDescription = "A Very Long Tour",
+            From = "Here",
+            To = "There",
+            Title = "Long",
+            TourDescription = "Very Long",
             TransportType = TransportType.Bike,
             User = user
         };
@@ -129,7 +135,8 @@ public class TourRepositoryTest
 
         var newTour = FindTour(tour.Id);
 
-        Assert.That(newTour.Title, Is.EqualTo("Place"));
+        Assert.That(newTour, Is.Not.Null);
+        Assert.That(newTour!.Title, Is.EqualTo("Place"));
         Assert.That(newTour.TourDescription, Is.EqualTo("NoDescription"));
         Assert.That(newTour.From, Is.EqualTo("Place2"));
         Assert.That(newTour.To, Is.EqualTo("Place1"));
@@ -137,12 +144,110 @@ public class TourRepositoryTest
 
     }
 
-    [TestCase("My")]
-    [TestCase("Tour")]
-    [TestCase("Fire")]
-    public async Task FindListOfToursByQuery_ShouldReturnTours(string value)
+    [TestCase("My", 1, 1)]
+    [TestCase("favorite", 1, 1)]
+    [TestCase("Vienna", 1, 1)]
+    [TestCase("Salzburg", 1,2)]
+    [TestCase("Hike", 1, 1)]
+    [TestCase("10", 1, 2)]
+    [TestCase("5", 1, 2)]
+    [TestCase("Good", 2, 1)]
+    [TestCase("Bike", 2, 1)]
+    [TestCase("Linz", 2, 2)]
+    [TestCase("12", 2, 1)]
+    [TestCase("Your", 3, 1)]
+    [TestCase("Graz", 3, 1)]
+    [TestCase("Car", 3, 1)]
+    [TestCase("Fire", 0, 0)]
+    public async Task ReadFromQuery_ShouldMatchTourFields(string query, int expectedTourIndex,int count)
     {
-        
+        var empty = new Tour(){From = "",To = ""};
+        var tour1 = new Tour
+        {
+            From = "Vienna",
+            To = "Salzburg",
+            Title = "My Tour",
+            TourDescription = "My favorite Tour",
+            TransportType = TransportType.Hike,
+            Distance = 10,
+            Time = 5,
+            User = user
+        };
+
+        var tour2 = new Tour
+        {
+            From = "Salzburg",
+            To = "Linz",
+            Title = "Good Tour",
+            TourDescription = "Bike Tour",
+            TransportType = TransportType.Bike,
+            User = user,
+            Distance = 5,
+            Time = 12
+        };
+
+        var tour3 = new Tour
+        {
+            From = "Linz",
+            To = "Graz",
+            Title = "Your Tour",
+            TourDescription = "No Hiking Tour",
+            TransportType = TransportType.Car,
+            User = user,
+            Distance = 0,
+            Time = 10
+        };
+
+        AddTour(tour1);
+        AddTour(tour2);
+        AddTour(tour3);
+
+        var result = (await TourRepository.ReadFromQuery(user!.Id, query)).ToList();
+
+        Assert.That(result, Has.Count.EqualTo(count));
+        Assert.That(result.FirstOrDefault()!.Id, Is.EqualTo(expectedTourIndex switch
+        {
+            0 => empty.Id,
+            1 => tour1.Id,
+            2 => tour2.Id,
+            _ => tour3.Id
+        }));
+    }
+
+    [Test]
+    public async Task ReadFromQuery_WithEmptyQuery_ShouldReturnAllToursForUser()
+    {
+        var tour1 = new Tour
+        {
+            From = "Vienna",
+            To = "Salzburg",
+            Title = "My Tour",
+            TourDescription = "My favorite Tour",
+            TransportType = TransportType.Hike,
+            Distance = 10,
+            Time = 5,
+            User = user
+        };
+
+        var tour2 = new Tour
+        {
+            From = "Salzburg",
+            To = "Linz",
+            Title = "Good Tour",
+            TourDescription = "Bike Tour",
+            TransportType = TransportType.Bike,
+            User = user,
+            Distance = 5,
+            Time = 12
+        };
+
+        AddTour(tour1);
+        AddTour(tour2);
+
+        var result = (await TourRepository.ReadFromQuery(user!.Id, string.Empty)).ToList();
+
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(result.Select(t => t.Id), Is.EquivalentTo([tour1.Id, tour2.Id]));
     }
 
 
