@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TourPlanner.Bll.Auth;
 using TourPlanner.Dal;
 
 // Controller-based Web API
@@ -11,6 +12,9 @@ builder.Services.AddSwaggerGen();
 // From get the Context with the connection string from the appsettings
 builder.Services.AddDbContext<TourPlannerDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TourPlannerDb")));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
 
 var app = builder.Build();
 
