@@ -7,13 +7,11 @@ public class TourRepository : Repository, ITourRepository
 {
     public TourRepository(TourPlannerDbContext tourPlannerDbContext) 
         : base(tourPlannerDbContext){}
-
     public async Task Create(Tour tour){
     _context.tours.Add(tour);
     await _context.SaveChangesAsync();
     }
     public async Task<Tour?> Read(string id) => await _context.tours.FindAsync(id);
-
     public async Task Update(string id, Tour objData)
     {
         var tour = await _context.tours.FindAsync(id);
@@ -32,7 +30,6 @@ public class TourRepository : Repository, ITourRepository
     _context.tours.Remove(tour);
     await _context.SaveChangesAsync();
     }
-
     /// <summary>
     /// Returns a List of Tours dependend on a Search query
     /// </summary>
