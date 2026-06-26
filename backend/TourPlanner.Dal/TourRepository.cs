@@ -17,11 +17,16 @@ public class TourRepository : Repository, ITourRepository
         var tour = await _context.tours.FindAsync(id);
         if(tour is null) return;
 
-        tour.Title = objData.Title;
-        tour.TourDescription = objData.TourDescription;
-        tour.TransportType = objData.TransportType;
-        tour.From = objData.From;
-        tour.To = objData.To;
+        if(objData.Title is not null)
+            tour.Title = objData.Title;
+        if(objData.TourDescription is not null)
+            tour.TourDescription = objData.TourDescription;
+        if(objData.From is not null)
+            tour.From = objData.From;
+        if(objData.To is not null)
+            tour.To = objData.To;
+        if(objData.TransportType is not null)
+            tour.TransportType = objData.TransportType;
 
         await _context.SaveChangesAsync();
     }
@@ -35,11 +40,30 @@ public class TourRepository : Repository, ITourRepository
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="query"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+    /// <returns>Tours assigned with the UserId, and query matching Title or Description</returns>
     public async Task<IEnumerable<Tour>> ReadFromQuery(string userId, string? query)
     {
-        return await _context.tours.Where(t => t.UserId == userId).ToListAsync();
+        var searchText = query?.Trim() ?? string.Empty;
 
+        var tours = await _context.tours.Where(t => t.UserId == userId).ToListAsync();
+        return tours.Where(t => string.IsNullOrEmpty(searchText) || FullTextSearch(t,searchText));
+    }
+
+    bool FullTextSearch(Tour tour, string text)
+    {
+        return
+        CompareToString(tour.Title,text) ||
+        CompareToString(tour.TourDescription,text) ||
+        CompareToString(tour.From,text) ||
+        CompareToString(tour.To,text) ||
+        CompareToString(tour.TransportType,text) ||
+        CompareToString(tour.Distance,text) ||
+        CompareToString(tour.Time,text);
+    }
+
+    bool CompareToString<T>(T value, string text)
+    {
+        if(value is null) return false;
+        return Convert.ToString(value)!.Contains(text);
     }
 }
