@@ -1,7 +1,4 @@
-using System.Collections;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using Microsoft.VisualBasic;
 using TourPlanner.Models;
 
 namespace TourPlanner.Dal;
