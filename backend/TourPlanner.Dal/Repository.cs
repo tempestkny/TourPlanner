@@ -1,4 +1,4 @@
-﻿using Npgsql;
+﻿using TourPlanner.Dal;
 
 public class Repository
 {
