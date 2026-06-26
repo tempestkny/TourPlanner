@@ -21,7 +21,18 @@ public class UserRepository : Repository, IUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<User?> GetUserByName(string username) => await _context.users.Where(u => u.Username == username).FirstAsync();
+    public async Task<User?> GetUserByName(string username) =>
+        await _context.users.FirstOrDefaultAsync(u => u.Username == username);
+
+    public async Task<User?> GetUserByEmail(string email) =>
+        await _context.users.FirstOrDefaultAsync(u => u.Email == email);
+
+    public async Task<bool> ExistsByName(string username) =>
+        await _context.users.AnyAsync(u => u.Username == username);
+
+    public async Task<bool> ExistsByEmail(string email) =>
+        await _context.users.AnyAsync(u => u.Email == email);
+
     public async Task<User?> Read(string id) => await _context.users.FindAsync(id);
 
     public async Task Update(string id, User objData)
