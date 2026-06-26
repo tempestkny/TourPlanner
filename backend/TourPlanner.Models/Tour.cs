@@ -2,7 +2,7 @@
 
 public class Tour
 {
-    public required string Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     public string? Title { get; set; }
     public string? TourDescription { get; set; }
     public required string From { get; set; }
@@ -10,7 +10,7 @@ public class Tour
     public TransportType? TransportType { get; set; }
 
     // Navigation
-    public required string UserId { get; set; }
+    public string? UserId { get; set; }
     public User? User {get; set; }
 
     public ICollection<TourLog> TourLogs {get; set;} = new List<TourLog>();
