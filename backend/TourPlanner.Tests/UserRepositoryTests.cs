@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using TourPlanner.Dal;
 using TourPlanner.Models;
 
+namespace TourPlanner.Tests;
+
+[TestFixture]
 public class UserRepositoryTests
 {
     string connectionString = "Host=localhost;Port=5432;Username=admin;Password=SWENSS26;Database=tourplannerdb";
