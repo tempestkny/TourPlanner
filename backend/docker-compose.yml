@@ -25,8 +25,7 @@ services:
     ports:
       - "5432:5432/tcp"
     volumes:
-      - "b9313e04e81074a128ff167800d57abc7797aa9535be019a35e1e767ec7f8c95:/var/lib/postgresql"
-version: "3.6"
+      - "tourplannerdb_storagevolume:/var/lib/postgresql"
 volumes:
-  b9313e04e81074a128ff167800d57abc7797aa9535be019a35e1e767ec7f8c95:
-    external: true
+  tourplannerdb_storagevolume:
+
