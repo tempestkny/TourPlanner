@@ -17,9 +17,18 @@ public class TourPlannerDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Custom Config
-
-
+        modelBuilder.Entity<Tour>()
+            .HasOne(t => t.User)
+            .WithMany(u => u.Tours)
+            .HasForeignKey(tl => tl.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        
+        modelBuilder.Entity<TourLog>()
+            .HasOne(tl => tl.Tour)
+            .WithMany(t => t.TourLogs)
+            .HasForeignKey(tl => tl.TourId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
 }

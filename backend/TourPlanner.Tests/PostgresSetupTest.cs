@@ -3,9 +3,9 @@
 using System.Data;
 using Npgsql;
 
-public class Tests
+public class PostgresSetupTest
 {
-    string connectionString = "Host=localhost;Port=5432;Username=admin;Password=SWENSS26;Database=tourplannerdb";
+    string connectionString ="Host=localhost;Port=5432;Username=admin;Password=SWENSS26;Database=tourplannerdb";
     private NpgsqlConnection connection;
 
     [SetUp]
@@ -21,10 +21,8 @@ public class Tests
     }
 
     [Test]
-    public void Test1()
+    public void TestIfServerIsOnlineAndReachable()
     {
-
-        
         try
         {
             connection.Open();
@@ -37,4 +35,5 @@ public class Tests
         Assert.That(connection.State, Is.EqualTo(ConnectionState.Open));
         connection.Close();
     }
+
 }

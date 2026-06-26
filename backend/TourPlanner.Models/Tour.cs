@@ -1,4 +1,5 @@
 ﻿namespace TourPlanner.Models;
+
 public class Tour
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -16,9 +17,9 @@ public class Tour
 
     // TourData
 
-    public double distance { get; set; }
-    public double time { get; set; }
-    public string? mapJSON { get; set; } // Whatever is required for the Map
+    public double Distance { get; set; }
+    public double Time { get; set; }
+    public string? MapJSON { get; set; } // Whatever is required for the Map
 }
 
 public enum TransportType
