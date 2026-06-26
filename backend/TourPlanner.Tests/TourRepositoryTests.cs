@@ -33,7 +33,7 @@ public class TourRepositoryTest
     [OneTimeTearDown]
     public async Task TearDown()
     {
-        await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"tours\" RESTART IDENTITY CASCADE");
+        //await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"tours\" RESTART IDENTITY CASCADE");
         context?.Dispose();
     }
 
@@ -61,7 +61,7 @@ public class TourRepositoryTest
             Assert.That(context.tours.FirstOrDefault(t => t.TransportType == TransportType.Car), Is.Not.Null);
         }
     }
-
+    
     [Test]
     public async Task FindTourInDataBase()
     {
@@ -75,12 +75,11 @@ public class TourRepositoryTest
             User = user
         };
 
-        context.tours.Add(tour);
-        context.SaveChanges();
+        AddTour(tour);
 
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(TourRepository.Read(tour.Id), Is.Not.Null);
+            Assert.That(FindTour(tour.Id), Is.Not.Null);
         }
 
     }
@@ -98,11 +97,62 @@ public class TourRepositoryTest
             User = user
         };
 
-        context.tours.Add(tour);
-        context.SaveChanges();
+        AddTour(tour);
 
         await TourRepository.Delete(tour);
 
-        Assert.That(context.tours.Find(tour.Id), Is.Null);
+        Assert.That(FindTour(tour.Id), Is.Null);
     }
+
+    [Test]
+    public async Task UpdateTour_ShouldReturnUpdatedTour()
+    {
+        var tour = new Tour
+        {
+            From = "NotAPlace",
+            To = "NotAPlace",
+            Title = "NoTitle",
+            TourDescription = "NoDescription",
+            TransportType = TransportType.Hike,
+            User = user
+        };
+
+        AddTour(tour);
+
+        await TourRepository.Update(tour.Id, new Tour
+        {
+            Title = "Place",
+            To = "Place1",
+            From = "Place2",
+            TransportType = TransportType.Car
+        });
+
+        var newTour = FindTour(tour.Id);
+
+        Assert.That(newTour.Title, Is.EqualTo("Place"));
+        Assert.That(newTour.TourDescription, Is.EqualTo("NoDescription"));
+        Assert.That(newTour.From, Is.EqualTo("Place2"));
+        Assert.That(newTour.To, Is.EqualTo("Place1"));
+        Assert.That(newTour.TransportType, Is.EqualTo(TransportType.Car));
+
+    }
+
+    [TestCase("My")]
+    [TestCase("Tour")]
+    [TestCase("Fire")]
+    public async Task FindListOfToursByQuery_ShouldReturnTours(string value)
+    {
+        
+    }
+
+
+    /// HelperFunctions
+    
+    void AddTour(Tour tour)
+    {
+        context.tours.Add(tour);
+        context.SaveChanges();
+    }
+    Tour? FindTour(string id) => context.tours.Find(id);
+
 }
