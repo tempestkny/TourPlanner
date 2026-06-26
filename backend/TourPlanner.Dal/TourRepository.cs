@@ -6,19 +6,16 @@ using TourPlanner.Models;
 
 namespace TourPlanner.Dal;
 
-public class TourRepository : Repository, IRepository<Tour>
+public class TourRepository : Repository, ITourRepository
 {
     public TourRepository(TourPlannerDbContext tourPlannerDbContext) 
         : base(tourPlannerDbContext){}
 
-    public async Task Create(Tour tour)
-    {
+    public async Task Create(Tour tour){
     _context.tours.Add(tour);
     await _context.SaveChangesAsync();
     }
     public async Task<Tour?> Read(string id) => await _context.tours.FindAsync(id);
-    public async Task<IEnumerable<Tour>> ReadAll(string? userId) =>
-        (IEnumerable<Tour>)_context.tours.Where(t => t.UserId == userId).ToListAsync();
 
     public async Task Update(string id, Tour objData)
     {
@@ -37,6 +34,10 @@ public class TourRepository : Repository, IRepository<Tour>
     {
     _context.tours.Remove(tour);
     await _context.SaveChangesAsync();
-    } 
+    }
 
+    public Task<Tour> ReadFromQuery(string userId, string? query)
+    {
+        throw new NotImplementedException();
+    }
 }

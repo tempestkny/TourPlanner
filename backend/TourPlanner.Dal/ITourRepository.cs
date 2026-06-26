@@ -4,5 +4,6 @@ namespace TourPlanner.Dal;
 
 public interface ITourRepository : IRepository<Tour>
 {
-    // Add Tour Specific Functions
+    Task<Tour> ReadFromQuery(string userId,string? query);
+    
 }
