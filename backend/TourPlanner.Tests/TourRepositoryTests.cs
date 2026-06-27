@@ -10,7 +10,6 @@ public class TourRepositoryTest
     string connectionString = "Host=localhost;Port=5432;Username=admin;Password=SWENSS26;Database=tourplannerdb";
     ITourRepository TourRepository;
     TourPlannerDbContext context;
-
     User? user;
 
     [OneTimeSetUp]
@@ -51,9 +50,9 @@ public class TourRepositoryTest
             From = "Here",
             To = "There",
             Title = "MyTour",
-            TourDescription = "MyTourDescription",
+            Description = "MyTourDescription",
             TransportType = TransportType.Car,
-            User = user
+            UserId = user.Id
         };
 
         await TourRepository.Create(tour);
@@ -63,7 +62,7 @@ public class TourRepositoryTest
             Assert.That(context.tours.FirstOrDefault(t => t.From == "Here"), Is.Not.Null);
             Assert.That(context.tours.FirstOrDefault(t => t.To == "There"), Is.Not.Null);
             Assert.That(context.tours.FirstOrDefault(t => t.Title == "MyTour"), Is.Not.Null);
-            Assert.That(context.tours.FirstOrDefault(t => t.TourDescription == "MyTourDescription"), Is.Not.Null);
+            Assert.That(context.tours.FirstOrDefault(t => t.Description == "MyTourDescription"), Is.Not.Null);
             Assert.That(context.tours.FirstOrDefault(t => t.TransportType == TransportType.Car), Is.Not.Null);
         }
     }
@@ -76,9 +75,9 @@ public class TourRepositoryTest
             From = "Here",
             To = "There",
             Title = "Long",
-            TourDescription = "Very Long",
+            Description = "Very Long",
             TransportType = TransportType.Bike,
-            User = user
+            UserId = user.Id
         };
 
         AddTour(tour);
@@ -98,9 +97,9 @@ public class TourRepositoryTest
             From = "NotAPlace",
             To = "NotAPlace",
             Title = "NoTitle",
-            TourDescription = "NoDescription",
+            Description = "NoDescription",
             TransportType = TransportType.Hike,
-            User = user
+            UserId = user.Id
         };
 
         AddTour(tour);
@@ -118,9 +117,9 @@ public class TourRepositoryTest
             From = "NotAPlace",
             To = "NotAPlace",
             Title = "NoTitle",
-            TourDescription = "NoDescription",
+            Description = "NoDescription",
             TransportType = TransportType.Hike,
-            User = user
+            UserId = user.Id
         };
 
         AddTour(tour);
@@ -137,7 +136,7 @@ public class TourRepositoryTest
 
         Assert.That(newTour, Is.Not.Null);
         Assert.That(newTour!.Title, Is.EqualTo("Place"));
-        Assert.That(newTour.TourDescription, Is.EqualTo("NoDescription"));
+        Assert.That(newTour.Description, Is.EqualTo("NoDescription"));
         Assert.That(newTour.From, Is.EqualTo("Place2"));
         Assert.That(newTour.To, Is.EqualTo("Place1"));
         Assert.That(newTour.TransportType, Is.EqualTo(TransportType.Car));
@@ -167,11 +166,11 @@ public class TourRepositoryTest
             From = "Vienna",
             To = "Salzburg",
             Title = "My Tour",
-            TourDescription = "My favorite Tour",
+            Description = "My favorite Tour",
             TransportType = TransportType.Hike,
             Distance = 10,
             Time = 5,
-            User = user
+            UserId = user.Id
         };
 
         var tour2 = new Tour
@@ -179,9 +178,9 @@ public class TourRepositoryTest
             From = "Salzburg",
             To = "Linz",
             Title = "Good Tour",
-            TourDescription = "Bike Tour",
+            Description = "Bike Tour",
             TransportType = TransportType.Bike,
-            User = user,
+            UserId = user.Id,
             Distance = 5,
             Time = 12
         };
@@ -191,9 +190,9 @@ public class TourRepositoryTest
             From = "Linz",
             To = "Graz",
             Title = "Your Tour",
-            TourDescription = "No Hiking Tour",
+            Description = "No Hiking Tour",
             TransportType = TransportType.Car,
-            User = user,
+            UserId = user.Id,
             Distance = 0,
             Time = 10
         };
@@ -205,7 +204,7 @@ public class TourRepositoryTest
         var result = (await TourRepository.ReadFromQuery(user!.Id, query)).ToList();
 
         Assert.That(result, Has.Count.EqualTo(count));
-        Assert.That(result.FirstOrDefault()!.Id, Is.EqualTo(expectedTourIndex switch
+        Assert.That(result.FirstOrDefault(empty)!.Id, Is.EqualTo(expectedTourIndex switch
         {
             0 => empty.Id,
             1 => tour1.Id,
@@ -222,11 +221,11 @@ public class TourRepositoryTest
             From = "Vienna",
             To = "Salzburg",
             Title = "My Tour",
-            TourDescription = "My favorite Tour",
+            Description = "My favorite Tour",
             TransportType = TransportType.Hike,
             Distance = 10,
             Time = 5,
-            User = user
+            UserId = user!.Id
         };
 
         var tour2 = new Tour
@@ -234,9 +233,9 @@ public class TourRepositoryTest
             From = "Salzburg",
             To = "Linz",
             Title = "Good Tour",
-            TourDescription = "Bike Tour",
+            Description = "Bike Tour",
             TransportType = TransportType.Bike,
-            User = user,
+            UserId = user.Id,
             Distance = 5,
             Time = 12
         };

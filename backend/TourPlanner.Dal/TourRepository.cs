@@ -19,8 +19,8 @@ public class TourRepository : Repository, ITourRepository
 
         if(objData.Title is not null)
             tour.Title = objData.Title;
-        if(objData.TourDescription is not null)
-            tour.TourDescription = objData.TourDescription;
+        if(objData.Description is not null)
+            tour.Description = objData.Description;
         if(objData.From is not null)
             tour.From = objData.From;
         if(objData.To is not null)
@@ -53,7 +53,7 @@ public class TourRepository : Repository, ITourRepository
     {
         return
         CompareToString(tour.Title,text) ||
-        CompareToString(tour.TourDescription,text) ||
+        CompareToString(tour.Description,text) ||
         CompareToString(tour.From,text) ||
         CompareToString(tour.To,text) ||
         CompareToString(tour.TransportType,text) ||
