@@ -4,7 +4,7 @@ public class Tour
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string? Title { get; set; }
-    public string? TourDescription { get; set; }
+    public string? Description { get; set; }
     public required string From { get; set; }
     public required string To { get; set; }
     public TransportType? TransportType { get; set; }
@@ -19,7 +19,6 @@ public class Tour
 
     public double Distance { get; set; }
     public double Time { get; set; }
-    public string? MapJSON { get; set; } // Whatever is required for the Map
 }
 
 public enum TransportType
