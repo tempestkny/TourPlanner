@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TourPlanner.Bll;
 using TourPlanner.Bll.Auth;
 using TourPlanner.Dal;
 
@@ -23,6 +24,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TourPlannerDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TourPlannerDb")));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITourRepository, TourRepository>();
+builder.Services.AddScoped<ITourService, TourService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
 
