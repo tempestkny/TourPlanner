@@ -17,6 +17,22 @@ public class TourPlannerDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(u => u.Id);
+            entity.Property(u => u.Email)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(u => u.Username)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(u => u.HashedPassword)
+                .IsRequired()
+                .HasMaxLength(512);
+            entity.HasIndex(u => u.Email).IsUnique();
+            entity.HasIndex(u => u.Username).IsUnique();
+        });
+
         modelBuilder.Entity<Tour>()
             .HasOne(t => t.User)
             .WithMany(u => u.Tours)
