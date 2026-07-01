@@ -20,9 +20,10 @@ Each layer only calls the layer directly below it.
 6. The controller delegates login logic to `IAuthService`.
 7. `AuthService` looks up the user by normalized email or username.
 8. `AuthService` verifies the password through `IPasswordHasher`.
-9. On success, the backend returns a `LoginResponseDto` without password or password hash.
-10. The frontend stores the authenticated user in `AuthService` state.
-11. The frontend redirects the user to the tours view.
+9. On success, `AuthService` generates a JWT through `ITokenService`.
+10. The backend returns a `LoginResponseDto` with safe user data and a JWT token.
+11. The frontend stores the authenticated user in `AuthService` state and stores the token in `localStorage`.
+12. The frontend redirects the user to the tours view.
 
 ## Layer Responsibilities
 
@@ -30,7 +31,7 @@ Each layer only calls the layer directly below it.
 
 The Angular login component is responsible for form state, loading state and user feedback. It does not verify passwords and does not access persistence directly.
 
-The Angular `AuthService` is responsible for API communication and authenticated user state. The current implementation stores the authenticated user in memory only.
+The Angular `AuthService` is responsible for API communication and authenticated user state. It stores the authenticated user in memory and stores the JWT token in `localStorage`.
 
 ### API Layer
 
@@ -52,9 +53,12 @@ The controller remains thin. It accepts `LoginUserDto`, calls `IAuthService.Logi
 - reject unknown users
 - reject missing password hashes
 - verify password hash
-- return safe login response DTO
+- generate a JWT token
+- return safe login response DTO with token
 
 Invalid login attempts throw `InvalidCredentialsException`, which hides whether the username/email or password was wrong.
+
+`TokenService` creates the JWT. The token contains only safe claims and is signed with the configured secret.
 
 ### Data Access Layer
 
@@ -82,22 +86,37 @@ Password
 Id
 Email
 Username
+Token
 ```
 
 `HashedPassword` is never sent to the frontend.
 
 ## Auth State
 
-After a successful login, the Angular `AuthService` stores the authenticated user in an in-memory `BehaviorSubject`.
+After a successful login, the Angular `AuthService` stores the authenticated user in an in-memory `BehaviorSubject` and stores the JWT in `localStorage`.
 
 The service exposes:
 
 - `currentUser$`
 - `currentUser`
 - `isAuthenticated`
+- `accessToken`
 - `logout()`
 
-No password, password hash or token is stored in browser storage.
+No password or password hash is stored in browser storage. `logout()` clears the token and the current user state.
+
+## JWT Configuration
+
+JWT settings are configured under the `Jwt` section in `appsettings.json` and `appsettings.Development.json`:
+
+```text
+Issuer
+Audience
+Secret
+ExpirationMinutes
+```
+
+`Program.cs` configures JWT Bearer authentication with issuer, audience, lifetime and signing-key validation.
 
 ## Validation And Error Handling
 
@@ -110,12 +129,15 @@ Backend DTO validation uses data annotations:
 
 Invalid credentials return `401 Unauthorized`. The response does not reveal whether the identifier or password was incorrect.
 
+Failed login attempts do not return a token.
+
 ## Design Patterns Used
 
 - DTO Pattern: separates API contracts from EF entities.
 - Service Layer Pattern: keeps login business logic in `AuthService`.
 - Repository Pattern: isolates EF Core user lookup in `UserRepository`.
 - Dependency Injection: injects repository, auth service and password hasher.
+- Options Pattern: loads JWT settings through `JwtOptions`.
 
 ## Tests
 
@@ -130,3 +152,6 @@ The tests verify:
 - wrong password rejection
 - missing password hash rejection
 - safe response DTO without password/hash
+- successful login returns token
+- token service creates JWT with issuer, audience, username claim and expiration
+- token does not contain password/hash claims
