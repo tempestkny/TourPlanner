@@ -61,6 +61,13 @@ builder.Services.AddHttpClient<IOpenRouteService,OpenRouteService>(client =>
 
 builder.Services.Configure<OpenRouteServiceOptions>(builder.Configuration.GetSection("OpenRouteService"));
 
+builder.Services.AddHttpClient<IOpenRouteService,OpenRouteService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.openrouteservice.org/");
+});
+
+builder.Services.Configure<OpenRouteServiceOptions>(builder.Configuration.GetSection("OpenRouteService"));
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
