@@ -20,10 +20,15 @@ export interface UserResponse {
   username: string;
 }
 
+export interface LoginResponse extends UserResponse {
+  token: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private readonly tokenStorageKey = 'tourplanner.auth.token';
   private readonly authUrl = `${API_BASE_URL}/auth`;
   private readonly currentUserSubject = new BehaviorSubject<UserResponse | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
@@ -35,20 +40,32 @@ export class AuthService {
   }
 
   get isAuthenticated(): boolean {
-    return this.currentUserSubject.value !== null;
+    return this.accessToken !== null;
+  }
+
+  get accessToken(): string | null {
+    return localStorage.getItem(this.tokenStorageKey);
   }
 
   register(request: RegisterUserRequest): Observable<UserResponse> {
     return this.http.post<UserResponse>(`${this.authUrl}/register`, request);
   }
 
-  login(request: LoginUserRequest): Observable<UserResponse> {
-    return this.http.post<UserResponse>(`${this.authUrl}/login`, request).pipe(
-      tap((user) => this.currentUserSubject.next(user))
+  login(request: LoginUserRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.authUrl}/login`, request).pipe(
+      tap((response) => {
+        localStorage.setItem(this.tokenStorageKey, response.token);
+        this.currentUserSubject.next({
+          id: response.id,
+          email: response.email,
+          username: response.username,
+        });
+      })
     );
   }
 
   logout(): void {
+    localStorage.removeItem(this.tokenStorageKey);
     this.currentUserSubject.next(null);
   }
 }
