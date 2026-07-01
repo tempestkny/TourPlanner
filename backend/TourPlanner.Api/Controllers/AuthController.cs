@@ -36,4 +36,26 @@ public class AuthController : ControllerBase
             });
         }
     }
+
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<LoginResponseDto>> Login(LoginUserDto loginUserDto)
+    {
+        try
+        {
+            var loggedInUser = await authService.Login(loginUserDto);
+            return Ok(loggedInUser);
+        }
+        catch (InvalidCredentialsException exception)
+        {
+            return Unauthorized(new ProblemDetails
+            {
+                Title = "Invalid credentials",
+                Detail = exception.Message,
+                Status = StatusCodes.Status401Unauthorized
+            });
+        }
+    }
 }
