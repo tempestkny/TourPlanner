@@ -25,7 +25,7 @@ public class TourServiceTests
         _tourRepository = new TourRepository(_context);
         TourService = new TourService(_tourRepository);
 
-        user = new User { Email = "newuser@user.us", Username = "New User", HashedPassword = "NewPassword" };
+        user = new User { Email = "neweruser@user.us", Username = "Newest User", HashedPassword = "NewPassword" };
         _context.users.Add(user);
         await _context.SaveChangesAsync();
     }
