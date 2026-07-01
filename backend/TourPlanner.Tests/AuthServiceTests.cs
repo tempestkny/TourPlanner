@@ -94,6 +94,83 @@ public class AuthServiceTests
         Assert.That(exception!.Field, Is.EqualTo("username"));
     }
 
+    [Test]
+    public async Task Login_WithEmailAndValidPassword_ShouldReturnUser()
+    {
+        var user = CreateStoredUser();
+        userRepository.CreatedUsers.Add(user);
+
+        var result = await authService.Login(CreateLoginDto(identifier: "user@example.com"));
+
+        Assert.That(result.Id, Is.EqualTo(user.Id));
+        Assert.That(result.Email, Is.EqualTo(user.Email));
+        Assert.That(result.Username, Is.EqualTo(user.Username));
+    }
+
+    [Test]
+    public async Task Login_WithUsernameAndValidPassword_ShouldReturnUser()
+    {
+        var user = CreateStoredUser();
+        userRepository.CreatedUsers.Add(user);
+
+        var result = await authService.Login(CreateLoginDto(identifier: "TourUser"));
+
+        Assert.That(result.Id, Is.EqualTo(user.Id));
+        Assert.That(result.Username, Is.EqualTo("TourUser"));
+    }
+
+    [Test]
+    public async Task Login_ShouldNormalizeEmailIdentifier()
+    {
+        var user = CreateStoredUser();
+        userRepository.CreatedUsers.Add(user);
+
+        var result = await authService.Login(CreateLoginDto(identifier: "  USER@Example.COM  "));
+
+        Assert.That(result.Id, Is.EqualTo(user.Id));
+    }
+
+    [Test]
+    public void Login_WithUnknownIdentifier_ShouldThrowInvalidCredentialsException()
+    {
+        Assert.ThrowsAsync<InvalidCredentialsException>(
+            () => authService.Login(CreateLoginDto(identifier: "unknown@example.com")));
+    }
+
+    [Test]
+    public void Login_WithWrongPassword_ShouldThrowInvalidCredentialsException()
+    {
+        userRepository.CreatedUsers.Add(CreateStoredUser());
+
+        Assert.ThrowsAsync<InvalidCredentialsException>(
+            () => authService.Login(CreateLoginDto(password: "WrongPassword123")));
+    }
+
+    [Test]
+    public void Login_WithMissingPasswordHash_ShouldThrowInvalidCredentialsException()
+    {
+        userRepository.CreatedUsers.Add(new User
+        {
+            Email = "user@example.com",
+            Username = "TourUser",
+            HashedPassword = string.Empty
+        });
+
+        Assert.ThrowsAsync<InvalidCredentialsException>(
+            () => authService.Login(CreateLoginDto()));
+    }
+
+    [Test]
+    public async Task Login_ShouldReturnSafeUserResponse()
+    {
+        userRepository.CreatedUsers.Add(CreateStoredUser());
+
+        var result = await authService.Login(CreateLoginDto());
+
+        Assert.That(result.GetType().GetProperty("Password"), Is.Null);
+        Assert.That(result.GetType().GetProperty("HashedPassword"), Is.Null);
+    }
+
     private static RegisterUserDto CreateRegisterDto(
         string email = "user@example.com",
         string username = "TourUser",
@@ -104,6 +181,30 @@ public class AuthServiceTests
             Email = email,
             Username = username,
             Password = password
+        };
+    }
+
+    private LoginUserDto CreateLoginDto(
+        string identifier = "user@example.com",
+        string password = "SuperSecret123")
+    {
+        return new LoginUserDto
+        {
+            Identifier = identifier,
+            Password = password
+        };
+    }
+
+    private User CreateStoredUser(
+        string email = "user@example.com",
+        string username = "TourUser",
+        string password = "SuperSecret123")
+    {
+        return new User
+        {
+            Email = email,
+            Username = username,
+            HashedPassword = passwordHasher.HashPassword(password)
         };
     }
 
