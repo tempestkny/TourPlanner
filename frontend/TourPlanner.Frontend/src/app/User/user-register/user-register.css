@@ -48,6 +48,18 @@
   background: var(--muted);
 }
 
+.error {
+  min-height: 1rem;
+  color: #d13438;
+  font-size: 0.85rem;
+}
+
+.success {
+  min-height: 1rem;
+  color: #107c10;
+  font-size: 0.85rem;
+}
+
 
 .login-link {
   text-align: center;

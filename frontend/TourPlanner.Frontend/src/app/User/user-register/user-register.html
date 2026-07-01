@@ -11,9 +11,23 @@
                 Passwords do not match
             }
         </div>
+        <div class="error">
+            @if (errorMessage) {
+                {{ errorMessage }}
+            }
+        </div>
+        <div class="success">
+            @if (successMessage) {
+                {{ successMessage }}
+            }
+        </div>
 
-        <button (click)="register()" [disabled]="!canRegister" routerLink="/login">
-            Register
+        <button (click)="register()" [disabled]="!canRegister">
+            @if (isLoading) {
+                Registering...
+            } @else {
+                Register
+            }
         </button>
 
         <div class="login-link">
