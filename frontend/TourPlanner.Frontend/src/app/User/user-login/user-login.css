@@ -43,6 +43,17 @@
   background: var(--muted);
 }
 
+.login-panel button:disabled {
+  background: var(--muted);
+  cursor: not-allowed;
+}
+
+.error {
+  min-height: 1rem;
+  color: #d13438;
+  font-size: 0.85rem;
+}
+
 .register-link{
   text-align: center;
   margin-top: o.5rem;
