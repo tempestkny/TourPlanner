@@ -7,6 +7,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add Services
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularDevelopment", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddSwaggerGen();
 // From get the Context with the connection string from the appsettings
@@ -32,6 +42,8 @@ if (app.Environment.IsDevelopment())
 
 
 // Add endpoints
+
+app.UseCors("AngularDevelopment");
 
 app.MapControllers();
 
