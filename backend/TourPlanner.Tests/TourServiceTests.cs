@@ -8,11 +8,11 @@ namespace TourPlanner.Tests;
 [TestFixture]
 public class TourServiceTests
 {
-    string connectionString = "Host=localhost;Port=5432;Username=admin;Password=SWENSS26;Database=tourplannerdb";
-    ITourService TourService;
-    ITourRepository _tourRepository;
-    TourPlannerDbContext _context;
-    User? user;
+    private string connectionString = "Host=localhost;Port=5432;Username=admin;Password=SWENSS26;Database=tourplannerdb";
+    private ITourService TourService;
+    private ITourRepository _tourRepository;
+    private TourPlannerDbContext _context;
+    private User? user;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
