@@ -56,4 +56,34 @@ public class AuthService : IAuthService
             Username = user.Username
         };
     }
+
+    public async Task<LoginResponseDto> Login(LoginUserDto loginUserDto)
+    {
+        var identifier = loginUserDto.Identifier.Trim();
+        var normalizedEmail = identifier.ToLowerInvariant();
+
+        var user = await userRepository.GetUserByEmail(normalizedEmail)
+            ?? await userRepository.GetUserByName(identifier);
+
+        if (user is null || string.IsNullOrWhiteSpace(user.HashedPassword))
+        {
+            logger.LogInformation("Login rejected for unknown identifier");
+            throw new InvalidCredentialsException();
+        }
+
+        if (!passwordHasher.VerifyPassword(loginUserDto.Password, user.HashedPassword))
+        {
+            logger.LogInformation("Login rejected for user {UserId}", user.Id);
+            throw new InvalidCredentialsException();
+        }
+
+        logger.LogInformation("User {UserId} logged in", user.Id);
+
+        return new LoginResponseDto
+        {
+            Id = user.Id,
+            Email = user.Email ?? string.Empty,
+            Username = user.Username ?? string.Empty
+        };
+    }
 }
