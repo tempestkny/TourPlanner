@@ -9,15 +9,18 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository userRepository;
     private readonly IPasswordHasher passwordHasher;
+    private readonly ITokenService tokenService;
     private readonly ILogger<AuthService> logger;
 
     public AuthService(
         IUserRepository userRepository,
         IPasswordHasher passwordHasher,
+        ITokenService tokenService,
         ILogger<AuthService> logger)
     {
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
+        this.tokenService = tokenService;
         this.logger = logger;
     }
 
@@ -83,7 +86,8 @@ public class AuthService : IAuthService
         {
             Id = user.Id,
             Email = user.Email ?? string.Empty,
-            Username = user.Username ?? string.Empty
+            Username = user.Username ?? string.Empty,
+            Token = tokenService.GenerateToken(user)
         };
     }
 }

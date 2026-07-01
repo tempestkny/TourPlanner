@@ -11,6 +11,7 @@ public class AuthServiceTests
 {
     private FakeUserRepository userRepository;
     private Pbkdf2PasswordHasher passwordHasher;
+    private FakeTokenService tokenService;
     private AuthService authService;
 
     [SetUp]
@@ -18,9 +19,11 @@ public class AuthServiceTests
     {
         userRepository = new FakeUserRepository();
         passwordHasher = new Pbkdf2PasswordHasher();
+        tokenService = new FakeTokenService();
         authService = new AuthService(
             userRepository,
             passwordHasher,
+            tokenService,
             NullLogger<AuthService>.Instance);
     }
 
@@ -105,6 +108,7 @@ public class AuthServiceTests
         Assert.That(result.Id, Is.EqualTo(user.Id));
         Assert.That(result.Email, Is.EqualTo(user.Email));
         Assert.That(result.Username, Is.EqualTo(user.Username));
+        Assert.That(result.Token, Is.EqualTo(FakeTokenService.Token));
     }
 
     [Test]
@@ -117,6 +121,7 @@ public class AuthServiceTests
 
         Assert.That(result.Id, Is.EqualTo(user.Id));
         Assert.That(result.Username, Is.EqualTo("TourUser"));
+        Assert.That(result.Token, Is.EqualTo(FakeTokenService.Token));
     }
 
     [Test]
@@ -169,6 +174,18 @@ public class AuthServiceTests
 
         Assert.That(result.GetType().GetProperty("Password"), Is.Null);
         Assert.That(result.GetType().GetProperty("HashedPassword"), Is.Null);
+    }
+
+    [Test]
+    public async Task Login_ShouldGenerateTokenForAuthenticatedUser()
+    {
+        var user = CreateStoredUser();
+        userRepository.CreatedUsers.Add(user);
+
+        var result = await authService.Login(CreateLoginDto());
+
+        Assert.That(result.Token, Is.Not.Empty);
+        Assert.That(tokenService.GeneratedForUsers.Single(), Is.EqualTo(user.Id));
     }
 
     private static RegisterUserDto CreateRegisterDto(
@@ -267,6 +284,19 @@ public class AuthServiceTests
             }
 
             return Task.CompletedTask;
+        }
+    }
+
+    private sealed class FakeTokenService : ITokenService
+    {
+        public const string Token = "test.jwt.token";
+
+        public List<string> GeneratedForUsers { get; } = [];
+
+        public string GenerateToken(User user)
+        {
+            GeneratedForUsers.Add(user.Id);
+            return Token;
         }
     }
 }
