@@ -5,9 +5,11 @@ namespace TourPlanner.Bll;
 public class TourService : ITourService
 {
     readonly ITourRepository _tourRepository;
-    public TourService(ITourRepository tourRepository)
+    readonly IOpenRouteService _openRouteService;
+    public TourService(ITourRepository tourRepository,IOpenRouteService openRouteService)
     {
         _tourRepository = tourRepository;
+        _openRouteService = openRouteService;
     }
 
     public TourDto? convertToDto(Tour tour)
@@ -47,7 +49,7 @@ public class TourService : ITourService
           TransportType = tourDto.transportType!,
           UserId = userId,
         };
-        (tour.Time, tour.Distance) = ORService.GetTimeAndDistance(tourDto.from,tourDto.to, (TransportType)tourDto.transportType!);
+        (tour.Time, tour.Distance) = await _openRouteService.GetTimeAndDistance(tourDto.from,tourDto.to, (TransportType)tourDto.transportType);
 
         await _tourRepository.Create(tour);
         return tour.Id;
