@@ -3,10 +3,8 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../user/user';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../auth/auth.service';
-import { User } from '../user/user';
+
+
 
 @Component({
   selector: 'app-user-register',
@@ -18,9 +16,7 @@ export class UserRegister {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
-  isLoading = false;
-  errorMessage = '';
-  successMessage = '';
+
 
   newUser: User = {
     id: '',
@@ -40,15 +36,11 @@ export class UserRegister {
   setEmail(value: string) {
     this.newUser.email = value;
   }
-
-  setUsername(value: string) {
-    this.newUser.username = value;
   setUsername(value: string) {
     this.newUser.username = value;
   }
 
-  checkPassword(value: string) {
-    this.checkpassword = value;
+
   checkPassword(value: string) {
     this.checkpassword = value;
   }
