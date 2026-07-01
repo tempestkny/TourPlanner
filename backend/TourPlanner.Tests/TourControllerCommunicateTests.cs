@@ -2,7 +2,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using TourPlanner.Api.Controllers;
 using TourPlanner.Bll;
 using TourPlanner.Dal;
@@ -10,9 +9,44 @@ using TourPlanner.Models;
 
 namespace TourPlanner.Tests;
 
+public class ApiFactory : WebApplicationFactory<Program>
+{
+}
 
 [TestFixture]
-public class TourControllerTests 
+public class TourControllerAuthTest
+{
+    private ApiFactory _factory;
+    private HttpClient _client;
+
+    [SetUp]
+    public async Task SetUp()
+    {
+        _factory = new ApiFactory();
+        _client = _factory.CreateClient();
+    }
+
+    [TearDown]
+    public async Task TearDown()
+    {
+        _factory.Dispose();
+        _client.Dispose();
+    }
+
+    [Test]
+    public async Task TestAllUnAuthorized_ShouldReturnUnAuthorized()
+    {
+        var response = await _client.GetAsync("/api/tour");
+        var expected = HttpStatusCode.Unauthorized;
+        Assert.That(response.StatusCode, Is.EqualTo(expected));
+
+    }
+}
+
+
+
+[TestFixture]
+public class TourControllerCommunicationTests 
 {
     private TourController tourController;
     private ITourRepository _tourRepository;
@@ -46,15 +80,15 @@ public class TourControllerTests
     }
 
     [Test]
+    public async Task TestAllUnAuthorized_ShouldReturnUnauthorized()
+    {
+        
+    }
+
+    [Test]
     public async Task CreateTourValidContent_ShouldReturnCreated()
     {
-        TourDto tour = new TourDto
-        {
-            id = null,
-            from = "here",
-            to = "there",
-            transportType = TransportType.Car
-        };
+        
     }
 
     [Test]
