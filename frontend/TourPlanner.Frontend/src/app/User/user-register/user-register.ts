@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { User } from '../user/user';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-register',
@@ -25,7 +26,8 @@ export class UserRegister {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly changeDetector: ChangeDetectorRef
   ) {}
 
   setEmail(value: string) {
@@ -76,15 +78,18 @@ export class UserRegister {
           this.successMessage = 'Registration successful.';
           this.router.navigate(['/login']);
         },
-        error: (error) => {
+        error: (error: HttpErrorResponse) => {
           this.errorMessage =
             error.status === 409
               ? 'A user with this email or username already exists.'
               : 'Registration failed. Please try again.';
+
           this.isLoading = false;
+          this.changeDetector.detectChanges();
         },
         complete: () => {
           this.isLoading = false;
+          this.changeDetector.detectChanges();
         },
       });
   }
