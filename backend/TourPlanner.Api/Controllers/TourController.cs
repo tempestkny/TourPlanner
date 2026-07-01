@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TourPlanner.Bll;
 using TourPlanner.Models;
@@ -6,6 +7,7 @@ namespace TourPlanner.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TourController : ControllerBase
 {
     private readonly ITourService _tourService;
@@ -16,9 +18,10 @@ public class TourController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TourDto>>> GetAll([FromQuery] string userId, [FromQuery] string? query = null)
+    public async Task<ActionResult<IEnumerable<TourDto>>> GetAll([FromQuery] string? query = null)
     {
-        var tours = await _tourService.GetTours(userId, query);
+        var userId = User.FindFirst("sub")?.Value;
+        var tours = await _tourService.GetTours(userId!, query);
         return tours is null ? NotFound() : Ok(tours);
     }
 
@@ -30,11 +33,12 @@ public class TourController : ControllerBase
     }
 
     [HttpPost("{userId}")]
-    public async Task<ActionResult<string>> Create(string userId, [FromBody] TourDto tour)
+    public async Task<ActionResult<string>> Create([FromBody] TourDto tour)
     {
+        var userId = User.FindFirst("sub")?.Value;
         try
         {
-            var id = await _tourService.CreateTour(userId, tour);
+            var id = await _tourService.CreateTour(userId!, tour);
             return CreatedAtAction(nameof(Get), new { id }, id);
         }
         catch (ArgumentException ex)
