@@ -6,8 +6,12 @@
 
         <input type="password" placeholder="Password" (input)="setPassword($event.target.value)" />
 
-        <button (click)="onLoginClick()">
-            Login
+        <button (click)="onLoginClick()" [disabled]="!canLogin">
+            @if (isLoading) {
+                Logging in...
+            } @else {
+                Login
+            }
         </button>
 
         <div class="error">
