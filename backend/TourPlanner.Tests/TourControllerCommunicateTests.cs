@@ -2,6 +2,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using NSubstitute;
 using TourPlanner.Api.Controllers;
 using TourPlanner.Bll;
 using TourPlanner.Dal;
@@ -51,6 +52,7 @@ public class TourControllerCommunicationTests
     private TourController tourController;
     private ITourRepository _tourRepository;
     private TourPlannerDbContext _context;
+    private IOpenRouteService _IOpenRouteService;
     private User? user;
  
     [OneTimeSetUp]
@@ -62,9 +64,11 @@ public class TourControllerCommunicationTests
             .UseNpgsql(connectionString)
             .Options;
         _context = new TourPlannerDbContext(options);
-
+        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"users\" RESTART IDENTITY CASCADE");
+        
+        _IOpenRouteService = Substitute.For<IOpenRouteService>();
         _tourRepository = new TourRepository(_context);
-        tourController = new TourController(new TourService(_tourRepository));
+        tourController = new TourController(new TourService(_tourRepository,_IOpenRouteService));
         
 
         user = new User { Email = "myuser@user.you", Username = "Newly User", HashedPassword = "NewlyPasswordy" };
