@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NSubstitute;
 using TourPlanner.Bll;
 using TourPlanner.Dal;
 using TourPlanner.Models;
@@ -12,6 +13,7 @@ public class TourServiceTests
     private ITourService TourService;
     private ITourRepository _tourRepository;
     private TourPlannerDbContext _context;
+    private IOpenRouteService _IOpenRouteService;
     private User? user;
 
     [OneTimeSetUp]
@@ -22,8 +24,14 @@ public class TourServiceTests
                 .Options;
         _context = new TourPlannerDbContext(options);
 
+        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"tours\" RESTART IDENTITY CASCADE");
+        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"users\" RESTART IDENTITY CASCADE");
+
+        _IOpenRouteService = Substitute.For<IOpenRouteService>();
+        _IOpenRouteService.GetTimeAndDistance(Arg.Any<string>(),Arg.Any<string>(),Arg.Any<TransportType>()).Returns((0,0));
+            
         _tourRepository = new TourRepository(_context);
-        TourService = new TourService(_tourRepository);
+        TourService = new TourService(_tourRepository,_IOpenRouteService);
 
         user = new User { Email = "neweruser@user.us", Username = "Newest User", HashedPassword = "NewPassword" };
         _context.users.Add(user);
@@ -254,6 +262,6 @@ public class TourServiceTests
 
         var retList = await TourService.GetTours("001");
 
-        Assert.That(retList,Is.Null);
+        Assert.That(retList,Is.Empty);
     }
 }
