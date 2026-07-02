@@ -51,7 +51,7 @@ public class OpenRouteService : IOpenRouteService
             TransportType.Hike => "foot-hiking",
             _ => "driving-car"
         };
-
+        
         var body = new
         {
             coordinates = new[]
@@ -61,17 +61,18 @@ public class OpenRouteService : IOpenRouteService
             }
         };
 
-        var response = await _http.PostAsJsonAsync($"/v2/directions/{pathProfile}?api_key={_apiKey}",body);
+        var url = $"v2/directions/{pathProfile}?api_key={_apiKey}";
+        var response = await _http.PostAsJsonAsync(url,body);
         var result = await response.Content.ReadFromJsonAsync<DirectionsResponse>();
 
-        var summary = result?.Routes?.FirstOrDefault()?.directionsSummary;
+        var summary = result?.Routes?.FirstOrDefault()?.Summary;
         if(summary == null)
         {
             _logger.LogInformation("The route from {start} to {dest} by {profile} could not be calculated.",start,dest,profile);
             return (0,0);
         }
 
-        return (summary.Distance,summary.Duration / 60.0);
+        return (summary.Distance ,summary.Duration / 60.0);
     }
 }
 
@@ -80,7 +81,7 @@ public class GeocodeFeature{ public GeoCodeGeometry? Geometry {get; set;}}
 public class GeoCodeGeometry{ public List<double>? Coordinates {get;set;}}
 
 public class DirectionsResponse{ public List<DirectionsRoute>? Routes {get; set;}}
-public class DirectionsRoute{ public DirectionsSummary? directionsSummary {get; set;}}
+public class DirectionsRoute{ public DirectionsSummary? Summary {get; set;}}
 public class DirectionsSummary{ 
     public double Distance{get;set;}
     public double Duration{get;set;}
