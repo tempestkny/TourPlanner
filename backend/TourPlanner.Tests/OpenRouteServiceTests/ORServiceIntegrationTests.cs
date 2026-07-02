@@ -19,7 +19,7 @@ public class OpenRouteServiceIntegrationTests
 
         var options = Options.Create(new OpenRouteServiceOptions
         {
-           ApiKey = Environment.GetEnvironmentVariable("ORS_API_KEY") ?? throw new Exception("ORS_API_KEY not set")
+           ApiKey = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjhhY2Q3M2QwYTQ2OTRkYWY5OWM2NGZkM2NhODFjMGQ5IiwiaCI6Im11cm11cjY0In0="
         });
         openRouteService = new OpenRouteService(httpClient, options,new NullLogger<OpenRouteService>());
     }
