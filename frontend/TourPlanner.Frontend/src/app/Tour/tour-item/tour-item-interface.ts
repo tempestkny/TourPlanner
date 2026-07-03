@@ -1,12 +1,11 @@
 export interface TourItemInterface {
     id : string;
-    userId:string;
     title: string;
-    tourDescription?: string;
+    description?: string;
     from: string;
     to: string;
     transportType: string;
 
-    tourDistance?: string;
-    tourTime?: string;
+    distance?: string;
+    time?: string;
 }

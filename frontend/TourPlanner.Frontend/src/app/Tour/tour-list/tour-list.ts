@@ -27,15 +27,17 @@ export class TourList {
     this.tourListService.tours$.subscribe(tours => {
       this.tours = tours;
     });
+    this.tourListService.loadTours();
   }
 
   onQueryInput(arg0: string) {
-
+    this.tourListService.query = arg0;
+    this.tourListService.loadTours();
   }
 
-
   clearQuery() {
-
+    this.tourListService.query = '';
+    this.tourListService.loadTours();
   }
 
 }

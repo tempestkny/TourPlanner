@@ -48,7 +48,7 @@ export class TourShell {
 
   onEditSaved(updatedTour: TourItemInterface) {
     if (this.originalTour) {
-      this.tourListService.updateTour(this.originalTour, updatedTour);
+      this.tourListService.updateTour(this.originalTour.id, updatedTour);
       this.selectedTour = updatedTour;
       this.originalTour = updatedTour;
       this.mode = 'detail';
@@ -62,7 +62,7 @@ export class TourShell {
   } 
 
   onDeleteTour(tour: TourItemInterface) {
-    this.tourListService.deleteTour(tour);
+    this.tourListService.deleteTour(tour.id);
 
     this.logListService.setLogs(
       this.logListService.logs.filter(log => log.tourId !== tour.id)

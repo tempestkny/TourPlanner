@@ -21,13 +21,21 @@ public class TourService : ITourService
             description = tour.Description,
             from = tour.From,
             to = tour.To,
-            transportType = tour.TransportType,
+            transportType = tour.TransportType.ToString(),
 
             distance = tour.Distance,
             time = tour.Time
 
         };
     }
+
+    private static TransportType toTransportype(string transportType) => transportType switch
+    {
+        "Car" => TransportType.Car,
+        "Bike" => TransportType.Bike,
+        "Hike" => TransportType.Hike,
+        _ => TransportType.Car
+    };
 
     /// <summary>
     /// Checks if the TourObject is valid and transfers the object to the Dal
@@ -46,10 +54,10 @@ public class TourService : ITourService
           Description = tourDto.description,
           From = tourDto.from!,
           To = tourDto.to!,
-          TransportType = tourDto.transportType!,
+          TransportType = toTransportype(tourDto.transportType),
           UserId = userId,
         };
-        (tour.Time, tour.Distance) = await _openRouteService.GetTimeAndDistance(tourDto.from,tourDto.to, (TransportType)tourDto.transportType);
+        (tour.Time, tour.Distance) = await _openRouteService.GetTimeAndDistance(tourDto.from,tourDto.to, toTransportype(tourDto.transportType));
 
         await _tourRepository.Create(tour);
         return tour.Id;
@@ -107,7 +115,7 @@ public class TourService : ITourService
             Description = newTour.description,
             From = newTour.from,
             To = newTour.to,
-            TransportType = newTour.transportType,
+            TransportType = toTransportype(newTour.transportType),
         };
         await _tourRepository.Update(tourId,tour);
 

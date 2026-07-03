@@ -1,66 +1,58 @@
 <h3>Edit tour</h3>
 
 @if (tour) {
-  <div class="tour-edit-container">
-    <div class="tour-edit-panel">
-      <div class="input-details">
-        <p>Tour Details</p>
+<div class="tour-edit-container">
+  <div class="tour-edit-panel">
+    <div class="input-details">
+      <p>Tour Details</p>
 
-        <input
-          type="text"
-          placeholder="Title"
-          [value]="editableTour.title"
-          (input)="setTitle($any($event.target).value)" />
+      <input type="text" placeholder="Title" [value]="editableTour.title"
+        (input)="setTitle($any($event.target).value)" />
 
-        <input
-          type="text"
-          placeholder="Description"
-          [value]="editableTour.tourDescription"
-          (input)="setDescription($any($event.target).value)" />
+      <input type="text" placeholder="Description" [value]="editableTour.description"
+        (input)="setDescription($any($event.target).value)" />
 
-        <input
-          type="text"
-          placeholder="From"
-          [value]="editableTour.from"
-          (input)="setFrom($any($event.target).value)" />
-        @if (!isFromValid && editableTour.from != '') {
-          <div class="error">Invalid Location!</div>
-        }
+      <input type="text" placeholder="From" [value]="editableTour.from" (input)="setFrom($any($event.target).value)" />
+      @if (!isFromValid && editableTour.from != '') {
+      <div class="error">Invalid Location!</div>
+      }
 
-        <input
-          type="text"
-          placeholder="To"
-          [value]="editableTour.to"
-          (input)="setTo($any($event.target).value)" />
-        @if (!isToValid && editableTour.to != '') {
-          <div class="error">Invalid Location!</div>
-        }
+      <input type="text" placeholder="To" [value]="editableTour.to" (input)="setTo($any($event.target).value)" />
+      @if (!isToValid && editableTour.to != '') {
+      <div class="error">Invalid Location!</div>
+      }
 
-        <select #editTransportSelect [value]="editableTour.transportType" (change)="setTransportType(editTransportSelect.value)">
-            <option value="" disabled>Transport Type</option>
-            <option value="Car">Car</option>
-            <option value="Bike">Bike</option>
-            <option value="Hike">Hike</option>
-        </select>
+      <select #editTransportSelect [value]="editableTour.transportType"
+        (change)="setTransportType(editTransportSelect.value)">
+        <option value="" disabled>Transport Type</option>
+        <option value="Car">Car</option>
+        <option value="Bike">Bike</option>
+        <option value="Hike">Hike</option>
+      </select>
 
-        @if (validationMessage) {
-            <div class="error">{{ validationMessage }}</div>
-        }
-      </div>
+      @if (validationMessage) {
+      <div class="error">{{ validationMessage }}</div>
+      }
+    </div>
 
-      <div class="route-calculations">
-        <p>Length</p>
-        <p>Time</p>
-      </div>
+    <div class="route-calculations">
+      <p>Length</p>
+      <p>Time</p>
+    </div>
 
-      <div id="map"></div>
-
+    <div class="map-and-buttons">
       <div class="tour-edit-buttons">
         <button type="button" (click)="saveTour()">Save Changes</button>
         <button type="button" (click)="cancel.emit()">Cancel</button>
       </div>
+      <div id="map"></div>
     </div>
+
+
+
+
   </div>
+</div>
 } @else {
-  <p>Loading tour...</p>
+<p>Loading tour...</p>
 }

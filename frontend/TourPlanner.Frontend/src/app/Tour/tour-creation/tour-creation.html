@@ -20,20 +20,16 @@
         </select>
 
         @if (validationMessage) {
-            <div class="error">{{ validationMessage }}</div>
+        <div class="error">{{ validationMessage }}</div>
         }
     </div>
 
-    <div class="route-calculations">
-        <p>Length</p>
-        <p>Time</p>
-    </div>
-
-    <div id="map"></div>
-
-    <div class="tour-creation-buttons">
-        <button (click)="CreateTour()">Create Tour</button>
-        <button (click)="Cancel()">cancel</button>
+    <div class="map-and-buttons">
+        <div class="tour-creation-buttons">
+            <button (click)="CreateTour()">Create Tour</button>
+            <button (click)="Cancel()">cancel</button>
+        </div>
+        <div id="map"></div>
     </div>
 
 </div>

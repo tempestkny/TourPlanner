@@ -2,13 +2,13 @@ namespace TourPlanner.Models;
 
 public class TourDto
 {
-    public required string? id;
-    public string? title;
-    public string? description;
-    public required string from;
-    public required string to;
-    public required TransportType? transportType;
+    public string? id {get; set;}
+    public string? title {get; set;}
+    public string? description {get; set;}
+    public string from {get; set;}
+    public string to {get; set;}
+    public string transportType {get; set;}
 
-    public double? distance;
-    public double? time;
+    public double? distance {get; set;}
+    public double? time {get; set;}
 }

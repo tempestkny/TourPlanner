@@ -13,7 +13,7 @@
     </button>
 
     <div class="tour-list-entry-container">
-        @for (tour of tours; track $index) {
+        @for (tour of tours; track tour.id) {
         <div class="tour-list-item" (click)="selectTour.emit(tour)">
             <app-tour-entry [tour]="tour" (viewLogList)="viewLogList.emit(tour)"
                 (createLog)="createLog.emit(tour)"></app-tour-entry>

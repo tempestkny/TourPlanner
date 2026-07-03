@@ -25,9 +25,9 @@ export class TourCreation {
   validationMessage = '';
   private map?: L.Map;
 
+
   newTour: TourItemInterface = {
     id: '',
-    userId: '',
     title: '',
     from: '',
     to: '',
@@ -60,7 +60,7 @@ export class TourCreation {
   }
 
   setDescription(value: string) {
-    this.newTour.tourDescription = value;
+    this.newTour.description = value;
   }
 
   setTitle(value: string) {
@@ -68,6 +68,8 @@ export class TourCreation {
   }
 
   constructor(private tourService: TourListService) { }
+
+
 
   ngOnInit(): void {
     setTimeout(() => this.initMap(), 0);
@@ -101,8 +103,7 @@ export class TourCreation {
       this.validationMessage = 'Please select a transport type.';
       return;
     }
-
-    this.SetTourID();
+    
     this.tourService.addTour(this.newTour);
     this.success.emit(this.newTour);
   }
@@ -111,16 +112,11 @@ export class TourCreation {
     this.cancel.emit();
   }
 
-  SetTourID(): void {
-    this.newTour.id = crypto.randomUUID();
-  }
-
   // Should later check if leaflet can find the location.
   CheckIfRealPlace(place: string): boolean {
     if (true)
       return true;
-    return false
-
+    return false;
   }
 
   private initMap(): void {

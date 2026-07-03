@@ -37,7 +37,6 @@ export class TourEdit implements OnChanges {
 
   editableTour: TourItemInterface = {
     id: '',
-    userId: '',
     title: '',
     from: '',
     to: '',
@@ -68,7 +67,7 @@ export class TourEdit implements OnChanges {
   }
 
   setDescription(value: string): void {
-    this.editableTour.tourDescription = value;
+    this.editableTour.description = value;
   }
 
   setFrom(value: string): void {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
+import { TourService } from '../tour-service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,29 +15,46 @@ export class TourListService {
   private toursSubject = new BehaviorSubject<TourItemInterface[]>([]);
   tours$ = this.toursSubject.asObservable();
 
-  get tours(): TourItemInterface[]{
-    return this.toursSubject.value;
+  query : string = '';
+
+  constructor(private tourService : TourService){}
+
+  loadTours() : void{
+    this.tourService.getAllTours(this.query).subscribe({
+      next: (tours) => this.toursSubject.next(tours), // update when successfull
+      error : (err) => console.error('Failed to load tours: ',err) // throw error when not
+    })
   }
 
   addTour(tour: TourItemInterface){
-    // creates a new Array which has the new tour at the end
-    const updated = [...this.toursSubject.value, tour];
-    this.toursSubject.next(updated);
+    this.tourService.createTour(tour).subscribe({
+      next: (id) => { this.loadTours();
+      },
+      error: (err) => console.error('Failed to create tour: ',err)
+    })
   }
 
-  updateTour(originalTour: TourItemInterface, updatedTour: TourItemInterface): void {
-    const updated = this.toursSubject.value.map(tour =>
-      tour === originalTour ? updatedTour : tour
-    );
-
-    this.toursSubject.next(updated);
+  updateTour(id : string, newTour : TourItemInterface): void{
+    this.tourService.updateTour(id,newTour).subscribe({
+      next: () => {
+        const updatedTour = this.toursSubject.value.map(tour =>
+          tour.id === id ? newTour : tour
+        );
+        this.toursSubject.next(updatedTour);
+        this.loadTours();
+      },
+      error: (err) => console.error('Failed to create tour: ',err)
+    })
   }
 
-  deleteTour(tourToDelete: TourItemInterface): void {
-    const updated = this.toursSubject.value.filter(
-      tour => tour !== tourToDelete
-    );
-
-    this.toursSubject.next(updated);
+  deleteTour(id: string): void {
+    this.tourService.deleteTour(id).subscribe({
+      next: () => {
+        const newList = this.toursSubject.value.filter(tour => tour.id !== id);
+        this.toursSubject.next(newList);
+        this.loadTours();
+      },
+      error: (err) => console.error('Failed to delete tour: ',err)
+    })
   }
 }
