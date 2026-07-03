@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
 using TourPlanner.Bll;
 using TourPlanner.Models;
 
@@ -48,7 +49,7 @@ public class TourController : ControllerBase
         try
         {
             var id = await _tourService.CreateTour(userId!, tour);
-            return CreatedAtAction(nameof(Get), new { id }, id);
+            return CreatedAtAction(nameof(Get), new { id }, new { id });
         }
         catch (ArgumentException ex)
         {
