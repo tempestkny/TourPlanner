@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using TourPlanner.Api.Middleware;
 using TourPlanner.Bll;
 using TourPlanner.Bll.Auth;
 using TourPlanner.Dal;
@@ -99,6 +100,8 @@ builder.Services.AddHttpClient<IOpenRouteService,OpenRouteService>(client =>
 builder.Services.Configure<OpenRouteServiceOptions>(builder.Configuration.GetSection("OpenRouteService"));
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
