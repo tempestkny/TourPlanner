@@ -19,11 +19,9 @@ public class TourLogController : ControllerBase
     }
 
     [HttpGet("tour/{tourId}")]
-    [ProducesResponseType(typeof(IEnumerable<TourLogResponseDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IEnumerable<TourLogResponseDto>>> GetByTourId(string tourId)
     {
-        var userId = GetUserId();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId is null) return Unauthorized();
 
         var tourLogs = await tourLogService.GetByTourId(userId, tourId);
@@ -31,12 +29,9 @@ public class TourLogController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(TourLogResponseDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TourLogResponseDto>> Get(string id)
     {
-        var userId = GetUserId();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId is null) return Unauthorized();
 
         var tourLog = await tourLogService.Get(userId, id);
@@ -44,13 +39,9 @@ public class TourLogController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(TourLogResponseDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TourLogResponseDto>> Create(CreateTourLogDto tourLogDto)
     {
-        var userId = GetUserId();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId is null) return Unauthorized();
 
         var createdTourLog = await tourLogService.Create(userId, tourLogDto);
@@ -60,13 +51,9 @@ public class TourLogController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(string id, UpdateTourLogDto tourLogDto)
     {
-        var userId = GetUserId();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId is null) return Unauthorized();
 
         var updated = await tourLogService.Update(userId, id, tourLogDto);
@@ -74,20 +61,12 @@ public class TourLogController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(string id)
     {
-        var userId = GetUserId();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId is null) return Unauthorized();
 
         var removed = await tourLogService.Remove(userId, id);
         return removed ? NoContent() : NotFound();
-    }
-
-    private string? GetUserId()
-    {
-        return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }
