@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using TourPlanner.Dal;
 using TourPlanner.Models;
 
@@ -6,10 +7,12 @@ public class TourService : ITourService
 {
     readonly ITourRepository _tourRepository;
     readonly IOpenRouteService _openRouteService;
-    public TourService(ITourRepository tourRepository,IOpenRouteService openRouteService)
+    ILogger<TourService> _logger;
+    public TourService(ITourRepository tourRepository,IOpenRouteService openRouteService,ILogger<TourService> logger)
     {
         _tourRepository = tourRepository;
         _openRouteService = openRouteService;
+        _logger = logger;
     }
 
     public TourDto? convertToDto(Tour tour)
@@ -89,10 +92,10 @@ public class TourService : ITourService
     /// <param name="query"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<IEnumerable<TourDto>?> GetTours(string userId,string? query = null)
+    public async Task<IEnumerable<TourDto>?> GetTours(string userId,string? query)
     {
         //UsernameExists should be called here if the UserId is invalid
-
+        _logger.LogInformation($"Searching for Tours. query: {query}");
         var tours = await _tourRepository.ReadFromQuery(userId,query);
 
         return tours?.Select(t => convertToDto(t)).Where(dto => dto is not null).Cast<TourDto>().ToList();

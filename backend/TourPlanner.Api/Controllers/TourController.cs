@@ -1,8 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
 using TourPlanner.Bll;
 using TourPlanner.Models;
 
@@ -24,7 +22,7 @@ public class TourController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<TourDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<TourDto>>> GetAll([FromQuery] string? query = null)
+    public async Task<ActionResult<IEnumerable<TourDto>>> GetAll([FromQuery] string? query)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var tours = await _tourService.GetTours(userId!, query);
