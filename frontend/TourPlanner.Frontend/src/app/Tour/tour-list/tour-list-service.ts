@@ -28,7 +28,7 @@ export class TourListService {
 
   addTour(tour: TourItemInterface){
     this.tourService.createTour(tour).subscribe({
-      next: (id) => { this.loadTours();
+      next: () => { this.loadTours();
       },
       error: (err) => console.error('Failed to create tour: ',err)
     })

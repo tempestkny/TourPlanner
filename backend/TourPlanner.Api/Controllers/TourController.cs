@@ -1,6 +1,6 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
 using TourPlanner.Bll;
 using TourPlanner.Models;
 
@@ -22,9 +22,9 @@ public class TourController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<TourDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<TourDto>>> GetAll([FromQuery] string? query = null)
+    public async Task<ActionResult<IEnumerable<TourDto>>> GetAll([FromQuery] string? query)
     {
-        var userId = User.FindFirst("sub")?.Value;
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var tours = await _tourService.GetTours(userId!, query);
         return tours is null ? NotFound() : Ok(tours);
     }
@@ -45,7 +45,15 @@ public class TourController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<string>> Create([FromBody] TourDto tour)
     {
-        var userId = User.FindFirst("sub")?.Value;
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId)) return Unauthorized(new ProblemDetails
+        {
+            Title = "Id could not be extracted from Token",
+            Detail = $"Token: {userId}",
+            Status = StatusCodes.Status500InternalServerError
+        });
+
         try
         {
             var id = await _tourService.CreateTour(userId!, tour);

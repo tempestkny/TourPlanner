@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TourPlanner.Models;
 
 namespace TourPlanner.Dal;
@@ -44,7 +45,7 @@ public class TourRepository : Repository, ITourRepository
     public async Task<IEnumerable<Tour>> ReadFromQuery(string userId, string? query)
     {
         var searchText = query?.Trim() ?? string.Empty;
-
+        
         var tours = await _context.tours.Where(t => t.UserId == userId).ToListAsync();
         return tours.Where(t => string.IsNullOrEmpty(searchText) || FullTextSearch(t,searchText));
     }
