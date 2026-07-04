@@ -1,5 +1,21 @@
-<h3>Your Tours</h3>
+<div class="tour-list-header">
+    <h3>Your Tours</h3>
 
+    <div class="tour-list-import-export">
+        <button type="button" (click)="importFileInput.click()" [disabled]="isImportExportLoading">
+            Import
+        </button>
+        <button type="button" (click)="exportTours()" [disabled]="isImportExportLoading">
+            Export
+        </button>
+        <input #importFileInput type="file" accept="application/json,.json" hidden
+            (change)="importTours($event)" />
+    </div>
+</div>
+
+@if (importExportMessage) {
+<p class="tour-list-message">{{ importExportMessage }}</p>
+}
 
 <div class="tour-list-task-bar">
     <input #q class="input" type="text" placeholder="Search for Tour" [value]="" (input)="onQueryInput(q.value)" />
