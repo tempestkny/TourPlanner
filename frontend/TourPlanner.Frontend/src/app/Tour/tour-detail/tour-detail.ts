@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourLogInterface } from '../tour-log/tour-log-interface';
 import { LogListService } from '../tour-log/tour-log-list/log-list-service';
 import { TourLogEntry } from '../tour-log/tour-log-list/tour-log-entry/tour-log-entry';
 import * as L from 'leaflet';
+import { Subscription } from 'rxjs';
 
 const defaultIcon = L.icon({
   iconUrl: 'assets/img/marker-icon.png',
@@ -33,8 +34,12 @@ export class TourDetail {
 
   tourLogs: TourLogInterface[] = [];
   private map?: L.Map;
+  private logsSubscription?: Subscription;
 
-  constructor(private logListService: LogListService) {}
+  constructor(
+    private logListService: LogListService,
+    private changeDetector: ChangeDetectorRef
+  ) {}
 
   getAverageRating() : number{
     return this.calculateAverageRating(this.tourLogs.map(log => log.rating!));
@@ -54,9 +59,12 @@ export class TourDetail {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.tour) {
-      this.tourLogs = this.logListService.logs.filter(
-        log => log.tourId === this.tour?.id
-      );
+      this.logListService.loadLogs(this.tour.id);
+      this.logsSubscription?.unsubscribe();
+      this.logsSubscription = this.logListService.logs$.subscribe(logs => {
+        this.tourLogs = logs.filter(log => log.tourId === this.tour?.id);
+        this.changeDetector.detectChanges();
+      });
     }
 
     if (this.tour)  {
@@ -64,6 +72,10 @@ export class TourDetail {
         this.initializeMap();
       }, 0);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.logsSubscription?.unsubscribe();
   }
 
   onEditClick(): void {

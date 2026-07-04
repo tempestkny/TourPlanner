@@ -23,6 +23,7 @@ export class TourLogList {
 
   ngOnChanges(): void {
     if (this.tour) {
+      this.logListService.loadLogs(this.tour.id);
       this.logs$ = this.logListService.logs$.pipe(
         map(logs => logs.filter(log => log.tourId === this.tour?.id))
       );
