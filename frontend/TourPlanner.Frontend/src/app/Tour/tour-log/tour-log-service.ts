@@ -2,14 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { API_BASE_URL } from '../../api.config';
-import { TourLogInterface } from './tour-log-interface';
+import { Difficulty, TourLogInterface } from './tour-log-interface';
 
 interface TourLogApiResponse {
   id: string;
   tourId: string;
   timeStamp: string;
   comment?: string;
-  difficulty?: TourLogInterface['difficulty'];
+  difficulty?: Difficulty | number | string;
   totalDistance?: number;
   totalTime?: number;
   rating?: number;
@@ -58,7 +58,7 @@ export class TourLogService {
       tourId: response.tourId,
       timeStamp: new Date(response.timeStamp),
       comment: response.comment,
-      difficulty: response.difficulty,
+      difficulty: this.toUiDifficulty(response.difficulty),
       totalDistance: response.totalDistance,
       totalTime: response.totalTime,
       rating: response.rating,
@@ -69,6 +69,32 @@ export class TourLogService {
     return {
       ...log,
       timeStamp: log.timeStamp.toISOString(),
+      difficulty: this.toApiDifficulty(log.difficulty),
     };
+  }
+
+  private toApiDifficulty(difficulty?: Difficulty): number | undefined {
+    if (!difficulty) return undefined;
+
+    return {
+      [Difficulty.Easy]: 0,
+      [Difficulty.Medium]: 1,
+      [Difficulty.Hard]: 2,
+    }[difficulty];
+  }
+
+  private toUiDifficulty(difficulty?: Difficulty | number | string): Difficulty | undefined {
+    if (difficulty === undefined || difficulty === null) return undefined;
+
+    if (typeof difficulty === 'number') {
+      return [Difficulty.Easy, Difficulty.Medium, Difficulty.Hard][difficulty];
+    }
+
+    const normalized = difficulty.toString().toLowerCase();
+    if (normalized === 'easy') return Difficulty.Easy;
+    if (normalized === 'medium') return Difficulty.Medium;
+    if (normalized === 'hard') return Difficulty.Hard;
+
+    return undefined;
   }
 }

@@ -91,6 +91,7 @@ export class TourShell {
 
   onSelectTour(tour: TourItemInterface) {
     this.selectedTour = tour;
+    this.logListService.loadLogs(tour.id);
     this.mode = 'detail';
     console.log("Selected for View: ", tour);
   }
@@ -99,11 +100,13 @@ export class TourShell {
 
   onViewLogList(tour: TourItemInterface) {
     this.selectedTour = tour;
+    this.logListService.loadLogs(tour.id);
     this.mode = 'logList';
   }
 
   onCreateLog(tour: TourItemInterface) {
     this.selectedTour = tour;
+    this.logListService.loadLogs(tour.id);
     this.mode = 'logCreate';
   }
 

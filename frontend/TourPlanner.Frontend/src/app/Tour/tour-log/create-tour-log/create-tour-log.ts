@@ -95,12 +95,11 @@ export class CreateTourLog {
 
     const log: TourLogInterface = {
       ...this.newLog,
-      id: crypto.randomUUID(),
+      id: '',
       tourId: this.tour.id
     };
 
     this.logListService.addLog(log);
-    console.log('Creating: ', log);
     this.cancel.emit();
 }
 
