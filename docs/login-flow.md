@@ -58,7 +58,7 @@ The controller remains thin. It accepts `LoginUserDto`, calls `IAuthService.Logi
 
 Invalid login attempts throw `InvalidCredentialsException`, which hides whether the username/email or password was wrong.
 
-`TokenService` creates the JWT. The token contains only safe claims and is signed with the configured secret.
+`TokenService` creates the JWT. The token contains the database user id as identity claim and is signed with the configured secret.
 
 ### Data Access Layer
 
@@ -118,6 +118,16 @@ ExpirationMinutes
 
 `Program.cs` configures JWT Bearer authentication with issuer, audience, lifetime and signing-key validation.
 
+## Reading The Authenticated User Id
+
+Protected backend endpoints should read the authenticated user id from the JWT:
+
+```csharp
+var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+```
+
+The frontend should not send user ids for ownership decisions. The backend should use the validated JWT as the source of truth.
+
 ## Validation And Error Handling
 
 Frontend validation prevents submitting an empty identifier or password.
@@ -153,5 +163,6 @@ The tests verify:
 - missing password hash rejection
 - safe response DTO without password/hash
 - successful login returns token
-- token service creates JWT with issuer, audience, username claim and expiration
+- token service creates JWT with issuer, audience, user id claim and expiration
+- token does not contain username claim
 - token does not contain password/hash claims
