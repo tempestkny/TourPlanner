@@ -39,12 +39,24 @@ public class TokenServiceTests
     }
 
     [Test]
-    public void GenerateToken_ShouldContainUsernameClaim()
+    public void GenerateToken_ShouldContainUserIdClaim()
+    {
+        var user = CreateUser();
+
+        var token = ReadToken(CreateTokenService().GenerateToken(user));
+
+        var userIdClaim = token.Claims.Single(claim => claim.Type == ClaimTypes.NameIdentifier);
+        Assert.That(userIdClaim.Value, Is.EqualTo(user.Id));
+    }
+
+    [Test]
+    public void GenerateToken_ShouldNotContainUsernameClaim()
     {
         var token = ReadToken(CreateTokenService().GenerateToken(CreateUser()));
+        var claimTypes = token.Claims.Select(claim => claim.Type).ToList();
 
-        var usernameClaim = token.Claims.Single(claim => claim.Type == JwtRegisteredClaimNames.UniqueName);
-        Assert.That(usernameClaim.Value, Is.EqualTo("TourUser"));
+        Assert.That(claimTypes, Does.Not.Contain(JwtRegisteredClaimNames.UniqueName));
+        Assert.That(claimTypes, Does.Not.Contain(ClaimTypes.Name));
     }
 
     [Test]
