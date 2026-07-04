@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using TourPlanner.Bll.Dtos;
 using TourPlanner.Dal;
 using TourPlanner.Models;
@@ -33,6 +34,55 @@ public class ImportExportService : IImportExportService
         };
     }
 
+    public async Task<int> Import(string userId, ImportTourDataDto importData)
+    {
+        Validate(importData);
+
+        var importedTours = 0;
+
+        foreach (var importTour in importData.Tours)
+        {
+            Validate(importTour);
+
+            var tour = new Tour
+            {
+                Title = importTour.Title,
+                Description = importTour.Description,
+                From = importTour.From,
+                To = importTour.To,
+                TransportType = importTour.TransportType,
+                Distance = importTour.Distance,
+                Time = importTour.Time,
+                UserId = userId
+            };
+
+            await tourRepository.Create(tour);
+
+            foreach (var importTourLog in importTour.TourLogs)
+            {
+                Validate(importTourLog);
+
+                var tourLog = new TourLog
+                {
+                    TourId = tour.Id,
+                    TimeStamp = importTourLog.TimeStamp,
+                    Comment = importTourLog.Comment,
+                    Difficulty = importTourLog.Difficulty,
+                    TotalDistance = importTourLog.TotalDistance,
+                    TotalTime = importTourLog.TotalTime,
+                    Rating = importTourLog.Rating,
+                    Tour = null!
+                };
+
+                await tourLogRepository.Create(tourLog);
+            }
+
+            importedTours++;
+        }
+
+        return importedTours;
+    }
+
     private static ExportTourDto ToExportTourDto(Tour tour, IEnumerable<TourLog> tourLogs)
     {
         return new ExportTourDto
@@ -61,5 +111,11 @@ public class ImportExportService : IImportExportService
             TotalTime = tourLog.TotalTime,
             Rating = tourLog.Rating
         };
+    }
+
+    private static void Validate<T>(T dto)
+    {
+        var validationContext = new ValidationContext(dto!);
+        Validator.ValidateObject(dto!, validationContext, validateAllProperties: true);
     }
 }
