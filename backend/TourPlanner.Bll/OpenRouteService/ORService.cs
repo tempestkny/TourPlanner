@@ -72,7 +72,7 @@ public class OpenRouteService : IOpenRouteService
             return (0,0);
         }
 
-        return (summary.Distance ,summary.Duration / 60.0);
+        return (Math.Round(summary.Distance/1000,2) ,Math.Round(summary.Duration / 60.0,2));
     }
 }
 
