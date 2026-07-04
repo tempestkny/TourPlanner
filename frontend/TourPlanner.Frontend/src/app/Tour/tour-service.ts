@@ -17,7 +17,7 @@ export class TourService {
 
   // Read from query
   getAllTours(query? : string): Observable<TourItemInterface[]>{
-    const params = query ? query : {};
+    const params = new HttpParams().set('query', query ?? '');
     return this.http.get<TourItemInterface[]>(this.baseTourUrl, { params });
   }
 

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using TourPlanner.Bll;
 using TourPlanner.Dal;
@@ -31,7 +32,7 @@ public class TourServiceTests
         _IOpenRouteService.GetTimeAndDistance(Arg.Any<string>(),Arg.Any<string>(),Arg.Any<TransportType>()).Returns((0,0));
             
         _tourRepository = new TourRepository(_context);
-        TourService = new TourService(_tourRepository,_IOpenRouteService);
+        TourService = new TourService(_tourRepository,_IOpenRouteService,NullLogger<TourService>.Instance);
 
         user = new User { Email = "neweruser@user.us", Username = "Newest User", HashedPassword = "NewPassword" };
         _context.users.Add(user);
@@ -61,7 +62,7 @@ public class TourServiceTests
             title = "Test",
             from = from,
             to = to,
-            transportType = type
+            transportType = type.ToString()
         };
 
         var tourId = await TourService.CreateTour(user!.Id, tourDto);
@@ -81,7 +82,7 @@ public class TourServiceTests
             title = "Test",
             from = from,
             to = to,
-            transportType = type
+            transportType = type.ToString()
         };
 
         Assert.ThrowsAsync<ArgumentException>(async () =>
@@ -146,7 +147,7 @@ public class TourServiceTests
     [Test]
     public async Task UpdateNonExistingTour_ShouldReturnFalse()
     {
-        var ret = await TourService.UpdateTour("001", new TourDto { id = null, from = "a", to = "b", transportType = TransportType.Car });
+        var ret = await TourService.UpdateTour("001", new TourDto { id = null, from = "a", to = "b", transportType = "Car" });
         Assert.That(ret, Is.False);
     }
 
@@ -213,7 +214,7 @@ public class TourServiceTests
             title = "CreatedByService",
             from = "A",
             to = "B",
-            transportType = TransportType.Car
+            transportType = "Car"
         };
 
         await TourService.CreateTour(user!.Id, tourDto);
