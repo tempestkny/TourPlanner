@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using TourPlanner.Bll.Dtos;
 using TourPlanner.Dal;
@@ -97,7 +96,7 @@ public class TourService : ITourService
     public async Task<IEnumerable<TourResponseDto>?> GetTours(string userId, string? query)
     {
         //UsernameExists should be called here if the UserId is invalid
-        _logger.LogInformation($"Searching for Tours. query: {query}");
+        _logger.LogInformation("Searching tours for user {UserId} with query {Query}", userId, query);
         var tours = await _tourRepository.ReadFromQuery(userId,query);
 
         return tours?.Select(t => ConvertToResponseDto(t)).Where(dto => dto is not null).Cast<TourResponseDto>().ToList();
