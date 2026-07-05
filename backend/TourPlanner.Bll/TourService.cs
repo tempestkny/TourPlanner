@@ -7,7 +7,7 @@ public class TourService : ITourService
 {
     readonly ITourRepository _tourRepository;
     readonly IOpenRouteService _openRouteService;
-    ILogger<TourService> _logger;
+    readonly ILogger<TourService> _logger;
     public TourService(ITourRepository tourRepository,IOpenRouteService openRouteService,ILogger<TourService> logger)
     {
         _tourRepository = tourRepository;
@@ -95,7 +95,7 @@ public class TourService : ITourService
     public async Task<IEnumerable<TourDto>?> GetTours(string userId,string? query)
     {
         //UsernameExists should be called here if the UserId is invalid
-        _logger.LogInformation($"Searching for Tours. query: {query}");
+        _logger.LogInformation("Searching tours for user {UserId} with query {Query}", userId, query);
         var tours = await _tourRepository.ReadFromQuery(userId,query);
 
         return tours?.Select(t => convertToDto(t)).Where(dto => dto is not null).Cast<TourDto>().ToList();

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using TourPlanner.Bll;
 using TourPlanner.Bll.Dtos;
 using TourPlanner.Dal;
@@ -20,7 +21,7 @@ public class TourLogServiceTests
     {
         tourRepository = new FakeTourRepository();
         tourLogRepository = new FakeTourLogRepository();
-        tourLogService = new TourLogService(tourLogRepository, tourRepository);
+        tourLogService = new TourLogService(tourLogRepository, tourRepository, NullLogger<TourLogService>.Instance);
     }
 
     [Test]

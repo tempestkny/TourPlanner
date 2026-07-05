@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging.Abstractions;
 using TourPlanner.Bll;
 using TourPlanner.Bll.Dtos;
 using TourPlanner.Dal;
@@ -21,7 +22,7 @@ public class ImportExportServiceTests
     {
         tourRepository = new FakeTourRepository();
         tourLogRepository = new FakeTourLogRepository();
-        importExportService = new ImportExportService(tourRepository, tourLogRepository);
+        importExportService = new ImportExportService(tourRepository, tourLogRepository, NullLogger<ImportExportService>.Instance);
     }
 
     [Test]

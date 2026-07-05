@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 using TourPlanner.Bll.Dtos;
 using TourPlanner.Dal;
 using TourPlanner.Models;
@@ -9,11 +10,16 @@ public class ImportExportService : IImportExportService
 {
     private readonly ITourRepository tourRepository;
     private readonly ITourLogRepository tourLogRepository;
+    private readonly ILogger<ImportExportService> logger;
 
-    public ImportExportService(ITourRepository tourRepository, ITourLogRepository tourLogRepository)
+    public ImportExportService(
+        ITourRepository tourRepository,
+        ITourLogRepository tourLogRepository,
+        ILogger<ImportExportService> logger)
     {
         this.tourRepository = tourRepository;
         this.tourLogRepository = tourLogRepository;
+        this.logger = logger;
     }
 
     public async Task<ExportTourDataDto> Export(string userId)
@@ -27,6 +33,8 @@ public class ImportExportService : IImportExportService
             exportTours.Add(ToExportTourDto(tour, tourLogs));
         }
 
+        logger.LogInformation("Exported {TourCount} tours for user {UserId}", exportTours.Count, userId);
+
         return new ExportTourDataDto
         {
             ExportedAt = DateTime.UtcNow,
@@ -37,6 +45,7 @@ public class ImportExportService : IImportExportService
     public async Task<int> Import(string userId, ImportTourDataDto importData)
     {
         Validate(importData);
+        logger.LogInformation("Starting import of {TourCount} tours for user {UserId}", importData.Tours.Count, userId);
 
         var importedTours = 0;
 
@@ -79,6 +88,8 @@ public class ImportExportService : IImportExportService
 
             importedTours++;
         }
+
+        logger.LogInformation("Imported {TourCount} tours for user {UserId}", importedTours, userId);
 
         return importedTours;
     }
