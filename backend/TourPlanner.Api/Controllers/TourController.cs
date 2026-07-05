@@ -25,6 +25,8 @@ public class TourController : ControllerBase
     public async Task<ActionResult<IEnumerable<TourDto>>> GetAll([FromQuery] string? query)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId is null) return Unauthorized();
+
         var tours = await _tourService.GetTours(userId!, query);
         return tours is null ? NotFound() : Ok(tours);
     }
@@ -49,9 +51,9 @@ public class TourController : ControllerBase
 
         if (string.IsNullOrEmpty(userId)) return Unauthorized(new ProblemDetails
         {
-            Title = "Id could not be extracted from Token",
-            Detail = $"Token: {userId}",
-            Status = StatusCodes.Status500InternalServerError
+            Title = "Unauthorized",
+            Detail = "The authenticated user id could not be read from the token.",
+            Status = StatusCodes.Status401Unauthorized
         });
 
         try

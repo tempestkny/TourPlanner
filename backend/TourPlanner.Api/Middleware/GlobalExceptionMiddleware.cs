@@ -40,6 +40,7 @@ public class GlobalExceptionMiddleware
                 Detail = "The server could not process the request.",
                 Instance = context.Request.Path
             };
+            problemDetails.Extensions["traceId"] = context.TraceIdentifier;
 
             await context.Response.WriteAsJsonAsync(problemDetails);
         }

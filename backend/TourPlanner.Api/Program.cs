@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add Services
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularDevelopment", policy =>
