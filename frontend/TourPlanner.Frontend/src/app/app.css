@@ -13,3 +13,8 @@
 .shell {
   padding: 18px 28px 34px;
 }
+
+.information{
+    font-size: 0.7rem;
+    color: yellow;
+}

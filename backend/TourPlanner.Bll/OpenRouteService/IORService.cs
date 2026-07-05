@@ -1,14 +1,20 @@
+using TourPlanner.Bll.Dtos;
 using TourPlanner.Models;
+using TourPlanner.Models.MapInformation;
 
 namespace TourPlanner.Bll;
 public interface IOpenRouteService
 {
     /// <summary>
-    /// Returns a Tuple with the route distance in meters and route duration in minutes
+    /// 
     /// </summary>
-    /// <param name="start"> name of the starting location</param>
-    /// <param name="dest"> name of the destination</param>
-    /// <param name="profile"> method of travel</param>
-    /// <returns>(distanceInMeters [double], timeInMinutes [double])</returns>
-    public Task<(double distM, double timeMin)> GetTimeAndDistance(string start, string dest, TransportType profile);
+    /// <param name="location"></param>
+    /// <returns></returns>
+    public Task<Coordinates> GetCoordinates(string location);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    public Task<RouteInformation> GetRouteInformation(ORServiceRequestDto request);
 }

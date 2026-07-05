@@ -22,11 +22,8 @@ public class ImportTourDto
     [Required]
     public TransportType TransportType { get; set; }
 
-    [Range(0, double.MaxValue)]
-    public double Distance { get; set; }
-
-    [Range(0, double.MaxValue)]
-    public double Time { get; set; }
+    [Required]
+    public required string RouteInfo{get; set;}
 
     public ICollection<ImportTourLogDto> TourLogs { get; set; } = new List<ImportTourLogDto>();
 }

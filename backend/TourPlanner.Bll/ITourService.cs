@@ -1,9 +1,13 @@
-using TourPlanner.Models;
+using TourPlanner.Bll.Dtos;
+
 namespace TourPlanner.Bll;
-public interface ITourService : IDataService<TourDto>
+public interface ITourService
 {
-    public Task<string> CreateTour(string userId,TourDto tour);
-    public Task<bool> UpdateTour(string tourId, TourDto newTour);
-    public Task<IEnumerable<TourDto>?> GetTours(string userId, string? query = null);
-    protected TourDto? convertToDto(Tour tour);
+    public Task<TourResponseDto?> GetTour(string id);
+    public Task<bool> RemoveTour(string id);
+    public Task<string> CreateTour(string userId,CreateTourDto tour);
+    public Task<bool> UpdateTour(string tourId, UpdateTourDto newTour);
+    public Task<IEnumerable<TourResponseDto>?> GetTours(string userId, string? query = null);
+
+    public Task<RouteInformationResponseDto?> GetRouteInformation(string id);
 }

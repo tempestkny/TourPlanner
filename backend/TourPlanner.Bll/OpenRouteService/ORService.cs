@@ -2,7 +2,9 @@ using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TourPlanner.Bll.Dtos;
 using TourPlanner.Models;
+using TourPlanner.Models.MapInformation;
 
 namespace TourPlanner.Bll;
 
@@ -18,31 +20,28 @@ public class OpenRouteService : IOpenRouteService
         _apiKey = options.Value.ApiKey;
         _logger = logger;
     }
-    public async Task<(double lon, double lat)?> GetCoordinates(string place)
+    public async Task<Coordinates> GetCoordinates(string place)
     {
         var url = $"/geocode/search?api_key={_apiKey}&text={place}";
         var response = await _http.GetFromJsonAsync<GeocodeResponse>(url);
-        
-        var first = response?.Features?.FirstOrDefault();
-        if(first == null){
-            _logger.LogInformation("No Coordinates could be extracted from location: {place}", place);
-            return null;
+
+        if (response == null)
+        {
+            throw new Exception($"No Coordinates could be extracted from location: {place}");
         }
 
+        var first = response?.Features?.FirstOrDefault();
+
+
         var coords = first.Geometry.Coordinates;
-        _logger.LogInformation("Returning Coordinates of Location {place}: {coords}",place,coords);
-        return (coords[0],coords[1]);
+        _logger.LogInformation("Returning Coordinates of Location {place}: {coords}", place, coords);
+        return new Coordinates { Lon = coords[0], Lat = coords[1] };
     }
-
-    public async Task<(double distM, double timeMin)> GetTimeAndDistance(string start, string dest, TransportType profile)
+    public async Task<RouteInformation> GetRouteInformation(ORServiceRequestDto request)
     {
-        var queryStart = await GetCoordinates(start);
-        var queryEnd = await GetCoordinates(dest);
-
-        if(queryStart == null || queryEnd == null){
-            //_logger.LogInformation("");
-            throw new ArgumentException($"route {queryStart} -> {queryEnd} could not be found");
-            }
+        var start = request.start;
+        var dest = request.dest;
+        var profile = request.profile;
 
         var pathProfile = profile switch
         {
@@ -51,38 +50,60 @@ public class OpenRouteService : IOpenRouteService
             TransportType.Hike => "foot-hiking",
             _ => "driving-car"
         };
-        
-        var body = new
+
+        var url = FormattableString.Invariant($"/v2/directions/{pathProfile}?api_key={_apiKey}&start={start.Lon},{start.Lat}&end={dest.Lon},{dest.Lat}");
+        _logger.LogInformation("Sending Request to ORS: {url}", _http.BaseAddress + url);
+
+        try
         {
-            coordinates = new[]
+            var response = await _http.GetFromJsonAsync<DirectionsResponse>(url);
+            var feature = response?.Features?.FirstOrDefault();
+            if (feature == null)
             {
-                new[] {queryStart.Value.lon,queryStart.Value.lat},
-                new[] {queryEnd.Value.lon, queryEnd.Value.lat}
+                throw new ArgumentException($"The route from ({start.Lon},{start.Lat}) to ({dest.Lon},{dest.Lat}) by {profile} could not be calculated.");
             }
-        };
 
-        var url = $"v2/directions/{pathProfile}?api_key={_apiKey}";
-        var response = await _http.PostAsJsonAsync(url,body);
-        var result = await response.Content.ReadFromJsonAsync<DirectionsResponse>();
-
-        var summary = result?.Routes?.FirstOrDefault()?.Summary;
-        if(summary == null)
-        {
-            _logger.LogInformation("The route from {start} to {dest} by {profile} could not be calculated.",start,dest,profile);
-            return (0,0);
+            return new RouteInformation
+            {
+                TimeMin = feature.Properties.Summary.Duration / 60,
+                DistKm = feature.Properties.Summary.Distance / 1000,
+                Route = ToCoordinates(feature.Geometry)
+            };
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "ORS request failed at URL: {url}", url);
+            throw;
+        }
+    }
 
-        return (Math.Round(summary.Distance/1000,2) ,Math.Round(summary.Duration / 60.0,2));
+    private List<Coordinates> ToCoordinates(DirectionsGeometry geoCodeGeometry)
+    {
+        if (geoCodeGeometry.Coordinates == null)
+            throw new Exception("ORService: The RouteCoordinates do not exist.");
+
+        return geoCodeGeometry.Coordinates.Select(coord => new Coordinates
+        {
+            Lon = coord[0],
+            Lat = coord[1]
+        }).ToList();
     }
 }
 
-public class GeocodeResponse{ public List<GeocodeFeature>? Features {get; set;}}
-public class GeocodeFeature{ public GeoCodeGeometry? Geometry {get; set;}}
-public class GeoCodeGeometry{ public List<double>? Coordinates {get;set;}}
+public class GeocodeResponse { public List<GeocodeFeature>? Features { get; set; } }
+public class GeocodeFeature { public GeoCodeGeometry? Geometry { get; set; } }
+public class GeoCodeGeometry { public List<double>? Coordinates { get; set; } }
 
-public class DirectionsResponse{ public List<DirectionsRoute>? Routes {get; set;}}
-public class DirectionsRoute{ public DirectionsSummary? Summary {get; set;}}
-public class DirectionsSummary{ 
-    public double Distance{get;set;}
-    public double Duration{get;set;}
+public class DirectionsResponse { public List<DirectionsFeature>? Features { get; set; } }
+public class DirectionsFeature
+{
+    public DirectionsGeometry? Geometry { get; set; }
+    public DirectionsProperty? Properties { get; set; }
+}
+public class DirectionsProperty { public DirectionsSummary? Summary { get; set; } }
+public class DirectionsGeometry { public List<List<double>>? Coordinates { get; set; } }
+public class DirectionsSummary
+{
+    public double Distance { get; set; }
+    public double Duration { get; set; }
 }

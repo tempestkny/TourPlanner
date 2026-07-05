@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TourItemInterface } from '../../tour-item/tour-item-interface';
 import { TourLogEntry } from "./tour-log-entry/tour-log-entry";
 import { LogListService } from './log-list-service';
 import { AsyncPipe } from '@angular/common';
 import { TourLogInterface } from '../tour-log-interface';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs';
+import { TourItemInterface } from '../../interfaces/tour-interface/tour-item-interface';
 
 @Component({
   selector: 'app-tour-log-list',

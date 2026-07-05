@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Difficulty, TourLogInterface } from '../tour-log-interface';
 import { LogListService } from '../tour-log-list/log-list-service';
-import { TourItemInterface } from '../../tour-item/tour-item-interface';
+import { TourItemInterface } from '../../interfaces/tour-interface/tour-item-interface';
 
 @Component({
   selector: 'app-create-tour-log',

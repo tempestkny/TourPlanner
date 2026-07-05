@@ -6,23 +6,17 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { TourItemInterface } from '../tour-item/tour-item-interface';
-import { TourListService } from '../tour-list/tour-list-service';
-import * as L from 'leaflet';
 
-const defaultIcon = L.icon({
-  iconUrl: 'assets/img/marker-icon.png',
-  shadowUrl: 'assets/img/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
+import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
+import { TransportType } from '../interfaces/tour-interface/transport-type';
+import { Coordinates } from '../interfaces/tour-interface/coordinates';
+import { OpenRouteService } from '../open-route-service';
+import { TourMapComponent } from "../tour-map-component/tour-map-component";
 
 @Component({
   selector: 'app-tour-edit',
   standalone: true,
-  imports: [],
+  imports: [TourMapComponent],
   templateUrl: './tour-edit.html',
   styleUrl: './tour-edit.css',
 })
@@ -33,26 +27,26 @@ export class TourEdit implements OnChanges {
   @Output() cancel = new EventEmitter<void>();
 
   validationMessage = '';
-  private map?: L.Map;
 
   editableTour: TourItemInterface = {
     id: '',
     title: '',
+    description: '',
     from: '',
     to: '',
-    transportType: ''
+    transportType: null,
+    route: null
   };
 
   isFromValid = true;
   isToValid = true;
 
-  constructor(
-    private tourListService: TourListService,
-  ) {}
+  start: Coordinates | undefined;
+  dest: Coordinates | undefined;
 
-  ngOnInit(): void {
-    setTimeout(() => this.initMap(), 0);
-  }
+  constructor(
+    private openRouteService: OpenRouteService
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tour'] && this.tour) {
@@ -71,67 +65,102 @@ export class TourEdit implements OnChanges {
   }
 
   setFrom(value: string): void {
-    this.isFromValid = this.checkIfRealPlace(value);
+    this.isFromValid = false;
     this.editableTour.from = value;
   }
 
   setTo(value: string): void {
-    this.isToValid = this.checkIfRealPlace(value);
+    this.isToValid = false;
     this.editableTour.to = value;
   }
 
+  async setPoints() {
+    if(!this.isFromValid)
+    this.openRouteService.GetCoordinatesOfPlace(this.editableTour.from).subscribe({
+      next: coord => {
+        this.isFromValid = true;
+        this.start = coord;
+        this.generateRoute();
+      },
+      error: () => {
+        this.isFromValid = false;
+        this.start = undefined;
+      }
+    });
+    if(!this.isToValid)
+    this.openRouteService.GetCoordinatesOfPlace(this.editableTour.to).subscribe({
+      next: coord => {
+        this.isToValid = true;
+        this.dest = coord;
+        this.generateRoute();
+      },
+      error: () => {
+        this.isToValid = false;
+        this.dest = undefined;
+      }
+    });
+  }
+
   setTransportType(value: string): void {
-    this.editableTour.transportType = value;
+    this.editableTour.transportType = this.transportMap[value] ?? TransportType.Car;
+    if(this.isFromValid&&this.isToValid){
+      this.generateRoute();
+    }
   }
 
   saveTour(): void {
     this.validationMessage = '';
 
-      if (!this.editableTour.title.trim()) {
-        this.validationMessage = 'Please enter a tour title.';
-        return;
-      }
+    if (!this.editableTour.title.trim()) {
+      this.validationMessage = 'Please enter a tour title.';
+      return;
+    }
 
-      if (!this.editableTour.from.trim()) {
-        this.validationMessage = 'Please enter a start location.';
-        return;
-      }
+    if (!this.editableTour.from.trim()) {
+      this.validationMessage = 'Please enter a start location.';
+      return;
+    }
 
-      if (!this.editableTour.to.trim()) {
-        this.validationMessage = 'Please enter a destination.';
-        return;
-      }
+    if (!this.editableTour.to.trim()) {
+      this.validationMessage = 'Please enter a destination.';
+      return;
+    }
 
-      if (!this.isFromValid || !this.isToValid) {
-        this.validationMessage = 'Please enter valid locations.';
-        return;
-      }
+    if (!this.isFromValid || !this.isToValid) {
+      this.validationMessage = 'Please enter valid locations.';
+      return;
+    }
 
-      if (!this.editableTour.transportType.trim()) {
-        this.validationMessage = 'Please select a transport type.';
-        return;
-      }
+    if (!this.editableTour.route) {
+      this.validationMessage = 'Please generate the route.';
+      return;
+    }
+
+    if (!this.editableTour.transportType) {
+      this.validationMessage = 'Please select a transport type.';
+      return;
+    }
 
     this.saved.emit(this.editableTour);
   }
 
-  checkIfRealPlace(place: string): boolean {
-    return true;
+  generateRoute() {
+    if (this.isFromValid && this.isToValid && this.editableTour.transportType) {
+      this.openRouteService.GetRouteInformation({ start: this.start!, dest: this.dest!, profile: this.editableTour.transportType }).subscribe({
+        next: (route) => {
+          this.editableTour.route = route
+        },
+        error: () => {
+          this.editableTour.route = null;
+          console.error("Route could not be generated");
+        }
+      });
+    }
   }
 
-  private initMap(): void {
-    if (this.map) {
-      this.map.remove();
-    }
-
-    this.map = L.map('map').setView([48.2082, 16.3738], 13);
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
-
-    L.marker([48.2082, 16.3738])
-      .addTo(this.map)
-      .bindPopup('Tour route');
-}
+  private transportMap: Record<string, TransportType> = {
+    Car: TransportType.Car,
+    Bike: TransportType.Bike,
+    Hike: TransportType.Hike
+  }
 }

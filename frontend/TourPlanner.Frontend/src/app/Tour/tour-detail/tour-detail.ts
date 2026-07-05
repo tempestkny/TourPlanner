@@ -1,30 +1,21 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output, SimpleChanges } from '@angular/core';
-import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourLogInterface } from '../tour-log/tour-log-interface';
 import { LogListService } from '../tour-log/tour-log-list/log-list-service';
 import { TourLogEntry } from '../tour-log/tour-log-list/tour-log-entry/tour-log-entry';
 import * as L from 'leaflet';
 import { Subscription } from 'rxjs';
-
-const defaultIcon = L.icon({
-  iconUrl: 'assets/img/marker-icon.png',
-  shadowUrl: 'assets/img/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-L.Marker.prototype.options.icon = defaultIcon;
+import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
+import { RouteInformation } from '../interfaces/tour-dtos/route-information';
+import { TourMapComponent } from "../tour-map-component/tour-map-component";
 
 @Component({
   selector: 'app-tour-detail',
-  imports: [TourLogEntry],
+  imports: [TourLogEntry, TourMapComponent],
   templateUrl: './tour-detail.html',
   styleUrl: './tour-detail.css',
 })
 export class TourDetail {
-  @Input() tour!:TourItemInterface | null
+  @Input() tour!: TourItemInterface | null
   @Output() editTour = new EventEmitter<TourItemInterface>();
   @Output() deleteTour = new EventEmitter<TourItemInterface>();
 
@@ -39,22 +30,22 @@ export class TourDetail {
   constructor(
     private logListService: LogListService,
     private changeDetector: ChangeDetectorRef
-  ) {}
+  ) { }
 
-  getAverageRating() : number{
+  getAverageRating(): number {
     return this.calculateAverageRating(this.tourLogs.map(log => log.rating!));
   }
 
-  calculateAverageRating(ratings: number[]) : number{
-    if(ratings.length == 0) return -1;
-    const sum = ratings.reduce((acc,cur) => acc + cur,0);
+  calculateAverageRating(ratings: number[]): number {
+    if (ratings.length == 0) return -1;
+    const sum = ratings.reduce((acc, cur) => acc + cur, 0);
     return sum / ratings.length
   }
 
-  getStars(avg: number) : string{
+  getStars(avg: number): string {
     const stars = Math.round(avg);
-    if(avg < 0) return '';
-    return '★'.repeat(stars) + '☆'.repeat(5-stars)
+    if (avg < 0) return '';
+    return '★'.repeat(stars) + '☆'.repeat(5 - stars)
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -67,7 +58,7 @@ export class TourDetail {
       });
     }
 
-    if (this.tour)  {
+    if (this.tour) {
       setTimeout(() => {
         this.initializeMap();
       }, 0);
@@ -100,7 +91,7 @@ export class TourDetail {
   onViewLogClick(log: TourLogInterface): void {
     this.viewLog.emit(log);
   }
-  
+
   onShowMoreClick(): void {
     if (this.tour) {
       this.viewLogs.emit(this.tour);
@@ -112,14 +103,34 @@ export class TourDetail {
       this.map.remove();
     }
 
-    this.map = L.map('map').setView([48.2082, 16.3738], 13);
+    this.map = L.map('map');
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(this.map);
+    this.drawRoute();
+  }
+
+  private drawRoute(): void {
+    if (!this.map || !this.tour?.route?.route) return;
+
+    const coords = this.tour.route.route;
+
+    // ORS [lon, lat] → Leaflet [lat, lon]
+    const latLngs : L.LatLngExpression[] = coords.map(c => [c.lat, c.lon]);
+
+    // Polyline zeichnen
+    const polyline = L.polyline(latLngs, {
+      color: 'blue',
+      weight: 4
     }).addTo(this.map);
 
-    L.marker([48.2082, 16.3738])
-      .addTo(this.map)
-      .bindPopup('Route preview');
-  } 
+    // Karte auf Route zoomen
+    this.map.fitBounds(polyline.getBounds());
+
+    L.marker(latLngs[0]).addTo(this.map).bindPopup("Start");
+    L.marker(latLngs[latLngs.length - 1]).addTo(this.map).bindPopup("Ziel");
+
+    coords.map(c => [c.lat, c.lon])
+  }
 }

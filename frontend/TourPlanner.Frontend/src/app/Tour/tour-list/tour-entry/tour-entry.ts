@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TourItemInterface } from '../../tour-item/tour-item-interface';
+import { TourItemInterface } from '../../interfaces/tour-interface/tour-item-interface';
 
 @Component({
   selector: 'app-tour-entry',

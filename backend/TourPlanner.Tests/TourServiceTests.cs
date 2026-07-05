@@ -103,16 +103,16 @@ public class TourServiceTests
         };
         await _tourRepository.Create(tour);
 
-        var tourDto = await TourService.Get(tour.Id);
+        var tourDto = await TourService.GetTour(tour.Id);
 
         Assert.That(tourDto, Is.Not.Null);
-        Assert.That(tourDto.from, Is.EqualTo("Here"));
+        Assert.That(tourDto.From, Is.EqualTo("Here"));
     }
     [Category("ReadTour")]
     [Test]
     public async Task ReadTourInvalidId_ShouldReturnNull()
     {
-        Assert.That(await TourService.Get("001"), Is.Null);
+        Assert.That(await TourService.GetTour("001"), Is.Null);
     }
 
     [Category("UpdateTour")]
@@ -168,7 +168,7 @@ public class TourServiceTests
 
         Assert.That(await _tourRepository.Read(tour.Id), Is.Not.Null);
 
-        var ret = await TourService.Remove(tour.Id);
+        var ret = await TourService.RemoveTour(tour.Id);
 
         using (Assert.EnterMultipleScope())
         {
@@ -193,7 +193,7 @@ public class TourServiceTests
 
         // Tour Is Not Created
 
-        var ret = await TourService.Remove(tour.Id);
+        var ret = await TourService.RemoveTour(tour.Id);
 
         using (Assert.EnterMultipleScope())
         {

@@ -13,21 +13,20 @@ public class TourRepository : Repository, ITourRepository
     await _context.SaveChangesAsync();
     }
     public async Task<Tour?> Read(string id) => await _context.tours.FindAsync(id);
-    public async Task Update(string id, Tour objData)
+    public async Task Update(string id, Tour newTour)
     {
         var tour = await _context.tours.FindAsync(id);
         if(tour is null) return;
 
-        if(objData.Title is not null)
-            tour.Title = objData.Title;
-        if(objData.Description is not null)
-            tour.Description = objData.Description;
-        if(objData.From is not null)
-            tour.From = objData.From;
-        if(objData.To is not null)
-            tour.To = objData.To;
-        if(objData.TransportType is not null)
-            tour.TransportType = objData.TransportType;
+        if(newTour.Title is not null)
+            tour.Title = newTour.Title;
+        if(newTour.Description is not null)
+            tour.Description = newTour.Description;
+        if(newTour.From is not null)
+            tour.From = newTour.From;
+        if(newTour.To is not null)
+            tour.To = newTour.To;
+        tour.TransportType = newTour.TransportType;
 
         await _context.SaveChangesAsync();
     }
@@ -57,9 +56,7 @@ public class TourRepository : Repository, ITourRepository
         CompareToString(tour.Description,text) ||
         CompareToString(tour.From,text) ||
         CompareToString(tour.To,text) ||
-        CompareToString(tour.TransportType,text) ||
-        CompareToString(tour.Distance,text) ||
-        CompareToString(tour.Time,text);
+        CompareToString(tour.TransportType,text);
     }
 
     bool CompareToString<T>(T value, string text)

@@ -41,8 +41,8 @@
       <aside class="tour-info-box">
         <p>{{ tour.from }} → {{ tour.to }}</p>
         <p>{{ tour.transportType }}</p>
-        <p>Tour Distance: {{tour.distance}}km</p>
-        <p>Estimated Time: {{tour.time}}min</p>
+        <p>Tour Distance: {{tour.route?.distKm?.toFixed(2)}}km</p>
+        <p>Estimated Time: {{tour.route?.timeMin?.toFixed(2)}}min</p>
       </aside>
     </div>
   </section>
@@ -89,19 +89,6 @@
         </div>
       </div>
 
-      <div class="route-step">
-        <div class="step-dot"></div>
-        <div class="step-content">
-            <p class="step-label">Place:<br>Place</p>
-        </div>
-      </div>
-
-      <div class="route-step">
-        <div class="step-dot"></div>
-        <div class="step-content">
-            <p class="step-label">Place:<br>Place</p>
-        </div>
-      </div>
 
       <div class="route-step end-step">
         <div class="step-dot"></div>
@@ -112,7 +99,7 @@
     </div>
 
     <!-- RIGHT SIDE -->
-    <div id="map"></div>
+    <app-tour-map-component [tour]="tour"></app-tour-map-component>
 
   </div>
 </section>
