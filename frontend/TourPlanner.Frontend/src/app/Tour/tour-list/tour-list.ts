@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Signal } from '@angular/core';
-import { TourItemInterface } from '../tour-item/tour-item-interface';
+import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface'
 import { TourEntry } from "./tour-entry/tour-entry";
 import { RouterModule } from "@angular/router";
 import { TourListService } from './tour-list-service';

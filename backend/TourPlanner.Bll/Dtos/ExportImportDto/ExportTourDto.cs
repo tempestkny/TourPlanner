@@ -10,7 +10,6 @@ public class ExportTourDto
     public required string From { get; set; }
     public required string To { get; set; }
     public TransportType? TransportType { get; set; }
-    public double Distance { get; set; }
-    public double Time { get; set; }
+    public required string RouteInfo{get; set;}
     public ICollection<ExportTourLogDto> TourLogs { get; set; } = new List<ExportTourLogDto>();
 }

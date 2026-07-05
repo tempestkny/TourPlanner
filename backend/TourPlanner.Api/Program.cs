@@ -77,26 +77,12 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
-builder.Services.AddHttpClient<IOpenRouteService,OpenRouteService>(client =>
-{
-    client.BaseAddress = new Uri("https://api.openrouteservice.org/");
-});
-
 builder.Services.Configure<OpenRouteServiceOptions>(builder.Configuration.GetSection("OpenRouteService"));
 
 builder.Services.AddHttpClient<IOpenRouteService,OpenRouteService>(client =>
 {
     client.BaseAddress = new Uri("https://api.openrouteservice.org/");
 });
-
-builder.Services.Configure<OpenRouteServiceOptions>(builder.Configuration.GetSection("OpenRouteService"));
-
-builder.Services.AddHttpClient<IOpenRouteService,OpenRouteService>(client =>
-{
-    client.BaseAddress = new Uri("https://api.openrouteservice.org/");
-});
-
-builder.Services.Configure<OpenRouteServiceOptions>(builder.Configuration.GetSection("OpenRouteService"));
 
 var app = builder.Build();
 

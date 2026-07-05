@@ -13,14 +13,11 @@
         (input)="setDescription($any($event.target).value)" />
 
       <input type="text" placeholder="From" [value]="editableTour.from" (input)="setFrom($any($event.target).value)" />
-      @if (!isFromValid && editableTour.from != '') {
-      <div class="error">Invalid Location!</div>
-      }
+      @if (isToValid){<div class="information">[{{start?.lat!.toFixed(2)}},{{start?.lon!.toFixed(2)}}]</div>}
+
 
       <input type="text" placeholder="To" [value]="editableTour.to" (input)="setTo($any($event.target).value)" />
-      @if (!isToValid && editableTour.to != '') {
-      <div class="error">Invalid Location!</div>
-      }
+      @if (isToValid){<div class="information">[{{dest?.lat!.toFixed(2)}},{{dest?.lon!.toFixed(2)}}]</div>}
 
       <select #editTransportSelect [value]="editableTour.transportType"
         (change)="setTransportType(editTransportSelect.value)">
@@ -29,6 +26,10 @@
         <option value="Bike">Bike</option>
         <option value="Hike">Hike</option>
       </select>
+
+      <div class="generate-route">
+        <button (click)="setPoints()">Generate Route</button>
+      </div>
 
       @if (validationMessage) {
       <div class="error">{{ validationMessage }}</div>
@@ -45,7 +46,7 @@
         <button type="button" (click)="saveTour()">Save Changes</button>
         <button type="button" (click)="cancel.emit()">Cancel</button>
       </div>
-      <div id="map"></div>
+      <app-tour-map-component [tour]="editableTour"></app-tour-map-component>
     </div>
 
 

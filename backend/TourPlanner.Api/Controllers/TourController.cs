@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TourPlanner.Bll;
-using TourPlanner.Models;
+using TourPlanner.Bll.Dtos;
 
 namespace TourPlanner.Api.Controllers;
 
@@ -19,10 +19,10 @@ public class TourController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<TourDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<TourResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<TourDto>>> GetAll([FromQuery] string? query)
+    public async Task<ActionResult<IEnumerable<TourResponseDto>>> GetAll([FromQuery] string? query)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var tours = await _tourService.GetTours(userId!, query);
@@ -30,20 +30,30 @@ public class TourController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(TourDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TourResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<TourDto>> Get(string id)
+    public async Task<ActionResult<TourResponseDto>> Get(string id)
     {
-        var tour = await _tourService.Get(id);
+        var tour = await _tourService.GetTour(id);
         return tour is null ? NotFound() : Ok(tour);
+    }
+
+    [HttpGet("{id}/route")]
+    [ProducesResponseType(typeof(TourResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<RouteInformationResponseDto>> GetRoute(string TourId)
+    {
+        var route = await _tourService.GetRouteInformation(TourId);
+        return route is null ? NotFound() : Ok(route);
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<string>> Create([FromBody] TourDto tour)
+    public async Task<ActionResult<string>> Create([FromBody] CreateTourDto tour)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -74,7 +84,7 @@ public class TourController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Update(string id, [FromBody] TourDto tour)
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateTourDto tour)
     {
         var updated = await _tourService.UpdateTour(id, tour);
         return updated ? NoContent() : NotFound();
@@ -86,7 +96,7 @@ public class TourController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Delete(string id)
     {
-        var removed = await _tourService.Remove(id);
+        var removed = await _tourService.RemoveTour(id);
         return removed ? NoContent() : NotFound();
     }
 }

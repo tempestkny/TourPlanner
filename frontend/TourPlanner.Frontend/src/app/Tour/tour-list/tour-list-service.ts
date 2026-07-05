@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { TourItemInterface } from '../tour-item/tour-item-interface';
-import { TourService } from '../tour-service';
+import { TourService, UpdateTourRequestInterface } from '../tour-service';
+import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
+import { Coordinates } from '../interfaces/tour-interface/coordinates';
+import { OpenRouteService } from '../open-route-service';
+import { CreateTourRequestInterface } from '../interfaces/tour-dtos/create-tour-request-interface';
 
 @Injectable({
   providedIn: 'root',
@@ -15,35 +18,35 @@ export class TourListService {
   private toursSubject = new BehaviorSubject<TourItemInterface[]>([]);
   tours$ = this.toursSubject.asObservable();
 
-  query : string = '';
+  query: string = '';
 
-  constructor(private tourService : TourService){}
+  constructor(private tourService: TourService) { }
 
-  loadTours() : void{
+  loadTours(): void {
     this.tourService.getAllTours(this.query).subscribe({
       next: (tours) => this.toursSubject.next(tours), // update when successfull
-      error : (err) => console.error('Failed to load tours: ',err) // throw error when not
+      error: (err) => console.error('Failed to load tours: ', err) // throw error when not
     })
   }
 
-  addTour(tour: TourItemInterface){
+  addTour(tour: TourItemInterface) {
     this.tourService.createTour(tour).subscribe({
-      next: () => { this.loadTours();
+      next: () => {
+        this.loadTours();
       },
-      error: (err) => console.error('Failed to create tour: ',err)
+      error: (err) => console.error('Failed to create tour: ', err)
     })
   }
 
-  updateTour(id : string, newTour : TourItemInterface): void{
-    this.tourService.updateTour(id,newTour).subscribe({
+  updateTour(id: string, newTour: TourItemInterface): void {
+    this.tourService.updateTour(id, newTour).subscribe({
       next: () => {
         const updatedTour = this.toursSubject.value.map(tour =>
           tour.id === id ? newTour : tour
         );
-        this.toursSubject.next(updatedTour);
         this.loadTours();
       },
-      error: (err) => console.error('Failed to create tour: ',err)
+      error: (err) => console.error('Failed to create tour: ', err)
     })
   }
 
@@ -54,7 +57,7 @@ export class TourListService {
         this.toursSubject.next(newList);
         this.loadTours();
       },
-      error: (err) => console.error('Failed to delete tour: ',err)
+      error: (err) => console.error('Failed to delete tour: ', err)
     })
   }
 }

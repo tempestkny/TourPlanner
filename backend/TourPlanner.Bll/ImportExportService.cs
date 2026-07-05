@@ -51,8 +51,7 @@ public class ImportExportService : IImportExportService
                 From = importTour.From,
                 To = importTour.To,
                 TransportType = importTour.TransportType,
-                Distance = importTour.Distance,
-                Time = importTour.Time,
+                RouteInfo = importTour.RouteInfo,
                 UserId = userId
             };
 
@@ -93,8 +92,7 @@ public class ImportExportService : IImportExportService
             From = tour.From,
             To = tour.To,
             TransportType = tour.TransportType,
-            Distance = tour.Distance,
-            Time = tour.Time,
+            RouteInfo = tour.RouteInfo,
             TourLogs = tourLogs.Select(ToExportTourLogDto).ToList()
         };
     }

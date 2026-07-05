@@ -136,7 +136,7 @@
   font-weight: 600;
 }
 
-#map {
+.app-tour-map-component{
   height: 350px;
   width: 100%;
   border-radius: 12px;
