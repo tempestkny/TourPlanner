@@ -76,6 +76,7 @@ builder.Services.AddScoped<ITourLogRepository, TourLogRepository>();
 builder.Services.AddScoped<ITourService, TourService>();
 builder.Services.AddScoped<ITourLogService, TourLogService>();
 builder.Services.AddScoped<IImportExportService, ImportExportService>();
+builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
 builder.Services.AddScoped<ITokenService, TokenService>();
