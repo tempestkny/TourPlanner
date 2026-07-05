@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add Services
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
+builder.Services.AddHealthChecks();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularDevelopment", policy =>
@@ -124,6 +125,7 @@ app.UseCors("AngularDevelopment");
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHealthChecks("/health");
 app.MapControllers();
 
 app.Run();
