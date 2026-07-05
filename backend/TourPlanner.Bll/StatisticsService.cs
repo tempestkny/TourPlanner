@@ -1,7 +1,9 @@
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using TourPlanner.Bll.Dtos;
 using TourPlanner.Dal;
 using TourPlanner.Models;
+using TourPlanner.Models.MapInformation;
 
 namespace TourPlanner.Bll;
 
@@ -38,8 +40,8 @@ public class StatisticsService : IStatisticsService
         {
             TotalTours = tours.Count,
             TotalTourLogs = tourLogs.Count,
-            TotalDistance = Math.Round(tours.Sum(tour => tour.Distance), 2),
-            TotalTime = Math.Round(tours.Sum(tour => tour.Time), 2),
+            TotalDistance = Math.Round(tours.Sum(tour => JsonSerializer.Deserialize<RouteInformation>(tour.RouteInfo!)!.DistKm!.Value), 2),
+            TotalTime = Math.Round(tours.Sum(tour => JsonSerializer.Deserialize<RouteInformation>(tour.RouteInfo!)!.TimeMin!.Value), 2),
             AverageRating = tourLogs.Count == 0
                 ? 0
                 : Math.Round(tourLogs.Average(tourLog => tourLog.Rating), 2)

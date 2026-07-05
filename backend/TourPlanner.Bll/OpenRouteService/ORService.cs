@@ -65,9 +65,9 @@ public class OpenRouteService : IOpenRouteService
 
             return new RouteInformation
             {
-                TimeMin = feature.Properties.Summary.Duration / 60,
+                TimeMin = feature.Properties!.Summary!.Duration / 60,
                 DistKm = feature.Properties.Summary.Distance / 1000,
-                Route = ToCoordinates(feature.Geometry)
+                Route = ToCoordinates(feature.Geometry!)
             };
         }
         catch (Exception ex)

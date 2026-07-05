@@ -29,7 +29,7 @@ public class TourService : ITourService
             From = tour.From,
             To = tour.To,
             TransportType = tour.TransportType,
-            route = JsonSerializer.Deserialize<RouteInformation>(tour.RouteInfo)
+            route = JsonSerializer.Deserialize<RouteInformation>(tour.RouteInfo!)!
         };
     }
 
@@ -84,7 +84,7 @@ public class TourService : ITourService
         if (tour is null) return null;
         return new RouteInformationResponseDto
         {
-            Route = JsonSerializer.Deserialize<RouteInformation>(tour.RouteInfo)
+            Route = JsonSerializer.Deserialize<RouteInformation>(tour.RouteInfo!)!
         };
     }
 

@@ -55,7 +55,7 @@ public class ImportExportService : IImportExportService
 
             var tour = new Tour
             {
-                Title = importTour.Title,
+                Title = importTour.Title!,
                 Description = importTour.Description,
                 From = importTour.From,
                 To = importTour.To,
