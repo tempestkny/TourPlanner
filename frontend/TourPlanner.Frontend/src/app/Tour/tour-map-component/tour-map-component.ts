@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
 import L from 'leaflet';
 
@@ -22,20 +22,17 @@ L.Marker.prototype.options.icon = defaultIcon;
 
 export class TourMapComponent {
   @Input() tour!: TourItemInterface;
-
+  
   private map?: L.Map;
 
-  ngAfterViewInit() {
-    this.initializeMap();
-  }
 
-  ngOnChanges() {
-    if (this.map) {
-      this.map.remove();   // alte Map komplett entfernen
-      this.map = undefined;
-    }
-
-    this.initializeMap();  // neue Map erzeugen
+  ngOnInit() {
+      if (this.map) {
+        this.map.remove();   // alte Map komplett entfernen
+        this.map = undefined;
+      }
+      this.initializeMap();  // neue Map erzeugen
+    
   }
 
   private initializeMap(): void {
@@ -52,12 +49,14 @@ export class TourMapComponent {
   }
 
   private drawRoute(): void {
-    if (!this.map || !this.tour?.route?.route){
+    if (!this.map || !this.tour?.route?.route) {
       console.log("Tour has no route.");
-      return;} 
+      this.map?.fitWorld();
+      return;
+    }
 
     const coords = this.tour.route.route;
-    
+
 
     // ORS [lon, lat] → Leaflet [lat, lon]
     const latLngs: L.LatLngExpression[] = coords.map(c => [c.lat, c.lon]);

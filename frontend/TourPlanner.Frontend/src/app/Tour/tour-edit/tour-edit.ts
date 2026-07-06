@@ -5,7 +5,8 @@ import {
   Input,
   OnChanges,
   Output,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
 
 import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
@@ -26,8 +27,9 @@ export class TourEdit implements OnChanges {
 
   @Output() saved = new EventEmitter<TourItemInterface>();
   @Output() cancel = new EventEmitter<void>();
-
+  @ViewChild(TourMapComponent) mapComp!: TourMapComponent;
   validationMessage = '';
+  errorMsg = '';
 
   editableTour: TourItemInterface = {
     id: '',
@@ -79,47 +81,53 @@ export class TourEdit implements OnChanges {
   }
 
   async setPoints() {
-    if(!this.isFromValid)
-    this.openRouteService.GetCoordinatesOfPlace(this.editableTour.from).subscribe({
-      next: coord => {
-        this.isFromValid = true;
-        this.start = coord;
-        this.generateRoute();
-      },
-      error: () => {
-        this.isFromValid = false;
-        this.start = undefined;
-      }
-    });
-    if(!this.isToValid)
-    this.openRouteService.GetCoordinatesOfPlace(this.editableTour.to).subscribe({
-      next: coord => {
-        this.isToValid = true;
-        this.dest = coord;
-        this.generateRoute();
-      },
-      error: () => {
-        this.isToValid = false;
-        this.dest = undefined;
-      }
-    });
+    if (!this.isFromValid)
+      this.openRouteService.GetCoordinatesOfPlace(this.editableTour.from).subscribe({
+        next: coord => {
+          this.isFromValid = true;
+          this.start = coord;
+          this.generateRoute();
+        },
+        error: () => {
+          this.isFromValid = false;
+          this.start = undefined;
+          this.errorMsg = 'Please set valid locations';
+          this.cdr.detectChanges();
+        }
+      });
+    if (!this.isToValid)
+      this.openRouteService.GetCoordinatesOfPlace(this.editableTour.to).subscribe({
+        next: coord => {
+          this.isToValid = true;
+          this.dest = coord;
+          this.generateRoute();
+        },
+        error: () => {
+          this.isToValid = false;
+          this.dest = undefined;
+          this.errorMsg = 'Please set valid locations';
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   setTransportType(value: string): void {
     this.editableTour.transportType = this.transportMap[value] ?? TransportType.Car;
-    if(this.isFromValid&&this.isToValid){
+    if (this.isFromValid && this.isToValid) {
       this.generateRoute();
     }
   }
 
-    generateRoute() {
+  generateRoute() {
     if (this.isFromValid && this.isToValid && this.editableTour.transportType) {
       this.openRouteService.GetRouteInformation({ start: this.start!, dest: this.dest!, profile: this.editableTour.transportType }).subscribe({
         next: (route) => {
           this.editableTour.route = route
           this.cdr.detectChanges();
+          this.mapComp.ngOnInit();
         },
         error: () => {
+          this.errorMsg = 'The Route could not be generated.';
           this.editableTour.route = null;
           console.error("Route could not be generated");
           this.cdr.detectChanges();

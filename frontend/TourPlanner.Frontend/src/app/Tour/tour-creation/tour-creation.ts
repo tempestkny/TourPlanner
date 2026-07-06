@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
 import { TourListService } from '../tour-list/tour-list-service';
 import { TransportType } from '../interfaces/tour-interface/transport-type';
@@ -16,7 +16,9 @@ export class TourCreation {
   @Output() cancel = new EventEmitter<void>();
   @Output() success = new EventEmitter<TourItemInterface>()
 
+  @ViewChild(TourMapComponent) mapComp!: TourMapComponent;
   validationMessage = '';
+  errorMsg = '';
 
   newTour: TourItemInterface = {
     id: '',
@@ -36,11 +38,18 @@ export class TourCreation {
   fromCoord: Coordinates | undefined;
   toCoord: Coordinates | undefined;
 
-  constructor(private tourListService: TourListService, 
-              private openRouteService: OpenRouteService,
-              private cdr: ChangeDetectorRef
-            ) { }
+  constructor(private tourListService: TourListService,
+    private openRouteService: OpenRouteService,
+    private cdr: ChangeDetectorRef
+  ) { }
+  
+  setDescription(value: string) {
+    this.newTour.description = value;
+  }
 
+  setTitle(value: string) {
+    this.newTour.title = value;
+  }
 
   // The boolean is set, so the error message can trigger,
   // but the string is still added to the Tour
@@ -56,7 +65,7 @@ export class TourCreation {
 
   setTransportType(value: string) {
     this.newTour.transportType = this.transportMap[value] ?? TransportType.Car;
-    if(this.isFromValid && this.isToValid){
+    if (this.isFromValid && this.isToValid) {
       this.generateRoute();
     }
   }
@@ -71,8 +80,11 @@ export class TourCreation {
           this.generateRoute();
         },
         error: () => {
+
           this.isFromValid = false;
           this.fromCoord = undefined;
+          this.errorMsg = 'Please set valid locations';
+          this.cdr.detectChanges();
         }
       });
 
@@ -86,18 +98,11 @@ export class TourCreation {
         error: () => {
           this.isToValid = false;
           this.toCoord = undefined;
+          this.errorMsg = 'Please set valid locations';
+          this.cdr.detectChanges();
         }
       });
   }
-
-  setDescription(value: string) {
-    this.newTour.description = value;
-  }
-
-  setTitle(value: string) {
-    this.newTour.title = value;
-  }
-
 
   generateRoute() {
     if (this.isFromValid && this.isToValid && this.newTour.transportType) {
@@ -106,17 +111,15 @@ export class TourCreation {
           this.newTour.route = route;
           this.cdr.detectChanges(); // <- force new render
           this.isRouteSet = true;
+          this.mapComp.ngOnInit();
         },
         error: () => {
+          this.errorMsg = 'The Route could not be generated. Make sure that the Transporttype is set';
           this.newTour.route = null;
           console.error("Route could not be generated");
           this.cdr.detectChanges();
         }
       });
-    }
-    else{
-      this.validationMessage = "Please set a transport Type.";
-      this.cdr.detectChanges();
     }
   }
 

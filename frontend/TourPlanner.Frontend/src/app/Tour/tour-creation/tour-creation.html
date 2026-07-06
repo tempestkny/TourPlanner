@@ -8,7 +8,8 @@
         <input type="text" placeholder="Description" (input)="setDescription($event.target.value)" />
 
         <input type="text" placeholder="From" (input)="setFrom($event.target.value)" />
-        @if (isFromValid){<div class="information">[{{fromCoord?.lat!.toFixed(2)}},{{fromCoord?.lon!.toFixed(2)}}]</div>}
+        @if (isFromValid){<div class="information">[{{fromCoord?.lat!.toFixed(2)}},{{fromCoord?.lon!.toFixed(2)}}]</div>
+        }
         <input type="text" placeholder="To" (input)="setTo($event.target.value)" />
         @if (isToValid){<div class="information">[{{toCoord?.lat!.toFixed(2)}},{{toCoord?.lon!.toFixed(2)}}]</div>}
 
@@ -18,6 +19,10 @@
             <option value="Bike">Bike</option>
             <option value="Hike">Hike</option>
         </select>
+
+        @if (errorMsg&&!(isFromValid&&isToValid)) {
+        <div class="error">{{ errorMsg }}</div>
+        }
 
         <div class="generate-route">
             <button (click)="setPoints()">Generate Route</button>
@@ -29,8 +34,8 @@
     </div>
 
     <div class="route-calculations">
-      <p>Length: {{newTour.route?.distKm}} km</p>
-      <p>Time: {{newTour.route?.timeMin}} min</p>
+        <p>Length: {{newTour.route?.distKm?.toFixed(2)}} km</p>
+        <p>Time: {{newTour.route?.timeMin?.toFixed(2)}} min</p>
     </div>
 
     <div class="map-and-buttons">
@@ -38,7 +43,7 @@
             <button (click)="CreateTour()">Create Tour</button>
             <button (click)="Cancel()">cancel</button>
         </div>
-        <app-tour-map-component [tour] = "newTour"></app-tour-map-component>
+        <app-tour-map-component [tour]="newTour"></app-tour-map-component>
     </div>
 
 </div>
