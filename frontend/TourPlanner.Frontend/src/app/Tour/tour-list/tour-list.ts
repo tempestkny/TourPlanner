@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output, Signal } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, NgZone, Output, Signal } from '@angular/core';
 import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface'
 import { TourEntry } from "./tour-entry/tour-entry";
 import { RouterModule } from "@angular/router";
 import { TourListService } from './tour-list-service';
 import { ImportExportService, ImportTourData } from '../../Import-Export/import-export.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-tour-list',
@@ -24,17 +25,31 @@ export class TourList {
   importExportMessage = '';
   isImportExportLoading = false;
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private tourListService: TourListService,
-    private importExportService: ImportExportService
+    private importExportService: ImportExportService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
-    this.tourListService.tours$.subscribe(tours => {
-      this.tours = tours;
-    });
     this.tourListService.loadTours();
+
+    this.tourListService.tours$.pipe(takeUntil(this.destroy$))
+      .subscribe(tours => {
+        this.tours = tours;
+        console.log('Tours updated:', this.tours);
+        this.cdr.markForCheck();
+      });
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+
 
   onQueryInput(arg0: string) {
     this.tourListService.query = arg0;

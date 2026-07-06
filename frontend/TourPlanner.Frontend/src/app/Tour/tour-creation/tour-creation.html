@@ -28,6 +28,11 @@
         }
     </div>
 
+    <div class="route-calculations">
+      <p>Length: {{newTour.route?.distKm}} km</p>
+      <p>Time: {{newTour.route?.timeMin}} min</p>
+    </div>
+
     <div class="map-and-buttons">
         <div class="tour-creation-buttons">
             <button (click)="CreateTour()">Create Tour</button>

@@ -48,8 +48,6 @@ export class TourMapComponent {
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(this.map);
-
-    console.log("Displayed Tour: ",JSON.stringify(this.tour))
     setTimeout(() => this.drawRoute(), 0);
   }
 

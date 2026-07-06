@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -45,12 +46,15 @@ export class TourEdit implements OnChanges {
   dest: Coordinates | undefined;
 
   constructor(
-    private openRouteService: OpenRouteService
+    private openRouteService: OpenRouteService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tour'] && this.tour) {
       this.editableTour = { ...this.tour };
+      this.start = this.tour.route?.route.at(0);
+      this.dest = this.tour.route?.route.at(-1);
       this.isFromValid = true;
       this.isToValid = true;
     }
@@ -108,6 +112,22 @@ export class TourEdit implements OnChanges {
     }
   }
 
+    generateRoute() {
+    if (this.isFromValid && this.isToValid && this.editableTour.transportType) {
+      this.openRouteService.GetRouteInformation({ start: this.start!, dest: this.dest!, profile: this.editableTour.transportType }).subscribe({
+        next: (route) => {
+          this.editableTour.route = route
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.editableTour.route = null;
+          console.error("Route could not be generated");
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }
+
   saveTour(): void {
     this.validationMessage = '';
 
@@ -142,20 +162,6 @@ export class TourEdit implements OnChanges {
     }
 
     this.saved.emit(this.editableTour);
-  }
-
-  generateRoute() {
-    if (this.isFromValid && this.isToValid && this.editableTour.transportType) {
-      this.openRouteService.GetRouteInformation({ start: this.start!, dest: this.dest!, profile: this.editableTour.transportType }).subscribe({
-        next: (route) => {
-          this.editableTour.route = route
-        },
-        error: () => {
-          this.editableTour.route = null;
-          console.error("Route could not be generated");
-        }
-      });
-    }
   }
 
   private transportMap: Record<string, TransportType> = {

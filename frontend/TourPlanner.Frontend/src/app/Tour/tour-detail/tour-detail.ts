@@ -24,7 +24,6 @@ export class TourDetail {
   @Output() viewLog = new EventEmitter<TourLogInterface>();
 
   tourLogs: TourLogInterface[] = [];
-  private map?: L.Map;
   private logsSubscription?: Subscription;
 
   constructor(
@@ -56,12 +55,6 @@ export class TourDetail {
         this.tourLogs = logs.filter(log => log.tourId === this.tour?.id);
         this.changeDetector.detectChanges();
       });
-    }
-
-    if (this.tour) {
-      setTimeout(() => {
-        this.initializeMap();
-      }, 0);
     }
   }
 
@@ -96,41 +89,5 @@ export class TourDetail {
     if (this.tour) {
       this.viewLogs.emit(this.tour);
     }
-  }
-
-  private initializeMap(): void {
-    if (this.map) {
-      this.map.remove();
-    }
-
-    this.map = L.map('map');
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
-    this.drawRoute();
-  }
-
-  private drawRoute(): void {
-    if (!this.map || !this.tour?.route?.route) return;
-
-    const coords = this.tour.route.route;
-
-    // ORS [lon, lat] → Leaflet [lat, lon]
-    const latLngs : L.LatLngExpression[] = coords.map(c => [c.lat, c.lon]);
-
-    // Polyline zeichnen
-    const polyline = L.polyline(latLngs, {
-      color: 'blue',
-      weight: 4
-    }).addTo(this.map);
-
-    // Karte auf Route zoomen
-    this.map.fitBounds(polyline.getBounds());
-
-    L.marker(latLngs[0]).addTo(this.map).bindPopup("Start");
-    L.marker(latLngs[latLngs.length - 1]).addTo(this.map).bindPopup("Ziel");
-
-    coords.map(c => [c.lat, c.lon])
   }
 }

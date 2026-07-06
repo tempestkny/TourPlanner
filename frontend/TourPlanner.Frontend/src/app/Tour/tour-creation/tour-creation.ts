@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
 import { TourListService } from '../tour-list/tour-list-service';
 import { TransportType } from '../interfaces/tour-interface/transport-type';
@@ -31,11 +31,15 @@ export class TourCreation {
   isFromValid = false;
   isToValid = false;
   isTransportTypeSet = false;
+  isRouteSet = false;
 
   fromCoord: Coordinates | undefined;
   toCoord: Coordinates | undefined;
 
-  constructor(private tourListService: TourListService, private openRouteService: OpenRouteService) { }
+  constructor(private tourListService: TourListService, 
+              private openRouteService: OpenRouteService,
+              private cdr: ChangeDetectorRef
+            ) { }
 
 
   // The boolean is set, so the error message can trigger,
@@ -99,13 +103,20 @@ export class TourCreation {
     if (this.isFromValid && this.isToValid && this.newTour.transportType) {
       this.openRouteService.GetRouteInformation({ start: this.fromCoord!, dest: this.toCoord!, profile: this.newTour.transportType }).subscribe({
         next: (route) => {
-          this.newTour.route = route
+          this.newTour.route = route;
+          this.cdr.detectChanges(); // <- force new render
+          this.isRouteSet = true;
         },
         error: () => {
           this.newTour.route = null;
           console.error("Route could not be generated");
+          this.cdr.detectChanges();
         }
       });
+    }
+    else{
+      this.validationMessage = "Please set a transport Type.";
+      this.cdr.detectChanges();
     }
   }
 
@@ -128,18 +139,18 @@ export class TourCreation {
       return;
     }
 
-    if (!this.isFromValid || !this.isToValid) {
-      this.validationMessage = 'Please enter valid locations.';
-      return;
-    }
-
     if (!this.newTour.transportType) {
       this.validationMessage = 'Please select a transport type.';
       return;
     }
 
-    if (!this.newTour.route) {
+    if (!this.isFromValid || !this.isToValid) {
       this.validationMessage = 'Please generate the route.';
+      return;
+    }
+
+    if (!this.isRouteSet) {
+      this.validationMessage = 'Route could not be generated.';
       return;
     }
 

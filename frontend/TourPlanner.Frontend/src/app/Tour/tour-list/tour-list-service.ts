@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TourService, UpdateTourRequestInterface } from '../tour-service';
 import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
@@ -20,11 +20,13 @@ export class TourListService {
 
   query: string = '';
 
-  constructor(private tourService: TourService) { }
+  constructor(private tourService: TourService
+  ) { }
 
   loadTours(): void {
     this.tourService.getAllTours(this.query).subscribe({
-      next: (tours) => this.toursSubject.next(tours), // update when successfull
+      next: (tours) => {
+        this.toursSubject.next(tours)}, // update when successfull
       error: (err) => console.error('Failed to load tours: ', err) // throw error when not
     })
   }
