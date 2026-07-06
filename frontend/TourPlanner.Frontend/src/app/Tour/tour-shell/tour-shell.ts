@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from "@angular/router";
 import { TourList } from "../tour-list/tour-list";
 import { TourListService } from "../tour-list/tour-list-service";
+import { TourItemInterface } from '../tour-item/tour-item-interface';
 import { TourDetail } from "../tour-detail/tour-detail";
 import { TourEdit } from "../tour-edit/tour-edit";
 import { TourCreation } from "../tour-creation/tour-creation";
@@ -11,13 +12,13 @@ import { TourLogInterface } from '../tour-log/tour-log-interface';
 import { ViewTourLog } from "../tour-log/view-tour-log/view-tour-log";
 import { EditTourLog } from "../tour-log/edit-tour-log/edit-tour-log";
 import { LogListService } from '../tour-log/tour-log-list/log-list-service';
-import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
+import { StatisticsDashboard } from '../../statistics/statistics-dashboard/statistics-dashboard';
 
 
 
 @Component({
   selector: 'app-tour-shell',
-  imports: [RouterModule, TourList, TourDetail, TourEdit, TourCreation, TourLogList, CreateTourLog, ViewTourLog, EditTourLog],
+  imports: [RouterModule, TourList, TourDetail, TourEdit, TourCreation, TourLogList, CreateTourLog, ViewTourLog, EditTourLog, StatisticsDashboard],
   templateUrl: './tour-shell.html',
   styleUrl: './tour-shell.css',
 })
@@ -29,7 +30,7 @@ export class TourShell {
     private logListService : LogListService
   ) {}
 
-  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' | 'logEdit' | 'none' = 'detail';
+  mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' | 'logEdit' | 'none' = 'none';
 
   selectedTour: TourItemInterface | null = null;
   selectedLog: TourLogInterface | null = null;

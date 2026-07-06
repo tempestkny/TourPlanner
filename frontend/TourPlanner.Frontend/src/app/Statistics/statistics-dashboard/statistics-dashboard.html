@@ -1,0 +1,44 @@
+<section class="statistics-dashboard">
+    <div class="statistics-header">
+        <div>
+            <h2>Statistics</h2>
+            <p>Your tour activity at a glance</p>
+        </div>
+        <button type="button" (click)="loadStatistics()" [disabled]="isLoading">
+            Refresh
+        </button>
+    </div>
+
+    @if (isLoading) {
+    <p class="statistics-message">Loading statistics...</p>
+    } @else if (errorMessage) {
+    <p class="statistics-message error">{{ errorMessage }}</p>
+    } @else if (statistics) {
+    <div class="statistics-grid">
+        <article class="statistic-item">
+            <span class="statistic-label">Tours</span>
+            <strong>{{ statistics.totalTours }}</strong>
+        </article>
+
+        <article class="statistic-item">
+            <span class="statistic-label">Tour Logs</span>
+            <strong>{{ statistics.totalTourLogs }}</strong>
+        </article>
+
+        <article class="statistic-item">
+            <span class="statistic-label">Total Distance</span>
+            <strong>{{ statistics.totalDistance }} km</strong>
+        </article>
+
+        <article class="statistic-item">
+            <span class="statistic-label">Total Time</span>
+            <strong>{{ statistics.totalTime }} min</strong>
+        </article>
+
+        <article class="statistic-item">
+            <span class="statistic-label">Average Rating</span>
+            <strong>{{ statistics.averageRating }}</strong>
+        </article>
+    </div>
+    }
+</section>
