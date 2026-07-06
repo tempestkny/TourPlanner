@@ -10,6 +10,12 @@
     </div>
 
     <div class="right">
+        <div class="tour-shell-nav">
+            <button type="button" (click)="showDashboard()">
+                Dashboard
+            </button>
+        </div>
+
         @switch (mode) {
         @case('detail') {
         <app-tour-detail

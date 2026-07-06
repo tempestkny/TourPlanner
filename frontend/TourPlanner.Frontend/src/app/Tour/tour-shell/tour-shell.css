@@ -14,3 +14,13 @@
   overflow-y: auto;
   padding-left: 1rem;
 }
+
+.tour-shell-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
+}
+
+.tour-shell-nav button {
+  background-color: var(--button);
+}
