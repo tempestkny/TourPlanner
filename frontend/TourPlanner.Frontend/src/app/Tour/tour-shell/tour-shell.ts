@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { StatisticsDashboard } from '../../statistics/statistics-dashboard/statistics-dashboard';
+import { StatisticsDashboard } from '../../Statistics/statistics-dashboard/statistics-dashboard';
 import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
 import { TourCreation } from '../tour-creation/tour-creation';
 import { TourDetail } from '../tour-detail/tour-detail';
