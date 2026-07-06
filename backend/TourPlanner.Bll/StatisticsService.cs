@@ -35,16 +35,24 @@ public class StatisticsService : IStatisticsService
         }
 
         logger.LogInformation("Calculated statistics for user {UserId}", userId);
+        var routeInformation = tours.Select(GetRouteInformation).ToList();
 
         return new StatisticsResponseDto
         {
             TotalTours = tours.Count,
             TotalTourLogs = tourLogs.Count,
-            TotalDistance = Math.Round(tours.Sum(tour => JsonSerializer.Deserialize<RouteInformation>(tour.RouteInfo!)!.DistKm!.Value), 2),
-            TotalTime = Math.Round(tours.Sum(tour => JsonSerializer.Deserialize<RouteInformation>(tour.RouteInfo!)!.TimeMin!.Value), 2),
+            TotalDistance = Math.Round(routeInformation.Sum(route => route?.DistKm ?? 0), 2),
+            TotalTime = Math.Round(routeInformation.Sum(route => route?.TimeMin ?? 0), 2),
             AverageRating = tourLogs.Count == 0
                 ? 0
                 : Math.Round(tourLogs.Average(tourLog => tourLog.Rating), 2)
         };
+    }
+
+    private static RouteInformation? GetRouteInformation(Tour tour)
+    {
+        if (string.IsNullOrWhiteSpace(tour.RouteInfo)) return null;
+
+        return JsonSerializer.Deserialize<RouteInformation>(tour.RouteInfo);
     }
 }

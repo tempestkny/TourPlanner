@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using Microsoft.Extensions.Logging.Abstractions;
 using TourPlanner.Bll;
 using TourPlanner.Bll.Dtos;
 using TourPlanner.Dal;
 using TourPlanner.Models;
+using TourPlanner.Models.MapInformation;
 
 namespace TourPlanner.Tests;
 
@@ -89,8 +91,7 @@ public class ImportExportServiceTests
                     From = null!,
                     To = "Graz",
                     TransportType = TransportType.Bike,
-                    Distance = 100,
-                    Time = 60
+                    RouteInfo = CreateRouteInfo()
                 }
             ]
         };
@@ -108,8 +109,7 @@ public class ImportExportServiceTests
             From = "Vienna",
             To = "Graz",
             TransportType = TransportType.Bike,
-            Distance = 100,
-            Time = 60
+            RouteInfo = CreateRouteInfo()
         };
     }
 
@@ -141,8 +141,7 @@ public class ImportExportServiceTests
                     From = "Vienna",
                     To = "Graz",
                     TransportType = TransportType.Bike,
-                    Distance = 100,
-                    Time = 60,
+                    RouteInfo = CreateRouteInfo(),
                     TourLogs =
                     [
                         new ImportTourLogDto
@@ -158,6 +157,15 @@ public class ImportExportServiceTests
                 }
             ]
         };
+    }
+
+    private static string CreateRouteInfo()
+    {
+        return JsonSerializer.Serialize(new RouteInformation
+        {
+            DistKm = 100,
+            TimeMin = 60
+        });
     }
 
     private sealed class FakeTourRepository : ITourRepository
