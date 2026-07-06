@@ -17,6 +17,7 @@ export class CreateTourLog {
   @Output() cancel = new EventEmitter<void>();
 
   validationMessage = '';
+  isSaving = false;
 
   newLog: TourLogInterface = {
     id: '',
@@ -99,8 +100,18 @@ export class CreateTourLog {
       tourId: this.tour.id
     };
 
-    this.logListService.addLog(log);
-    this.cancel.emit();
+    this.isSaving = true;
+    this.logListService.addLog(log).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.cancel.emit();
+      },
+      error: (error) => {
+        console.error('Failed to create tour log', error);
+        this.validationMessage = 'Could not create tour log.';
+        this.isSaving = false;
+      }
+    });
 }
 
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { TourLogInterface } from '../tour-log-interface';
 import { TourLogService } from '../tour-log-service';
 
@@ -31,14 +32,13 @@ export class LogListService {
     });
   }
 
-  addLog(log: TourLogInterface){
-    this.tourLogService.createLog(log).subscribe({
-      next: (createdLog) => {
+  addLog(log: TourLogInterface): Observable<TourLogInterface> {
+    return this.tourLogService.createLog(log).pipe(
+      tap((createdLog) => {
         const updated = [...this.logsSubject.value, createdLog];
         this.logsSubject.next(updated);
-      },
-      error: (error) => console.error('Failed to create tour log', error)
-    });
+      })
+    );
   }
 
   updateLog(updated: TourLogInterface){

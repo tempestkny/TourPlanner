@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Statistics, StatisticsService } from '../statistics.service';
 
 @Component({
@@ -11,7 +11,10 @@ export class StatisticsDashboard implements OnInit {
   isLoading = false;
   errorMessage = '';
 
-  constructor(private readonly statisticsService: StatisticsService) {}
+  constructor(
+    private readonly statisticsService: StatisticsService,
+    private readonly changeDetector: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadStatistics();
@@ -25,11 +28,13 @@ export class StatisticsDashboard implements OnInit {
       next: (statistics) => {
         this.statistics = statistics;
         this.isLoading = false;
+        this.changeDetector.markForCheck();
       },
       error: (error) => {
         console.error('Failed to load statistics: ', error);
         this.errorMessage = 'Could not load statistics.';
         this.isLoading = false;
+        this.changeDetector.markForCheck();
       }
     });
   }
