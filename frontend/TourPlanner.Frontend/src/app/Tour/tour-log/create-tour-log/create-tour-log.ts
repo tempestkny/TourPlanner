@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Difficulty, TourLogInterface } from '../tour-log-interface';
 import { LogListService } from '../tour-log-list/log-list-service';
@@ -69,6 +70,11 @@ export class CreateTourLog {
   createLog() {
     this.validationMessage = '';
 
+    if (!this.tour?.id) {
+      this.validationMessage = 'Please select a tour before creating a log.';
+      return;
+    }
+
     if (!this.newLog.timeStamp || Number.isNaN(this.newLog.timeStamp.getTime())) {
       this.validationMessage = 'Please select a valid date and time.';
       return;
@@ -108,7 +114,7 @@ export class CreateTourLog {
       },
       error: (error) => {
         console.error('Failed to create tour log', error);
-        this.validationMessage = 'Could not create tour log.';
+        this.validationMessage = this.getErrorMessage(error);
         this.isSaving = false;
       }
     });
@@ -119,4 +125,16 @@ export class CreateTourLog {
     this.cancel.emit();
   }
 
+  private getErrorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse && error.status === 400) {
+      const validationErrors = error.error?.errors;
+      if (validationErrors) {
+        return Object.values(validationErrors).flat().join(' ');
+      }
+
+      return error.error?.detail ?? 'The tour log data is invalid.';
+    }
+
+    return 'Could not create tour log.';
+  }
 }
