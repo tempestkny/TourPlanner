@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output, Signal } from '@angular/core';
-import { TourItemInterface } from '../tour-item/tour-item-interface';
-import { TourEntry } from "./tour-entry/tour-entry";
-import { RouterModule } from "@angular/router";
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { ImportExportService, ImportTourData } from '../../Import-Export/import-export.service';
+import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
 import { TourListService } from './tour-list-service';
-import { ImportExportService, ImportTourData } from '../../import-export/import-export.service';
+import { TourEntry } from './tour-entry/tour-entry';
 
 @Component({
   selector: 'app-tour-list',
@@ -11,37 +12,49 @@ import { ImportExportService, ImportTourData } from '../../import-export/import-
   templateUrl: './tour-list.html',
   styleUrl: './tour-list.css',
 })
-export class TourList {
+export class TourList implements OnInit, OnDestroy {
   @Output() selectTour = new EventEmitter<TourItemInterface>();
   @Output() editTour = new EventEmitter<TourItemInterface>();
   @Output() createTour = new EventEmitter<void>();
 
-  // Tour Log events
   @Output() viewLogList = new EventEmitter<TourItemInterface>();
-  @Output() createLog = new EventEmitter<TourItemInterface>()
+  @Output() createLog = new EventEmitter<TourItemInterface>();
 
   tours: TourItemInterface[] = [];
   importExportMessage = '';
   isImportExportLoading = false;
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private tourListService: TourListService,
-    private importExportService: ImportExportService
-  ) { }
+    private importExportService: ImportExportService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  ngOnInit() {
-    this.tourListService.tours$.subscribe(tours => {
-      this.tours = tours;
-    });
+  ngOnInit(): void {
+    this.tourListService.loadTours();
+
+    this.tourListService.tours$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(tours => {
+        this.tours = tours;
+        console.log('Tours updated:', this.tours);
+        this.cdr.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onQueryInput(query: string): void {
+    this.tourListService.query = query;
     this.tourListService.loadTours();
   }
 
-  onQueryInput(arg0: string) {
-    this.tourListService.query = arg0;
-    this.tourListService.loadTours();
-  }
-
-  clearQuery() {
+  clearQuery(): void {
     this.tourListService.query = '';
     this.tourListService.loadTours();
   }
@@ -80,9 +93,11 @@ export class TourList {
     this.importExportMessage = '';
 
     const reader = new FileReader();
+
     reader.onload = () => {
       try {
         const importData = JSON.parse(reader.result as string) as ImportTourData;
+
         this.importExportService.importTours(importData).subscribe({
           next: (result) => {
             this.tourListService.loadTours();
@@ -109,5 +124,4 @@ export class TourList {
 
     reader.readAsText(file);
   }
-
 }

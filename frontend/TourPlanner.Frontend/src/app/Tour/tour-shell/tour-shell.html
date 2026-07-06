@@ -1,19 +1,17 @@
 <div class="split-view">
     <div class="left">
         <router-outlet name="list"></router-outlet>
-        <app-tour-list 
-            (selectTour)="onSelectTour($event)" 
-            (createTour)="onCreateTour()" 
+        <app-tour-list
+            (selectTour)="onSelectTour($event)"
+            (createTour)="onCreateTour()"
             (viewLogList)="onViewLogList($event)"
-            (createLog)="onCreateLog($event)"
-            >
+            (createLog)="onCreateLog($event)">
         </app-tour-list>
     </div>
 
     <div class="right">
-        <!--Event Handling of which page the shell should display on the right side-->
         @switch (mode) {
-        @case('detail'){
+        @case('detail') {
         <app-tour-detail
             [tour]="selectedTour"
             (editTour)="onEditTour($event)"
@@ -24,59 +22,54 @@
         </app-tour-detail>
         }
 
-        @case('edit'){
-        <app-tour-edit 
+        @case('edit') {
+        <app-tour-edit
             [tour]="selectedTour"
             (saved)="onEditSaved($event)"
             (cancel)="onEditCancelled()">
         </app-tour-edit>
         }
 
-        @case('create'){
-        <app-tour-creation 
+        @case('create') {
+        <app-tour-creation
             (cancel)="onCreateCancelled()"
-            (success)="onCreateSuccess($event)"
-            />
+            (success)="onCreateSuccess($event)" />
         }
 
-        @case('logList'){
-        <app-tour-log-list 
-            [tour]="selectedTour" 
-            (viewLog)="onViewLog($event)" 
-            />
+        @case('logList') {
+        <app-tour-log-list
+            [tour]="selectedTour"
+            (viewLog)="onViewLog($event)" />
         }
 
-        @case('logCreate'){
+        @case('logCreate') {
             @if (selectedTour) {
-                <app-create-tour-log 
+                <app-create-tour-log
                     [tour]="selectedTour"
-                    (cancel)="onCancelLog()" 
-                />
+                    (cancel)="onCancelLog()" />
             } @else {
                 <p>No tour selected.</p>
             }
         }
 
-        @case('logView'){
-        <app-view-tour-log 
-            [log]="selectedLog" 
-            (back)="onCancelLog()" 
-            (editLog)="onEditLog($event)" 
-            (deleteLog)="onDeleteLog($event)"
-            />
+        @case('logView') {
+        <app-view-tour-log
+            [log]="selectedLog"
+            (back)="onCancelLog()"
+            (editLog)="onEditLog($event)"
+            (deleteLog)="onDeleteLog($event)" />
         }
 
-        @case('logEdit'){
-         <app-edit-tour-log 
-            [log]="selectedLog" 
-            (back)="onCancelLog()" 
-            (save)="onSaveLog($event)"/>   
+        @case('logEdit') {
+        <app-edit-tour-log
+            [log]="selectedLog"
+            (back)="onCancelLog()"
+            (save)="onSaveLog($event)" />
         }
 
         @default {
         <app-statistics-dashboard />
         }
-    }
+        }
     </div>
-
 </div>

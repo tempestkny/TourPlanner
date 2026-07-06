@@ -1,33 +1,40 @@
 import { Component } from '@angular/core';
-import { RouterModule } from "@angular/router";
-import { TourList } from "../tour-list/tour-list";
-import { TourListService } from "../tour-list/tour-list-service";
-import { TourItemInterface } from '../tour-item/tour-item-interface';
-import { TourDetail } from "../tour-detail/tour-detail";
-import { TourEdit } from "../tour-edit/tour-edit";
-import { TourCreation } from "../tour-creation/tour-creation";
-import { TourLogList } from '../tour-log/tour-log-list/tour-log-list';
-import { CreateTourLog } from "../tour-log/create-tour-log/create-tour-log";
-import { TourLogInterface } from '../tour-log/tour-log-interface';
-import { ViewTourLog } from "../tour-log/view-tour-log/view-tour-log";
-import { EditTourLog } from "../tour-log/edit-tour-log/edit-tour-log";
+import { RouterModule } from '@angular/router';
+import { StatisticsDashboard } from '../../Statistics/statistics-dashboard/statistics-dashboard';
+import { TourItemInterface } from '../interfaces/tour-interface/tour-item-interface';
+import { TourCreation } from '../tour-creation/tour-creation';
+import { TourDetail } from '../tour-detail/tour-detail';
+import { TourEdit } from '../tour-edit/tour-edit';
+import { CreateTourLog } from '../tour-log/create-tour-log/create-tour-log';
+import { EditTourLog } from '../tour-log/edit-tour-log/edit-tour-log';
 import { LogListService } from '../tour-log/tour-log-list/log-list-service';
-import { StatisticsDashboard } from '../../statistics/statistics-dashboard/statistics-dashboard';
-
-
+import { TourLogList } from '../tour-log/tour-log-list/tour-log-list';
+import { TourLogInterface } from '../tour-log/tour-log-interface';
+import { ViewTourLog } from '../tour-log/view-tour-log/view-tour-log';
+import { TourList } from '../tour-list/tour-list';
+import { TourListService } from '../tour-list/tour-list-service';
 
 @Component({
   selector: 'app-tour-shell',
-  imports: [RouterModule, TourList, TourDetail, TourEdit, TourCreation, TourLogList, CreateTourLog, ViewTourLog, EditTourLog, StatisticsDashboard],
+  imports: [
+    RouterModule,
+    TourList,
+    TourDetail,
+    TourEdit,
+    TourCreation,
+    TourLogList,
+    CreateTourLog,
+    ViewTourLog,
+    EditTourLog,
+    StatisticsDashboard
+  ],
   templateUrl: './tour-shell.html',
   styleUrl: './tour-shell.css',
 })
-
 export class TourShell {
-
   constructor(
     private tourListService: TourListService,
-    private logListService : LogListService
+    private logListService: LogListService
   ) {}
 
   mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' | 'logEdit' | 'none' = 'none';
@@ -36,18 +43,14 @@ export class TourShell {
   selectedLog: TourLogInterface | null = null;
   originalTour: TourItemInterface | null = null;
 
-  // When the button to edit/create/view Tour is clicked
-  // the TourItemInterface of this object is selected 
-  // for CRUD-Operations
-
-  onEditTour(tour: TourItemInterface) {
-    this.originalTour = tour;       
-    this.selectedTour = { ...tour } 
+  onEditTour(tour: TourItemInterface): void {
+    this.originalTour = tour;
+    this.selectedTour = { ...tour };
     this.mode = 'edit';
-    console.log("Selected for Edit:", tour.title);
+    console.log('Selected for Edit:', tour.title);
   }
 
-  onEditSaved(updatedTour: TourItemInterface) {
+  onEditSaved(updatedTour: TourItemInterface): void {
     if (this.originalTour) {
       this.tourListService.updateTour(this.originalTour.id, updatedTour);
       this.selectedTour = updatedTour;
@@ -55,14 +58,15 @@ export class TourShell {
       this.mode = 'detail';
     }
   }
-  onEditCancelled() {
+
+  onEditCancelled(): void {
     if (this.originalTour) {
       this.selectedTour = this.originalTour;
     }
     this.mode = 'detail';
-  } 
+  }
 
-  onDeleteTour(tour: TourItemInterface) {
+  onDeleteTour(tour: TourItemInterface): void {
     this.tourListService.deleteTour(tour.id);
 
     this.logListService.setLogs(
@@ -71,71 +75,67 @@ export class TourShell {
 
     this.selectedTour = null;
     this.originalTour = null;
-    this.mode = 'detail';
-    console.log("Deleted tour:", tour.title);
+    this.mode = 'none';
+    console.log('Deleted tour:', tour.title);
   }
 
-  onCreateTour() {
+  onCreateTour(): void {
     this.selectedTour = null;
     this.mode = 'create';
-    console.log("Create new Tour");
+    console.log('Create new Tour');
   }
 
-  onCreateSuccess(tour: TourItemInterface){
+  onCreateSuccess(tour: TourItemInterface): void {
     this.selectedTour = tour;
     this.mode = 'detail';
   }
 
-  onCreateCancelled(){
+  onCreateCancelled(): void {
     this.mode = 'none';
   }
 
-  onSelectTour(tour: TourItemInterface) {
+  onSelectTour(tour: TourItemInterface): void {
     this.selectedTour = tour;
     this.logListService.loadLogs(tour.id);
     this.mode = 'detail';
-    console.log("Selected for View: ", tour);
+    console.log('Selected for View: ', tour);
   }
 
-  // Log User-Interface
-
-  onViewLogList(tour: TourItemInterface) {
+  onViewLogList(tour: TourItemInterface): void {
     this.selectedTour = tour;
     this.logListService.loadLogs(tour.id);
     this.mode = 'logList';
   }
 
-  onCreateLog(tour: TourItemInterface) {
+  onCreateLog(tour: TourItemInterface): void {
     this.selectedTour = tour;
     this.logListService.loadLogs(tour.id);
     this.mode = 'logCreate';
   }
 
-  onViewLog(log: TourLogInterface) {
+  onViewLog(log: TourLogInterface): void {
     this.selectedLog = log;
     this.mode = 'logView';
   }
 
-  onEditLog(log: TourLogInterface) {
+  onEditLog(log: TourLogInterface): void {
     this.selectedLog = log;
     this.mode = 'logEdit';
   }
 
-  onSaveLog(updated: TourLogInterface) {
-    //UpdateLog
+  onSaveLog(updated: TourLogInterface): void {
     this.logListService.updateLog(updated);
     this.selectedLog = updated;
     this.mode = 'logView';
   }
 
-  onDeleteLog(id : string){
+  onDeleteLog(id: string): void {
     this.logListService.deleteLog(id);
     this.selectedLog = null;
     this.mode = 'logList';
   }
 
-  onCancelLog() {
+  onCancelLog(): void {
     this.mode = 'logList';
   }
-
 }
