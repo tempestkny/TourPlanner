@@ -18,7 +18,7 @@ public class TourRepository : Repository, ITourRepository
         var tour = await _context.tours.FindAsync(id);
         if(tour is null) return;
 
-        if(newTour.Title is not null)
+        if(!string.IsNullOrWhiteSpace(newTour.Title))
             tour.Title = newTour.Title;
         if(newTour.Description is not null)
             tour.Description = newTour.Description;
