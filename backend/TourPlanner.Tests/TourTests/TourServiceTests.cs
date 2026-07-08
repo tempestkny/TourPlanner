@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
@@ -93,13 +94,21 @@ public class TourServiceTests
     [Test]
     public async Task ReadTourValidId_ShouldReturnTourDto()
     {
+        var route = new RouteInformation()
+        {
+            DistKm = 1.0,
+            TimeMin = 1.0,
+            Route = new List<Coordinates>()
+        };
+
         Tour tour = new Tour
         {
             Title = "Test",
             From = "Here",
             To = "There",
             TransportType = TransportType.Car,
-            UserId = user!.Id
+            UserId = user!.Id,
+            RouteInfo = JsonSerializer.Serialize(route)
         };
         await _tourRepository.Create(tour);
 
@@ -119,17 +128,25 @@ public class TourServiceTests
     [Test]
     public async Task UpdateExistingTour_ShouldReturnTrue()
     {
+        var route = new RouteInformation()
+        {
+            DistKm = 1.0,
+            TimeMin = 1.0,
+            Route = new List<Coordinates>()
+        };
+
         Tour tour = new Tour
         {
             Title = "Test",
             From = "Here",
             To = "There",
             TransportType = TransportType.Car,
-            UserId = user!.Id
+            UserId = user!.Id,
+            RouteInfo = JsonSerializer.Serialize(route)
         };
         await _tourRepository.Create(tour);
 
-        var ret = await TourService.UpdateTour(tour.Id, new UpdateTourDto { From = "a", To = "b", Description = "TourDescription", TransportType = null });
+        var ret = await TourService.UpdateTour(tour.Id, new UpdateTourDto { Title = "", From = "a", To = "b", Description = "TourDescription",TransportType = TransportType.Car,Route = new RouteInformation()});
 
         Assert.That(ret, Is.True);
 
@@ -228,9 +245,16 @@ public class TourServiceTests
     [Test]
     public async Task ReadToursNoQuery_ShouldReturnAllTours()
     {
-        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour1", From = "A", To = "B", Description = "One Description", TransportType = TransportType.Car });
-        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour2", From = "B", To = "C", Description = "A Tour", TransportType = TransportType.Bike });
-        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour3", From = "A", To = "C", Description = "The Third", TransportType = TransportType.Hike });
+        var route = JsonSerializer.Serialize(new RouteInformation()
+        {
+            DistKm = 1.0,
+            TimeMin = 1.0,
+            Route = new List<Coordinates>()
+        });
+
+        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour1", From = "A", To = "B", Description = "One Description", TransportType = TransportType.Car,RouteInfo = route});
+        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour2", From = "B", To = "C", Description = "A Tour", TransportType = TransportType.Bike,RouteInfo = route });
+        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour3", From = "A", To = "C", Description = "The Third", TransportType = TransportType.Hike,RouteInfo = route });
 
         var retList = await TourService.GetTours(user!.Id);
 
@@ -243,9 +267,16 @@ public class TourServiceTests
     [TestCase("1", 1)]
     public async Task ReadToursWithQuery_ShouldReturnAllTours(string query, int count)
     {
-        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour1", From = "A", To = "B", Description = "One Description", TransportType = TransportType.Car });
-        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour2", From = "B", To = "C", Description = "A Tour", TransportType = TransportType.Bike });
-        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour3", From = "A", To = "C", Description = "The Third", TransportType = TransportType.Hike });
+        var route = JsonSerializer.Serialize(new RouteInformation()
+        {
+            DistKm = 1.0,
+            TimeMin = 1.0,
+            Route = new List<Coordinates>()
+        });
+
+        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour1", From = "A", To = "B", Description = "One Description", TransportType = TransportType.Bike, RouteInfo = route });
+        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour2", From = "B", To = "C", Description = "A Tour", TransportType = TransportType.Car, RouteInfo = route });
+        await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour3", From = "A", To = "C", Description = "The Third", TransportType = TransportType.Hike, RouteInfo = route });
 
 
         var retList = await TourService.GetTours(user!.Id, query);
@@ -260,7 +291,7 @@ public class TourServiceTests
         await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour1", From = "A", To = "B", Description = "One Description", TransportType = TransportType.Car });
         await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour2", From = "B", To = "C", Description = "A Tour", TransportType = TransportType.Bike });
         await _tourRepository.Create(new Tour { UserId = user!.Id, Title = "Tour3", From = "A", To = "C", Description = "The Third", TransportType = TransportType.Hike });
-        
+
         var retList = await TourService.GetTours("001");
 
         Assert.That(retList, Is.Empty);
