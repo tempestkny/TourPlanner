@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NSubstitute.Core.Arguments;
 using TourPlanner.Dal;
 using TourPlanner.Models;
 
@@ -52,7 +53,7 @@ public class TourRepositoryTest
             Title = "MyTour",
             Description = "MyTourDescription",
             TransportType = TransportType.Car,
-            UserId = user.Id
+            UserId = user!.Id
         };
 
         await TourRepository.Create(tour);
@@ -77,7 +78,7 @@ public class TourRepositoryTest
             Title = "Long",
             Description = "Very Long",
             TransportType = TransportType.Bike,
-            UserId = user.Id
+            UserId = user!.Id
         };
 
         AddTour(tour);
@@ -99,7 +100,7 @@ public class TourRepositoryTest
             Title = "NoTitle",
             Description = "NoDescription",
             TransportType = TransportType.Hike,
-            UserId = user.Id
+            UserId = user!.Id
         };
 
         AddTour(tour);
@@ -119,7 +120,7 @@ public class TourRepositoryTest
             Title = "NoTitle",
             Description = "NoDescription",
             TransportType = TransportType.Hike,
-            UserId = user.Id
+            UserId = user!.Id
         };
 
         AddTour(tour);
@@ -148,19 +149,16 @@ public class TourRepositoryTest
     [TestCase("Vienna", 1, 1)]
     [TestCase("Salzburg", 1,2)]
     [TestCase("Hike", 1, 1)]
-    [TestCase("10", 1, 2)]
-    [TestCase("5", 1, 2)]
     [TestCase("Good", 2, 1)]
     [TestCase("Bike", 2, 1)]
     [TestCase("Linz", 2, 2)]
-    [TestCase("12", 2, 1)]
     [TestCase("Your", 3, 1)]
     [TestCase("Graz", 3, 1)]
     [TestCase("Car", 3, 1)]
     [TestCase("Fire", 0, 0)]
     public async Task ReadFromQuery_ShouldMatchTourFields(string query, int expectedTourIndex,int count)
     {
-        var empty = new Tour(){From = "",To = ""};
+        var empty = new Tour(){Title = "",From = "",To = "",TransportType = TransportType.Car};
         var tour1 = new Tour
         {
             From = "Vienna",
@@ -168,9 +166,7 @@ public class TourRepositoryTest
             Title = "My Tour",
             Description = "My favorite Tour",
             TransportType = TransportType.Hike,
-            Distance = 10,
-            Time = 5,
-            UserId = user.Id
+            UserId = user!.Id
         };
 
         var tour2 = new Tour
@@ -181,8 +177,6 @@ public class TourRepositoryTest
             Description = "Bike Tour",
             TransportType = TransportType.Bike,
             UserId = user.Id,
-            Distance = 5,
-            Time = 12
         };
 
         var tour3 = new Tour
@@ -193,8 +187,6 @@ public class TourRepositoryTest
             Description = "No Hiking Tour",
             TransportType = TransportType.Car,
             UserId = user.Id,
-            Distance = 0,
-            Time = 10
         };
 
         AddTour(tour1);
@@ -223,8 +215,6 @@ public class TourRepositoryTest
             Title = "My Tour",
             Description = "My favorite Tour",
             TransportType = TransportType.Hike,
-            Distance = 10,
-            Time = 5,
             UserId = user!.Id
         };
 
@@ -236,8 +226,6 @@ public class TourRepositoryTest
             Description = "Bike Tour",
             TransportType = TransportType.Bike,
             UserId = user.Id,
-            Distance = 5,
-            Time = 12
         };
 
         AddTour(tour1);
