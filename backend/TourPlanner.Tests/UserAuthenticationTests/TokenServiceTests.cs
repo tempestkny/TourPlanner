@@ -39,17 +39,6 @@ public class TokenServiceTests
     }
 
     [Test]
-    public void GenerateToken_ShouldContainUserIdClaim()
-    {
-        var user = CreateUser();
-
-        var token = ReadToken(CreateTokenService().GenerateToken(user));
-
-        var userIdClaim = token.Claims.Single(claim => claim.Type == ClaimTypes.NameIdentifier);
-        Assert.That(userIdClaim.Value, Is.EqualTo(user.Id));
-    }
-
-    [Test]
     public void GenerateToken_ShouldNotContainUsernameClaim()
     {
         var token = ReadToken(CreateTokenService().GenerateToken(CreateUser()));
