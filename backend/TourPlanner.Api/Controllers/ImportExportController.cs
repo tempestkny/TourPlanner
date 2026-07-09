@@ -9,9 +9,9 @@ namespace TourPlanner.Api.Controllers;
 
 [ApiController]
 [Route("api/import-export")]
-[Authorize]
+[Authorize] // only Authenticated users can access these endpoints
 public class ImportExportController : ControllerBase
-{
+{ // DI
     private readonly IImportExportService importExportService;
 
     public ImportExportController(IImportExportService importExportService)
@@ -25,9 +25,9 @@ public class ImportExportController : ControllerBase
     public async Task<ActionResult<ExportTourDataDto>> Export()
     {
         var userId = GetUserId();
-        if (userId is null) return Unauthorized();
+        if (userId is null) return Unauthorized(); // check if authenticated 
 
-        var exportData = await importExportService.Export(userId);
+        var exportData = await importExportService.Export(userId); // BLL Service
         return Ok(exportData);
     }
 
@@ -57,7 +57,7 @@ public class ImportExportController : ControllerBase
     }
 
     private string? GetUserId()
-    {
+    { // Get userID from claims
         return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }

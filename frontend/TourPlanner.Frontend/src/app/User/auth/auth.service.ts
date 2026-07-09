@@ -1,3 +1,4 @@
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
@@ -28,30 +29,30 @@ export interface LoginResponse extends UserResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly tokenStorageKey = 'tourplanner.auth.token';
-  private readonly authUrl = `${API_BASE_URL}/auth`;
-  private readonly currentUserSubject = new BehaviorSubject<UserResponse | null>(null);
+  private readonly tokenStorageKey = 'tourplanner.auth.token'; // key for storing token in localStorage
+  private readonly authUrl = `${API_BASE_URL}/auth`; // base URL for authentication endpoints
+  private readonly currentUserSubject = new BehaviorSubject<UserResponse | null>(null); // state management for the current user
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private readonly http: HttpClient) {}
 
-  get currentUser(): UserResponse | null {
+  get currentUser(): UserResponse | null { // returns user onject
     return this.currentUserSubject.value;
   }
 
-  get isAuthenticated(): boolean {
+  get isAuthenticated(): boolean { // checks if user is authenticated
     return this.accessToken !== null;
   }
 
-  get accessToken(): string | null {
+  get accessToken(): string | null { // reads the access token from localStorage
     return localStorage.getItem(this.tokenStorageKey);
   }
 
-  register(request: RegisterUserRequest): Observable<UserResponse> {
+  register(request: RegisterUserRequest): Observable<UserResponse> { // sends a registration request to the backend
     return this.http.post<UserResponse>(`${this.authUrl}/register`, request);
   }
 
-  login(request: LoginUserRequest): Observable<LoginResponse> {
+  login(request: LoginUserRequest): Observable<LoginResponse> { // sends a login request to the backend and stores the token in localStorage
     return this.http.post<LoginResponse>(`${this.authUrl}/login`, request).pipe(
       tap((response) => {
         localStorage.setItem(this.tokenStorageKey, response.token);
@@ -64,7 +65,7 @@ export class AuthService {
     );
   }
 
-  logout(): void {
+  logout(): void { // clears the token from localStorage and resets the current user state
     localStorage.removeItem(this.tokenStorageKey);
     this.currentUserSubject.next(null);
   }

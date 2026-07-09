@@ -17,7 +17,7 @@ export class StatisticsDashboard implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadStatistics();
+    this.loadStatistics(); // automatically load statistics 
   }
 
   loadStatistics(): void {
@@ -28,7 +28,7 @@ export class StatisticsDashboard implements OnInit {
       next: (statistics) => {
         this.statistics = statistics;
         this.isLoading = false;
-        this.changeDetector.markForCheck();
+        this.changeDetector.markForCheck(); // Mark for check to update the view
       },
       error: (error) => {
         console.error('Failed to load statistics: ', error);

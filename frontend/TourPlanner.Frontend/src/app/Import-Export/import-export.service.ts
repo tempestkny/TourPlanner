@@ -66,13 +66,13 @@ export class ImportExportService {
 
   constructor(private readonly http: HttpClient) {}
 
-  exportTours(): Observable<Blob> {
+  exportTours(): Observable<Blob> { // export as Blob, so it can be downloaded as a file
     return this.http.get(`${this.importExportUrl}/export`, {
       responseType: 'blob',
     });
   }
 
-  importTours(importData: ImportTourData): Observable<ImportResult> {
+  importTours(importData: ImportTourData): Observable<ImportResult> { // sends JSON data to the backend for import, returns the number of imported tours
     return this.http.post<ImportResult>(`${this.importExportUrl}/import`, importData);
   }
 }

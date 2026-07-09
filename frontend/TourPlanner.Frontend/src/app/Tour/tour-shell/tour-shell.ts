@@ -39,7 +39,7 @@ export class TourShell {
 
   mode: 'detail' | 'edit' | 'create' | 'logList' | 'logCreate' | 'logView' | 'logEdit' | 'none' = 'none';
 
-  selectedTour: TourItemInterface | null = null;
+  selectedTour: TourItemInterface | null = null; // ui states
   selectedLog: TourLogInterface | null = null;
   originalTour: TourItemInterface | null = null;
 
@@ -108,10 +108,10 @@ export class TourShell {
     console.log('Selected for View: ', tour);
   }
 
-  onViewLogList(tour: TourItemInterface): void {
-    this.selectedTour = tour;
-    this.logListService.loadLogs(tour.id);
-    this.mode = 'logList';
+  onViewLogList(tour: TourItemInterface): void { 
+    this.selectedTour = tour; // selected tour is set to the tour for which logs are being viewed
+    this.logListService.loadLogs(tour.id); // load logs
+    this.mode = 'logList'; // set mode to loglist
   }
 
   onCreateLog(tour: TourItemInterface): void {

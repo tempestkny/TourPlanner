@@ -19,7 +19,7 @@ export class StatisticsService {
 
   constructor(private readonly http: HttpClient) {}
 
-  getStatistics(): Observable<Statistics> {
+  getStatistics(): Observable<Statistics> { // jwt token is added by the interceptor
     return this.http.get<Statistics>(this.statisticsUrl);
   }
 }

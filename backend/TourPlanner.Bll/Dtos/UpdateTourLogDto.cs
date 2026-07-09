@@ -3,7 +3,7 @@ using TourPlanner.Models;
 
 namespace TourPlanner.Bll.Dtos;
 
-public class UpdateTourLogDto
+public class UpdateTourLogDto // No TourId because it is not allowed to change the Tour of a TourLog
 {
     [Required]
     public DateTime TimeStamp { get; set; }

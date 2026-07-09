@@ -7,10 +7,10 @@ namespace TourPlanner.Bll.Auth;
 
 public class AuthService : IAuthService
 {
-    private readonly IUserRepository userRepository;
-    private readonly IPasswordHasher passwordHasher;
-    private readonly ITokenService tokenService;
-    private readonly ILogger<AuthService> logger;
+    private readonly IUserRepository userRepository; // loads & stores users
+    private readonly IPasswordHasher passwordHasher; // hashes & verifies passwords
+    private readonly ITokenService tokenService; // creates tokens 
+    private readonly ILogger<AuthService> logger; // structured logging
 
     public AuthService(
         IUserRepository userRepository,
@@ -29,30 +29,30 @@ public class AuthService : IAuthService
         var email = registerUserDto.Email.Trim().ToLowerInvariant();
         var username = registerUserDto.Username.Trim();
 
-        if (await userRepository.ExistsByEmail(email))
+        if (await userRepository.ExistsByEmail(email)) // check if email already exists
         {
             logger.LogInformation("Registration rejected because email already exists: {Email}", email);
             throw new RegistrationConflictException("email");
         }
 
-        if (await userRepository.ExistsByName(username))
+        if (await userRepository.ExistsByName(username)) // check if username already exists
         {
             logger.LogInformation("Registration rejected because username already exists: {Username}", username);
             throw new RegistrationConflictException("username");
         }
 
-        var user = new User
+        var user = new User // create new user object
         {
             Email = email,
             Username = username,
-            HashedPassword = passwordHasher.HashPassword(registerUserDto.Password)
+            HashedPassword = passwordHasher.HashPassword(registerUserDto.Password) // hash the password
         };
 
         await userRepository.Create(user);
 
         logger.LogInformation("Registered user {UserId}", user.Id);
 
-        return new UserResponseDto
+        return new UserResponseDto // dto to return user 
         {
             Id = user.Id,
             Email = user.Email,
@@ -62,19 +62,19 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponseDto> Login(LoginUserDto loginUserDto)
     {
-        var identifier = loginUserDto.Identifier.Trim();
-        var normalizedEmail = identifier.ToLowerInvariant();
+        var identifier = loginUserDto.Identifier.Trim(); // email or username
+        var normalizedEmail = identifier.ToLowerInvariant(); 
 
         var user = await userRepository.GetUserByEmail(normalizedEmail)
-            ?? await userRepository.GetUserByName(identifier);
+            ?? await userRepository.GetUserByName(identifier); // try to find user by email or username
 
-        if (user is null || string.IsNullOrWhiteSpace(user.HashedPassword))
+        if (user is null || string.IsNullOrWhiteSpace(user.HashedPassword)) // login fails if user not found
         {
             logger.LogInformation("Login rejected for unknown identifier");
             throw new InvalidCredentialsException();
         }
 
-        if (!passwordHasher.VerifyPassword(loginUserDto.Password, user.HashedPassword))
+        if (!passwordHasher.VerifyPassword(loginUserDto.Password, user.HashedPassword)) // password compared to stored hash
         {
             logger.LogInformation("Login rejected for user {UserId}", user.Id);
             throw new InvalidCredentialsException();
@@ -82,7 +82,7 @@ public class AuthService : IAuthService
 
         logger.LogInformation("User {UserId} logged in", user.Id);
 
-        return new LoginResponseDto
+        return new LoginResponseDto // retunr dto with user info and token
         {
             Id = user.Id,
             Email = user.Email ?? string.Empty,

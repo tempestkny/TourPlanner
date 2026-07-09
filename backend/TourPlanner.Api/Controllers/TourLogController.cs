@@ -8,10 +8,10 @@ namespace TourPlanner.Api.Controllers;
 
 [ApiController]
 [Route("api/tourlogs")]
-[Authorize]
+[Authorize] // all endpoints require authentication
 public class TourLogController : ControllerBase
 {
-    private readonly ITourLogService tourLogService;
+    private readonly ITourLogService tourLogService; // DI
 
     public TourLogController(ITourLogService tourLogService)
     {
@@ -23,10 +23,10 @@ public class TourLogController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IEnumerable<TourLogResponseDto>>> GetByTourId(string tourId)
     {
-        var userId = GetUserId();
+        var userId = GetUserId(); // userid from JWT token
         if (userId is null) return Unauthorized();
 
-        var tourLogs = await tourLogService.GetByTourId(userId, tourId);
+        var tourLogs = await tourLogService.GetByTourId(userId, tourId); // get all tourlogs for a specific tour
         return Ok(tourLogs);
     }
 
@@ -86,7 +86,7 @@ public class TourLogController : ControllerBase
         return removed ? NoContent() : NotFound();
     }
 
-    private string? GetUserId()
+    private string? GetUserId() // userid read from JWT token claims
     {
         return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }

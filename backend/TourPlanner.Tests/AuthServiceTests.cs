@@ -17,14 +17,14 @@ public class AuthServiceTests
     [SetUp]
     public void Setup()
     {
-        userRepository = new FakeUserRepository();
-        passwordHasher = new Pbkdf2PasswordHasher();
-        tokenService = new FakeTokenService();
+        userRepository = new FakeUserRepository(); // User DB
+        passwordHasher = new Pbkdf2PasswordHasher(); // Password hashing service
+        tokenService = new FakeTokenService(); // Token generation service
         authService = new AuthService(
             userRepository,
             passwordHasher,
             tokenService,
-            NullLogger<AuthService>.Instance);
+            NullLogger<AuthService>.Instance); // no logging for tests
     }
 
     [Test]
@@ -228,8 +228,8 @@ public class AuthServiceTests
     private sealed class FakeUserRepository : IUserRepository
     {
         public List<User> CreatedUsers { get; } = [];
-        public HashSet<string> ExistingEmails { get; } = [];
-        public HashSet<string> ExistingUsernames { get; } = [];
+        public HashSet<string> ExistingEmails { get; } = []; // no duplicates
+        public HashSet<string> ExistingUsernames { get; } = []; // no duplicates
 
         public Task Create(User obj)
         {

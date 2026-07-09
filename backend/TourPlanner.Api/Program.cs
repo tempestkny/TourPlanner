@@ -12,10 +12,10 @@ using TourPlanner.Dal;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add Services
-builder.Services.AddControllers();
+builder.Services.AddControllers(); 
 builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks();
-builder.Services.AddCors(options =>
+builder.Services.AddCors(options => // Add CORS policy for Angular development
 {
     options.AddPolicy("AngularDevelopment", policy =>
     {
@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddSwaggerGen(options => // configures Swagger to use JWT authentication
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -46,12 +46,12 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-builder.Services.Configure<JwtOptions>(
+builder.Services.Configure<JwtOptions>( // loads JWT options from the configuration file
     builder.Configuration.GetSection(JwtOptions.SectionName));
 var jwtOptions = builder.Configuration
     .GetSection(JwtOptions.SectionName)
     .Get<JwtOptions>()!;
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) // backend JWT authentication configuration
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -65,11 +65,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret))
         };
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(); // enables Authorization
 // From get the Context with the connection string from the appsettings
-builder.Services.AddDbContext<TourPlannerDbContext>(options =>
+builder.Services.AddDbContext<TourPlannerDbContext>(options => // configures the EF Core DbContext to use PostgreSQL 
     options.UseNpgsql(builder.Configuration.GetConnectionString("TourPlannerDb")));
 
+// Add services and repositories to the DI container
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITourRepository, TourRepository>();
 builder.Services.AddScoped<ITourLogRepository, TourLogRepository>();
@@ -90,7 +91,7 @@ builder.Services.AddHttpClient<IOpenRouteService, OpenRouteService>(client =>
 
 var app = builder.Build();
 
-app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseMiddleware<CorrelationIdMiddleware>(); // correlation runs early so that all logs have correlation id
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -108,11 +109,11 @@ if (app.Environment.IsDevelopment())
 
 // Add endpoints
 
-app.UseCors("AngularDevelopment");
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseCors("AngularDevelopment"); // CORS first
+app.UseAuthentication(); // reads and validates JWT
+app.UseAuthorization(); // checks [Authorize] 
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health"); // maps endpoints
 app.MapControllers();
 
 app.Run();

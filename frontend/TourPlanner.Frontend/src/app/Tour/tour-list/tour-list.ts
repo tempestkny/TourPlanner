@@ -60,17 +60,17 @@ export class TourList implements OnInit, OnDestroy {
   }
 
   exportTours(): void {
-    this.isImportExportLoading = true;
-    this.importExportMessage = '';
+    this.isImportExportLoading = true; // Set loading state to true
+    this.importExportMessage = ''; // Clear any previous messages
 
-    this.importExportService.exportTours().subscribe({
+    this.importExportService.exportTours().subscribe({ // backend call to export tours
       next: (exportFile) => {
-        const fileUrl = URL.createObjectURL(exportFile);
-        const downloadLink = document.createElement('a');
+        const fileUrl = URL.createObjectURL(exportFile); // create a temporary URL for the exported file
+        const downloadLink = document.createElement('a'); // create a temporary anchor element to trigger the download
         downloadLink.href = fileUrl;
         downloadLink.download = `tourplanner-export-${new Date().toISOString().slice(0, 10)}.json`;
-        downloadLink.click();
-        URL.revokeObjectURL(fileUrl);
+        downloadLink.click(); // download the file
+        URL.revokeObjectURL(fileUrl); // revoke the temporary URL to free up memory
         this.importExportMessage = 'Export completed.';
         this.isImportExportLoading = false;
       },
@@ -84,23 +84,23 @@ export class TourList implements OnInit, OnDestroy {
 
   importTours(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    input.value = '';
+    const file = input.files?.[0]; // get the first selected file
+    input.value = ''; 
 
-    if (!file) return;
+    if (!file) return; // no file selected, exit early
 
     this.isImportExportLoading = true;
     this.importExportMessage = '';
 
     const reader = new FileReader();
 
-    reader.onload = () => {
+    reader.onload = () => { // JSON parsing and sending to backend for import
       try {
         const importData = JSON.parse(reader.result as string) as ImportTourData;
 
         this.importExportService.importTours(importData).subscribe({
           next: (result) => {
-            this.tourListService.loadTours();
+            this.tourListService.loadTours(); // reload the tours after import
             this.importExportMessage = `Imported ${result.importedTours} tour(s).`;
             this.isImportExportLoading = false;
           },

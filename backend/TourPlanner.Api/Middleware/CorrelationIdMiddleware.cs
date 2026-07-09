@@ -2,9 +2,9 @@ namespace TourPlanner.Api.Middleware;
 
 public class CorrelationIdMiddleware
 {
-    public const string HeaderName = "X-Correlation-ID";
+    public const string HeaderName = "X-Correlation-ID"; // header name
 
-    private readonly RequestDelegate next;
+    private readonly RequestDelegate next; // next middleware in the pipeline
     private readonly ILogger<CorrelationIdMiddleware> logger;
 
     public CorrelationIdMiddleware(RequestDelegate next, ILogger<CorrelationIdMiddleware> logger)
@@ -14,17 +14,17 @@ public class CorrelationIdMiddleware
     }
 
     public async Task InvokeAsync(HttpContext context)
-    {
+    { // for each request, check if a correlation id is present in the request headers, if not generate a new one and add it to the response headers
         var correlationId = GetOrCreateCorrelationId(context);
 
         context.Response.OnStarting(() =>
-        {
+        { // before sending, add correlation id to header
             context.Response.Headers[HeaderName] = correlationId;
             return Task.CompletedTask;
         });
 
         using (logger.BeginScope(new Dictionary<string, object>
-        {
+        { // structured logging scope, add correlation id for all log entries in this request
             ["CorrelationId"] = correlationId
         }))
         {

@@ -9,12 +9,12 @@ namespace TourPlanner.Tests;
 [TestFixture]
 public class TokenServiceTests
 {
-    private readonly JwtOptions jwtOptions = new()
-    {
-        Issuer = "TourPlanner.Api.Tests",
-        Audience = "TourPlanner.Frontend.Tests",
-        Secret = "TourPlannerTestSecretKeyWithEnoughLength123",
-        ExpirationMinutes = 60
+    private readonly JwtOptions jwtOptions = new() 
+    { // simulates configuration
+        Issuer = "TourPlanner.Api.Tests", // who issues the token
+        Audience = "TourPlanner.Frontend.Tests", // intended audience for the token
+        Secret = "TourPlannerTestSecretKeyWithEnoughLength123", // key used to sign the token 
+        ExpirationMinutes = 60 // token expiration time in minutes
     };
 
     [Test]
@@ -26,7 +26,7 @@ public class TokenServiceTests
         var token = tokenService.GenerateToken(user);
 
         Assert.That(token, Is.Not.Empty);
-        Assert.That(token.Split('.'), Has.Length.EqualTo(3));
+        Assert.That(token.Split('.'), Has.Length.EqualTo(3)); // header, payload, signature
     }
 
     [Test]

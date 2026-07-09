@@ -11,8 +11,8 @@ public class TourLog
     public int Rating { get; set; }
 
     // Navigation
-    public string? TourId { get; set; }
-    public required Tour Tour {get; set;}
+    public string? TourId { get; set; } // Foreign key for the Tour entity
+    public required Tour Tour {get; set;} // Navigation property
 }
 
 public enum Difficulty

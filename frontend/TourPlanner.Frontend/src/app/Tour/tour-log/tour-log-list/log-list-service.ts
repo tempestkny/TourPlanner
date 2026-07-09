@@ -9,12 +9,12 @@ import { TourLogService } from '../tour-log-service';
 })
 export class LogListService {
   
-  private logsSubject = new BehaviorSubject<TourLogInterface[]>([]);
+  private logsSubject = new BehaviorSubject<TourLogInterface[]>([]); // service owns tourlog state, components subscribe to logs$ instead of manually shared state
   logs$ = this.logsSubject.asObservable();
 
   constructor(private readonly tourLogService: TourLogService) {}
 
-  get logs(): TourLogInterface[]{
+  get logs(): TourLogInterface[]{ // getter for current logs value
     return this.logsSubject.value;
   } 
 
@@ -22,17 +22,17 @@ export class LogListService {
     this.logsSubject.next(logs);
   }
 
-  loadLogs(tourId: string): void {
+  loadLogs(tourId: string): void { // http call to backend, load logs, refreshes behaviour subject
     this.tourLogService.getLogsByTourId(tourId).subscribe({
-      next: (logs) => {
-        const otherTourLogs = this.logsSubject.value.filter(log => log.tourId !== tourId);
-        this.logsSubject.next([...otherTourLogs, ...logs]);
+      next: (logs) => { // response as logs
+        const otherTourLogs = this.logsSubject.value.filter(log => log.tourId !== tourId); // keep logs of other tours
+        this.logsSubject.next([...otherTourLogs, ...logs]); // initiates UI update
       },
       error: (error) => console.error('Failed to load tour logs', error)
     });
   }
 
-  addLog(log: TourLogInterface): Observable<TourLogInterface> {
+  addLog(log: TourLogInterface): Observable<TourLogInterface> { 
     return this.tourLogService.createLog(log).pipe(
       tap((createdLog) => {
         const updated = [...this.logsSubject.value, createdLog];
@@ -41,7 +41,7 @@ export class LogListService {
     );
   }
 
-  updateLog(updated: TourLogInterface){
+  updateLog(updated: TourLogInterface){ 
     this.tourLogService.updateLog(updated.id, updated).subscribe({
       next: () => {
         const newList = this.logsSubject.value.map(

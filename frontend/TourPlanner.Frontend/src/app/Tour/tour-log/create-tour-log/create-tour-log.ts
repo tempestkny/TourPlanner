@@ -14,11 +14,11 @@ import { TourItemInterface } from '../../interfaces/tour-interface/tour-item-int
 //a tour-log consists of date/time, comment, difficulty, total distance, total time, and rating taken
 // on the tour
 export class CreateTourLog {
-  @Input() tour!: TourItemInterface
-  @Output() cancel = new EventEmitter<void>();
+  @Input() tour!: TourItemInterface // tour comes from tourshell
+  @Output() cancel = new EventEmitter<void>(); // tells tourshell to close the create log form
 
   validationMessage = '';
-  isSaving = false;
+  isSaving = false; // deactivates button, prevents multiple submissions
 
   newLog: TourLogInterface = {
     id: '',
@@ -30,12 +30,12 @@ export class CreateTourLog {
     rating:1
   }
 
-  difficulties = Object.values(Difficulty);
+  difficulties = Object.values(Difficulty); // difficulty options for dropdown
 
   currentDateTime = new Date().toISOString().slice(0, 16)
   // format: "1900-01-01T00:00"
 
-  setDateTime(arg0: string) {
+  setDateTime(arg0: string) { // setter
     this.newLog.timeStamp = new Date(arg0);
   }
 
@@ -61,7 +61,7 @@ export class CreateTourLog {
     this.newLog.rating = Number(value);
   }
 
-  CheckNumber(number?: number): boolean {
+  CheckNumber(number?: number): boolean { // validation for total distance and total time, must be greater than 0
     return number != null && !Number.isNaN(number) && number > 0;
   }
 
@@ -100,7 +100,7 @@ export class CreateTourLog {
       return;
     }
 
-    const log: TourLogInterface = {
+    const log: TourLogInterface = { // log is created, with empty id and tourId, which will be set by the backend
       ...this.newLog,
       id: '',
       tourId: this.tour.id
@@ -125,7 +125,7 @@ export class CreateTourLog {
     this.cancel.emit();
   }
 
-  private getErrorMessage(error: unknown): string {
+  private getErrorMessage(error: unknown): string { // backend validation error handling
     if (error instanceof HttpErrorResponse && error.status === 400) {
       const validationErrors = error.error?.errors;
       if (validationErrors) {

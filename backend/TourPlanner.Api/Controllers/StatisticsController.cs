@@ -23,10 +23,10 @@ public class StatisticsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<StatisticsResponseDto>> Get()
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the user ID from the claims
         if (userId is null) return Unauthorized();
 
-        var statistics = await statisticsService.GetStatistics(userId);
+        var statistics = await statisticsService.GetStatistics(userId); // Get statistics for the user
         return Ok(statistics);
     }
 }

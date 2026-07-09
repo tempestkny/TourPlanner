@@ -5,17 +5,17 @@ using TourPlanner.Bll.Dtos;
 namespace TourPlanner.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]")] // creates route for controller, e.g. /api/auth
 public class AuthController : ControllerBase
 {
     private readonly IAuthService authService;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService) // controller receives authService 
     {
         this.authService = authService;
     }
 
-    [HttpPost("register")]
+    [HttpPost("register")] // register endpoint
     [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -23,10 +23,10 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var registeredUser = await authService.Register(registerUserDto);
-            return Created($"/api/users/{registeredUser.Id}", registeredUser);
+            var registeredUser = await authService.Register(registerUserDto); // calls service
+            return Created($"/api/users/{registeredUser.Id}", registeredUser); // returns status 201 with user info
         }
-        catch (RegistrationConflictException exception)
+        catch (RegistrationConflictException exception) // if email or username already exists
         {
             return Conflict(new ProblemDetails
             {
@@ -37,7 +37,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpPost("login")]
+    [HttpPost("login")] // login endpoint
     [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -45,10 +45,10 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var loggedInUser = await authService.Login(loginUserDto);
-            return Ok(loggedInUser);
+            var loggedInUser = await authService.Login(loginUserDto); // calls service to login user
+            return Ok(loggedInUser); // returns status 200 with user info and token
         }
-        catch (InvalidCredentialsException exception)
+        catch (InvalidCredentialsException exception) // if email/username or password is invalid
         {
             return Unauthorized(new ProblemDetails
             {

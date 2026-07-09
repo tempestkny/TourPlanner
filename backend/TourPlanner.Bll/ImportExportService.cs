@@ -24,12 +24,12 @@ public class ImportExportService : IImportExportService
 
     public async Task<ExportTourDataDto> Export(string userId)
     {
-        var tours = await tourRepository.ReadFromQuery(userId, null);
+        var tours = await tourRepository.ReadFromQuery(userId, null); // tours for user
         var exportTours = new List<ExportTourDto>();
 
         foreach (var tour in tours)
         {
-            var tourLogs = await tourLogRepository.ReadByTourId(tour.Id);
+            var tourLogs = await tourLogRepository.ReadByTourId(tour.Id); // logs for tour
             exportTours.Add(ToExportTourDto(tour, tourLogs));
         }
 
@@ -44,12 +44,12 @@ public class ImportExportService : IImportExportService
 
     public async Task<int> Import(string userId, ImportTourDataDto importData)
     {
-        Validate(importData);
+        Validate(importData); // Validate the import data 
         logger.LogInformation("Starting import of {TourCount} tours for user {UserId}", importData.Tours.Count, userId);
 
         var importedTours = 0;
 
-        foreach (var importTour in importData.Tours)
+        foreach (var importTour in importData.Tours) // Iterate through each tour in the import data, create new Tour and TourLogs
         {
             Validate(importTour);
 
@@ -61,10 +61,10 @@ public class ImportExportService : IImportExportService
                 To = importTour.To,
                 TransportType = importTour.TransportType,
                 RouteInfo = importTour.RouteInfo,
-                UserId = userId
+                UserId = userId // Assign the user ID to the tour, prevents importing tours for other users
             };
 
-            await tourRepository.Create(tour);
+            await tourRepository.Create(tour); // Create the tour in the repository
 
             foreach (var importTourLog in importTour.TourLogs)
             {
@@ -72,7 +72,7 @@ public class ImportExportService : IImportExportService
 
                 var tourLog = new TourLog
                 {
-                    TourId = tour.Id,
+                    TourId = tour.Id, // new ID, for each tour
                     TimeStamp = importTourLog.TimeStamp,
                     Comment = importTourLog.Comment,
                     Difficulty = importTourLog.Difficulty,
@@ -82,7 +82,7 @@ public class ImportExportService : IImportExportService
                     Tour = null!
                 };
 
-                await tourLogRepository.Create(tourLog);
+                await tourLogRepository.Create(tourLog); // create the tour log in the repository
             }
 
             importedTours++;
@@ -93,7 +93,7 @@ public class ImportExportService : IImportExportService
         return importedTours;
     }
 
-    private static ExportTourDto ToExportTourDto(Tour tour, IEnumerable<TourLog> tourLogs)
+    private static ExportTourDto ToExportTourDto(Tour tour, IEnumerable<TourLog> tourLogs) // Convert a Tour and its TourLogs to ExportTourDto
     {
         return new ExportTourDto
         {
@@ -108,7 +108,7 @@ public class ImportExportService : IImportExportService
         };
     }
 
-    private static ExportTourLogDto ToExportTourLogDto(TourLog tourLog)
+    private static ExportTourLogDto ToExportTourLogDto(TourLog tourLog) // Convert a TourLog and its TourLogs to ExportTourDto
     {
         return new ExportTourLogDto
         {
@@ -122,7 +122,7 @@ public class ImportExportService : IImportExportService
         };
     }
 
-    private static void Validate<T>(T dto)
+    private static void Validate<T>(T dto) // validates imported DTOs before creating entities
     {
         var validationContext = new ValidationContext(dto!);
         Validator.ValidateObject(dto!, validationContext, validateAllProperties: true);
